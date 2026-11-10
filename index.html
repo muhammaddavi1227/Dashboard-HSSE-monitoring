@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SheetJS (xlsx) CDN untuk Download Excel Resmi -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
@@ -281,6 +283,16 @@
             </select>
           </div>
         </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Temuan</label>
+            <input type="text" id="rca-location" placeholder="Contoh: Area Turbin Unit 2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pelapor</label>
+            <input type="text" id="rca-reporter" placeholder="Contoh: Davi Adhimukti" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+          </div>
+        </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi Temuan Lapangan</label>
           <textarea id="rca-finding" required rows="2" placeholder="Deskripsikan temuan K3L..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
@@ -295,8 +307,8 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">PIC (Penanggung Jawab)</label>
-            <input type="text" id="rca-pic" required placeholder="Contoh: Maintenance Team / Davi" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">PIC Department / Penanggung Jawab</label>
+            <input type="text" id="rca-pic" required placeholder="Contoh: Maintenance Team" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
@@ -323,7 +335,6 @@
         <button onclick="closeModal('validate-finding-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
       <div id="validate-modal-content" class="mt-4 space-y-3.5 text-xs">
-        <!-- Render detail laporan -->
       </div>
     </div>
   </div>
@@ -378,27 +389,27 @@
 
     function initHiradcData() {
       const activities = [
-        { act: "Pekerjaan Pengelasan Pipa Gas", hazard: "Percikan api, gas mudah meledak", risk: "Ekstrem", ctrl: "Permit to Work, Fire Watcher, APD Las" },
-        { act: "Bekerja pada Ketinggian 15 Meter", hazard: "Terjatuh dari perancah", risk: "Tinggi", ctrl: "Full Body Harness Double Lanyard, Scaffolding Tag" },
-        { act: "Pemindahan Drum Kimia Berbahaya", hazard: "Kebocoran zat asam / korosif", risk: "Sedang", ctrl: "Secondary Containment, Sarung Tangan Nitril" },
-        { act: "Pembersihan Saluran Air Internal", hazard: "Terpeleset dan bakteri patogen", risk: "Rendah", ctrl: "Safety Boots, Sarung Tangan Karet" },
-        { act: "Pengoperasian Forklift di Gudang", hazard: "Menabrak personel / barang roboh", risk: "Sedang", ctrl: "Batas Kecepatan 10km/jam, Klakson Sudut Buta" },
-        { act: "Uji Beban Crane 50 Ton", hazard: "Sling putus / crane terbalik", risk: "Ekstrem", ctrl: "Load Indicator Valid, Barikade Area Radius Putar" },
-        { act: "Penggalian Manual Kabel Bawah Tanah", hazard: "Kena kabel aktif / tanah longsor", risk: "Tinggi", ctrl: "Shoring Dinding Tanah, Detektor Kabel Bawah Tanah" },
-        { act: "Inspeksi Panel Listrik Tegangan Tinggi", hazard: "Arc flash / sengatan listrik", risk: "Tinggi", ctrl: "LOTO, Sarung Tangan Insulasi Kelas 4" },
-        { act: "Pengisian Bahan Bakar Solar Genset", hazard: "Tumpahan solar, potensi flash fire", risk: "Sedang", ctrl: "Grounding Clamp, Spill Kit Siaga" },
-        { act: "Pengecatan Struktur Luar Bangunan", hazard: "Inhalasi uap pelarut kimia", risk: "Sedang", ctrl: "Respirator Uap Organik, Ventilasi Alami" },
-        { act: "Pembersihan Tangki Bahan Bakar", hazard: "Kekurangan oksigen di ruang tertutup", risk: "Ekstrem", ctrl: "Gas Testing Berkala, SCBA, Standby Rescue Team" },
-        { act: "Pengujian Alarm Kebakaran Gedung", hazard: "Paparan suara bising mendadak", risk: "Rendah", ctrl: "Earplug bagi Tim Penguji" },
-        { act: "Perapian Arsip Dokumen Kantor", hazard: "Tergelincir tangga kecil", risk: "Rendah", ctrl: "Tangga A-Frame Karet Anti-Slip" },
-        { act: "Inspeksi Visual Pemadam Api Ringan", hazard: "Beban angkut manual berulang", risk: "Rendah", ctrl: "Teknik Manual Handling Ergonomis" },
-        { act: "Penggantian Filter Dust Collector", hazard: "Paparan debu partikulat halus", risk: "Sedang", ctrl: "Masker N95 / FFP2, Kacamata Goggles" },
-        { act: "Pemotongan Plat Baja dengan Plasma", hazard: "Radiasi UV & radiasi termal", risk: "Tinggi", ctrl: "Tabir Pelindung Las, Apron Kulit" },
-        { act: "Pembersihan Lumut di Cooling Tower", hazard: "Permukaan licin & ketinggian", risk: "Sedang", ctrl: "Sepatu Karet Bergerigi, Tali Pengaman Lifeline" },
-        { act: "Pengangkutan Tabung Oksigen & Asetilen", hazard: "Tabung terguling / katup bocor", risk: "Tinggi", ctrl: "Troli Rantai Khusus Tabung, Cap Pelindung Katup" },
-        { act: "Pemberian Pakan Kimia Water Treatment", hazard: "Cipratan bahan cair basa kuat", risk: "Sedang", ctrl: "Face Shield Utuh, Jas Lab Kimiawi" },
-        { act: "Pemeriksaan Lampu Penerangan Pabrik", hazard: "Menggunakan tangga lipat aluminium", risk: "Rendah", ctrl: "Pengawasan 2 Orang (1 Orang Memegangi Tangga)" },
-        { act: "Kalibrasi Instrumen Pengukur Tekanan", hazard: "Paparan fluida bertekanan", risk: "Sedang", ctrl: "Depressurizing Total Sebelum Pelepasan Sensor" }
+        { act: "Pekerjaan Pengelasan Pipa Gas", hazard: "Percikan api, gas mudah meledak", risk: "Ekstrem", ctrl: "Permit to Work, Fire Watcher, APD Las", date: "2024-05-02" },
+        { act: "Bekerja pada Ketinggian 15 Meter", hazard: "Terjatuh dari perancah", risk: "Tinggi", ctrl: "Full Body Harness Double Lanyard, Scaffolding Tag", date: "2024-05-03" },
+        { act: "Pemindahan Drum Kimia Berbahaya", hazard: "Kebocoran zat asam / korosif", risk: "Sedang", ctrl: "Secondary Containment, Sarung Tangan Nitril", date: "2024-05-05" },
+        { act: "Pembersihan Saluran Air Internal", hazard: "Terpeleset dan bakteri patogen", risk: "Rendah", ctrl: "Safety Boots, Sarung Tangan Karet", date: "2024-05-06" },
+        { act: "Pengoperasian Forklift di Gudang", hazard: "Menabrak personel / barang roboh", risk: "Sedang", ctrl: "Batas Kecepatan 10km/jam, Klakson Sudut Buta", date: "2024-05-08" },
+        { act: "Uji Beban Crane 50 Ton", hazard: "Sling putus / crane terbalik", risk: "Ekstrem", ctrl: "Load Indicator Valid, Barikade Area Radius Putar", date: "2024-05-10" },
+        { act: "Penggalian Manual Kabel Bawah Tanah", hazard: "Kena kabel aktif / tanah longsor", risk: "Tinggi", ctrl: "Shoring Dinding Tanah, Detektor Kabel Bawah Tanah", date: "2024-05-11" },
+        { act: "Inspeksi Panel Listrik Tegangan Tinggi", hazard: "Arc flash / sengatan listrik", risk: "Tinggi", ctrl: "LOTO, Sarung Tangan Insulasi Kelas 4", date: "2024-05-12" },
+        { act: "Pengisian Bahan Bakar Solar Genset", hazard: "Tumpahan solar, potensi flash fire", risk: "Sedang", ctrl: "Grounding Clamp, Spill Kit Siaga", date: "2024-05-14" },
+        { act: "Pengecatan Struktur Luar Bangunan", hazard: "Inhalasi uap pelarut kimia", risk: "Sedang", ctrl: "Respirator Uap Organik, Ventilasi Alami", date: "2024-05-15" },
+        { act: "Pembersihan Tangki Bahan Bakar", hazard: "Kekurangan oksigen di ruang tertutup", risk: "Ekstrem", ctrl: "Gas Testing Berkala, SCBA, Standby Rescue Team", date: "2024-05-16" },
+        { act: "Pengujian Alarm Kebakaran Gedung", hazard: "Paparan suara bising mendadak", risk: "Rendah", ctrl: "Earplug bagi Tim Penguji", date: "2024-05-17" },
+        { act: "Perapian Arsip Dokumen Kantor", hazard: "Tergelincir tangga kecil", risk: "Rendah", ctrl: "Tangga A-Frame Karet Anti-Slip", date: "2024-05-18" },
+        { act: "Inspeksi Visual Pemadam Api Ringan", hazard: "Beban angkut manual berulang", risk: "Rendah", ctrl: "Teknik Manual Handling Ergonomis", date: "2024-05-19" },
+        { act: "Penggantian Filter Dust Collector", hazard: "Paparan debu partikulat halus", risk: "Sedang", ctrl: "Masker N95 / FFP2, Kacamata Goggles", date: "2024-05-20" },
+        { act: "Pemotongan Plat Baja dengan Plasma", hazard: "Radiasi UV & radiasi termal", risk: "Tinggi", ctrl: "Tabir Pelindung Las, Apron Kulit", date: "2024-05-21" },
+        { act: "Pembersihan Lumut di Cooling Tower", hazard: "Permukaan licin & ketinggian", risk: "Sedang", ctrl: "Sepatu Karet Bergerigi, Tali Pengaman Lifeline", date: "2024-05-22" },
+        { act: "Pengangkutan Tabung Oksigen & Asetilen", hazard: "Tabung terguling / katup bocor", risk: "Tinggi", ctrl: "Troli Rantai Khusus Tabung, Cap Pelindung Katup", date: "2024-05-23" },
+        { act: "Pemberian Pakan Kimia Water Treatment", hazard: "Cipratan bahan cair basa kuat", risk: "Sedang", ctrl: "Face Shield Utuh, Jas Lab Kimiawi", date: "2024-05-24" },
+        { act: "Pemeriksaan Lampu Penerangan Pabrik", hazard: "Menggunakan tangga lipat aluminium", risk: "Rendah", ctrl: "Pengawasan 2 Orang (1 Orang Memegangi Tangga)", date: "2024-05-25" },
+        { act: "Kalibrasi Instrumen Pengukur Tekanan", hazard: "Paparan fluida bertekanan", risk: "Sedang", ctrl: "Depressurizing Total Sebelum Pelepasan Sensor", date: "2024-05-26" }
       ];
       return activities.map((item, index) => ({
         id: 'hiradc-' + (index + 1),
@@ -407,30 +418,31 @@
         hazard: item.hazard,
         level: item.risk,
         control: item.ctrl,
+        date: item.date,
         isDemo: true
       }));
     }
 
     function initRcaData() {
       const descriptions = [
-        { desc: "Trip breaker genset utama menyebabkan padam site mendadak", sev: "Kritis", rc: "Relai proteksi kelebihan beban aus tanpa kalibrasi rutin", act: "Ganti relai baru & jadwalkan preventif tiap 3 bulan", pic: "Tim Elektrikal", st: "Closed" },
-        { desc: "Tumpahan oli hidrolik crane seluas 4m2 di dermaga pelabuhan", sev: "Mayor", rc: "Selang hidrolik bergesekan dengan sasis hingga pecah", act: "Pasang spiral guard selang & bersihkan tumpahan", pic: "Maintenance Dermaga", st: "Closed" },
-        { desc: "Kabel gerinda tangan terkelupas tanpa pembungkus insulasi", sev: "Moderat", rc: "Inspeksi bulanan alat portabel terlewat", act: "Tarik alat dari lapangan dan re-tagging kelistrikan", pic: "Safety Officer Site", st: "Closed" },
-        { desc: "Penyimpanan APAR terhalang tumpukan palet kayu", sev: "Minor", rc: "Housekeeping vendor gudang tidak disiplin 5S", act: "Pembersihan jalur dan sosialisasi batas demarkasi", pic: "Gudang Logistik", st: "Closed" },
-        { desc: "Pekerja tidak mengaitkan lanyard saat berada di platform 4 meter", sev: "Mayor", rc: "Titik anchor tetap sulit dijangkau pekerja", act: "Instalasi horizontal lifeline kawat baja permanen", pic: "Konstruksi Sipil", st: "In Progress" },
-        { desc: "Sensor deteksi kebocoran gas metana error saat uji coba", sev: "Kritis", rc: "Sensor teracuni senyawa silikon atmosferik", act: "Penggantian modul sensor infrared tahan racun", pic: "Tim Instrumentasi", st: "Open" },
-        { desc: "Kacamata pelindung safety tergores berat dan tetap digunakan", sev: "Minor", rc: "Stok APD kacamata cadangan di gudang habis", act: "Pengadaan rutin stok minimal 50 pcs", pic: "Logistik K3", st: "Closed" },
-        { desc: "Ventilasi udara ruangan baterai aki UPS tidak berfungsi", sev: "Moderat", rc: "Exhaust fan mati karena motor terbakar", act: "Ganti exhaust fan tipe explosion proof", pic: "Mekanikal Fasilitas", st: "In Progress" },
-        { desc: "Tutup botol larutan asam laboratorium tidak tersegel rapat", sev: "Moderat", rc: "Tutup botol drat pecah namun belum diganti", act: "Ganti kontainer kaca berstandar reagent", pic: "Analis Lab K3", st: "Closed" },
-        { desc: "Pintu darurat tangga timur gedung tertutup gembok ilegal", sev: "Mayor", rc: "Pihak sekuriti mengunci demi keamanan pencurian", act: "Pasang panic bar dan door contact alarm otomatis", pic: "Dept Sekuriti & HSSE", st: "Closed" },
-        { desc: "Tanda bahaya tegangan tinggi lepas dari pintu panel trafo", sev: "Minor", rc: "Perekat signage lapuk karena panas luar ruangan", act: "Ganti plat aluminium rivet permanen", pic: "Divisi Listrik", st: "Closed" },
-        { desc: "Pengikatan sling pipa baja tidak seimbang saat diangkat", sev: "Mayor", rc: "Rigger belum tersertifikasi migas/kemnaker", act: "Wajibkan rigger bersertifikat & toolbox meeting", pic: "Pengawas Lifting", st: "In Progress" },
-        { desc: "Lampu penerangan jalan inspeksi mati 3 unit berturut-turut", sev: "Minor", rc: "Lampu jalan kemasukan air hujan", act: "Ganti kap lampu waterproof IP66", pic: "Maintenance Sipil", st: "Closed" },
-        { desc: "Jalur evakuasi terhalang drum bahan baku sementara", sev: "Moderat", rc: "Kapasitas tempat bongkar muat sementara penuh", act: "Relokasi drop zone muatan ke zona barat", pic: "Logistik Lapangan", st: "Open" },
-        { desc: "Kegagalan fungsi katup pelepas tekanan di boiler cadangan", sev: "Kritis", rc: "Pegas katup terkorosi oleh uap asam sulfat", act: "Overhaul dan uji sertifikasi ulang Disnaker", pic: "Engineer Boiler", st: "In Progress" },
-        { desc: "Sarung tangan tahan panas aus dan robek pada bagian ibu jari", sev: "Minor", rc: "Masa pakai melebihi 6 bulan kerja terus menerus", act: "Buat jadwal ganti berkala APD setiap 3 bulan", pic: "Supervisor Las", st: "Closed" },
-        { desc: "Eye-wash station darurat bertekanan air lemah saat diuji", sev: "Moderat", rc: "Kerak pipa galvanis menyumbat filter nozzle", act: "Flushing pipa dan ganti pipa stainless steel", pic: "Plumbing Utility", st: "Closed" },
-        { desc: "Kadar karbon monoksida ruangan genset melebihi batas ambang aman", sev: "Mayor", rc: "Pipa knalpot pembuangan mengalami retak mikro", act: "Pengelasan ulang sambungan flange knalpot", pic: "Mekanik Genset", st: "In Progress" }
+        { desc: "Trip breaker genset utama menyebabkan padam site mendadak", sev: "Kritis", rc: "Relai proteksi kelebihan beban aus tanpa kalibrasi rutin", act: "Ganti relai baru & jadwalkan preventif tiap 3 bulan", pic: "Tim Elektrikal", st: "Closed", loc: "Powerhouse Genset", rep: "Budi Santoso", date: "2024-05-02" },
+        { desc: "Tumpahan oli hidrolik crane seluas 4m2 di dermaga pelabuhan", sev: "Mayor", rc: "Selang hidrolik bergesekan dengan sasis hingga pecah", act: "Pasang spiral guard selang & bersihkan tumpahan", pic: "Maintenance Dermaga", st: "Closed", loc: "Dermaga Jetty 1", rep: "Ahmad Fauzi", date: "2024-05-04" },
+        { desc: "Kabel gerinda tangan terkelupas tanpa pembungkus insulasi", sev: "Moderat", rc: "Inspeksi bulanan alat portabel terlewat", act: "Tarik alat dari lapangan dan re-tagging kelistrikan", pic: "Safety Officer Site", st: "Closed", loc: "Workshop Fabrikasi", rep: "Davi Adhimukti", date: "2024-05-05" },
+        { desc: "Penyimpanan APAR terhalang tumpukan palet kayu", sev: "Minor", rc: "Housekeeping vendor gudang tidak disiplin 5S", act: "Pembersihan jalur dan sosialisasi batas demarkasi", pic: "Gudang Logistik", st: "Closed", loc: "Warehouse Bahan Baku", rep: "Siti Rahma", date: "2024-05-07" },
+        { desc: "Pekerja tidak mengaitkan lanyard saat berada di platform 4 meter", sev: "Mayor", rc: "Titik anchor tetap sulit dijangkau pekerja", act: "Instalasi horizontal lifeline kawat baja permanen", pic: "Konstruksi Sipil", st: "In Progress", loc: "Area Tangki T-102", rep: "Davi Adhimukti", date: "2024-05-09" },
+        { desc: "Sensor deteksi kebocoran gas metana error saat uji coba", sev: "Kritis", rc: "Sensor teracuni senyawa silikon atmosferik", act: "Penggantian modul sensor infrared tahan racun", pic: "Tim Instrumentasi", st: "Open", loc: "Stasiun Gas Metering", rep: "Hendra Gunawan", date: "2024-05-11" },
+        { desc: "Kacamata pelindung safety tergores berat dan tetap digunakan", sev: "Minor", rc: "Stok APD kacamata cadangan di gudang habis", act: "Pengadaan rutin stok minimal 50 pcs", pic: "Logistik K3", st: "Closed", loc: "Workshop Bubut", rep: "Budi Santoso", date: "2024-05-13" },
+        { desc: "Ventilasi udara ruangan baterai aki UPS tidak berfungsi", sev: "Moderat", rc: "Exhaust fan mati karena motor terbakar", act: "Ganti exhaust fan tipe explosion proof", pic: "Mekanikal Fasilitas", st: "In Progress", loc: "Ruang UPS Control Room", rep: "Ahmad Fauzi", date: "2024-05-14" },
+        { desc: "Tutup botol larutan asam laboratorium tidak tersegel rapat", sev: "Moderat", rc: "Tutup botol drat pecah namun belum diganti", act: "Ganti kontainer kaca berstandar reagent", pic: "Analis Lab K3", st: "Closed", loc: "Laboratorium Uji Air", rep: "Siti Rahma", date: "2024-05-16" },
+        { desc: "Pintu darurat tangga timur gedung tertutup gembok ilegal", sev: "Mayor", rc: "Pihak sekuriti mengunci demi keamanan pencurian", act: "Pasang panic bar dan door contact alarm otomatis", pic: "Dept Sekuriti & HSSE", st: "Closed", loc: "Gedung Kantor Pusat Lt 2", rep: "Davi Adhimukti", date: "2024-05-17" },
+        { desc: "Tanda bahaya tegangan tinggi lepas dari pintu panel trafo", sev: "Minor", rc: "Perekat signage lapuk karena panas luar ruangan", act: "Ganti plat aluminium rivet permanen", pic: "Divisi Listrik", st: "Closed", loc: "Yard Trafo Utama", rep: "Budi Santoso", date: "2024-05-18" },
+        { desc: "Pengikatan sling pipa baja tidak seimbang saat diangkat", sev: "Mayor", rc: "Rigger belum tersertifikasi migas/kemnaker", act: "Wajibkan rigger bersertifikat & toolbox meeting", pic: "Pengawas Lifting", st: "In Progress", loc: "Laydown Area Pipa", rep: "Ahmad Fauzi", date: "2024-05-19" },
+        { desc: "Lampu penerangan jalan inspeksi mati 3 unit berturut-turut", sev: "Minor", rc: "Lampu jalan kemasukan air hujan", act: "Ganti kap lampu waterproof IP66", pic: "Maintenance Sipil", st: "Closed", loc: "Jalan Perimeter Selatan", rep: "Siti Rahma", date: "2024-05-20" },
+        { desc: "Jalur evakuasi terhalang drum bahan baku sementara", sev: "Moderat", rc: "Kapasitas tempat bongkar muat sementara penuh", act: "Relokasi drop zone muatan ke zona barat", pic: "Logistik Lapangan", st: "Open", loc: "Koridor Produksi Timur", rep: "Davi Adhimukti", date: "2024-05-21" },
+        { desc: "Kegagalan fungsi katup pelepas tekanan di boiler cadangan", sev: "Kritis", rc: "Pegas katup terkorosi oleh uap asam sulfat", act: "Overhaul dan uji sertifikasi ulang Disnaker", pic: "Engineer Boiler", st: "In Progress", loc: "Boiler House", rep: "Budi Santoso", date: "2024-05-22" },
+        { desc: "Sarung tangan tahan panas aus dan robek pada bagian ibu jari", sev: "Minor", rc: "Masa pakai melebihi 6 bulan kerja terus menerus", act: "Buat jadwal ganti berkala APD setiap 3 bulan", pic: "Supervisor Las", st: "Closed", loc: "Workshop Pengelasan", rep: "Ahmad Fauzi", date: "2024-05-23" },
+        { desc: "Eye-wash station darurat bertekanan air lemah saat diuji", sev: "Moderat", rc: "Kerak pipa galvanis menyumbat filter nozzle", act: "Flushing pipa dan ganti pipa stainless steel", pic: "Plumbing Utility", st: "Closed", loc: "Area Pengisian Kimia", rep: "Siti Rahma", date: "2024-05-24" },
+        { desc: "Kadar karbon monoksida ruangan genset melebihi batas ambang aman", sev: "Mayor", rc: "Pipa knalpot pembuangan mengalami retak mikro", act: "Pengelasan ulang sambungan flange knalpot", pic: "Mekanik Genset", st: "In Progress", loc: "Ruang Genset Barat", rep: "Davi Adhimukti", date: "2024-05-25" }
       ];
       return descriptions.map((item, index) => ({
         id: 'rca-' + (index + 1),
@@ -440,8 +452,13 @@
         rootCause: item.rc,
         action: item.act,
         pic: item.pic,
-        status: item.st, // Open, In Progress, Closed
-        date: '2024-05-' + String((index % 25) + 1).padStart(2, '0'),
+        status: item.st,
+        location: item.loc,
+        reporter: item.rep,
+        date: item.date,
+        indicator: 'Kondisi Tidak Aman (Unsafe Condition)',
+        behaviorCategory: 'Unsafe Condition',
+        isValidated: true,
         isDemo: true
       }));
     }
@@ -458,7 +475,7 @@
           description: 'Ditemukan kabel power mesin bor duduk terkelupas dan bersentuhan dengan meja besi kerja.',
           recommendation: 'Segera lakukan isolasi standar kelistrikan dan pasang grounding pengaman.',
           photo: '',
-          status: 'Menunggu Validasi', // Menunggu Validasi, Tervalidasi, Dikembalikan
+          status: 'Menunggu Validasi',
           feedback: ''
         },
         {
@@ -529,6 +546,7 @@
        ------------------------------------------------------------- */
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
     let currentActiveMenu = 'dashboard';
+    let rekapActiveTab = 'rca'; // 'rca' atau 'hiradc'
 
     function handleAuthSubmit(event) {
       event.preventDefault();
@@ -666,6 +684,7 @@
       if (currentUser.role === 'hsse') {
         menuItems = [
           { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+          { id: 'rekap-laporan', label: 'Rekap Laporan', icon: 'file-spreadsheet' },
           { id: 'dokumen-sop', label: 'Dokumen SOP', icon: 'file-text' },
           { id: 'permintaan-dokumen', label: 'Permintaan Dokumen', icon: 'clipboard-list' },
           { id: 'peminjaman-apd', label: 'Peminjaman APD', icon: 'hard-hat' },
@@ -676,6 +695,7 @@
       } else if (currentUser.role === 'manajemen') {
         menuItems = [
           { id: 'dashboard', label: 'Dashboard Monitoring', icon: 'bar-chart-3' },
+          { id: 'rekap-laporan', label: 'Rekap Laporan', icon: 'file-spreadsheet' },
         ];
       } else if (currentUser.role === 'karyawan') {
         menuItems = [
@@ -703,6 +723,11 @@
     }
 
     function switchMenu(menuId) {
+      // Pembatasan hak akses Frontend: Karyawan dilarang membuka rekap-laporan
+      if (menuId === 'rekap-laporan' && currentUser.role === 'karyawan') {
+        showToast("Akses ditolak: Menu Rekap Laporan hanya untuk Unit HSSE dan Manajemen.");
+        return;
+      }
       currentActiveMenu = menuId;
       renderApp();
     }
@@ -724,6 +749,9 @@
       if (currentActiveMenu === 'dashboard') {
         pageTitle.innerText = currentUser.role === 'manajemen' ? 'Dashboard Monitoring Eksekutif' : 'Dashboard Operasional';
         pageSubtitle.innerText = 'Sistem Informasi HSSE & Manajemen Risiko Terpadu';
+      } else if (currentActiveMenu === 'rekap-laporan') {
+        pageTitle.innerText = 'Rekap Laporan & Ekspor Data Excel';
+        pageSubtitle.innerText = 'Pusat rekapitulasi data temuan RCA dan penilaian risiko HIRADC terintegrasi';
       } else if (currentActiveMenu === 'lapor-temuan') {
         pageTitle.innerText = 'Pelaporan Temuan Bahaya & Kondisi K3L';
         pageSubtitle.innerText = 'Laporkan potensi bahaya di area kerja secara real-time ke Unit HSSE';
@@ -747,8 +775,10 @@
         pageSubtitle.innerText = 'Formulir digital peminjaman peralatan keselamatan';
       }
 
-      // Route View
-      if (currentUser.role === 'hsse') {
+      // Router View
+      if (currentActiveMenu === 'rekap-laporan') {
+        renderRekapLaporan(content);
+      } else if (currentUser.role === 'hsse') {
         if (currentActiveMenu === 'dashboard') renderHsseDashboard(content);
         else if (currentActiveMenu === 'dokumen-sop') renderHsseSop(content);
         else if (currentActiveMenu === 'permintaan-dokumen') renderHsseDocReq(content);
@@ -769,14 +799,546 @@
     }
 
     /* =============================================================
-       FITUR BARU 1: KARYAWAN - LAPOR TEMUAN K3L
+       FITUR UTAMA BARU: REKAP LAPORAN & DOWNLOAD EXCEL (RCA & HIRADC)
+       ============================================================= */
+    function setRekapTab(tabName) {
+      rekapActiveTab = tabName;
+      renderApp();
+    }
+
+    function renderRekapLaporan(container) {
+      const isManajemen = currentUser.role === 'manajemen';
+
+      container.innerHTML = `
+        <!-- Banner Mode Role -->
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-3 bg-blue-50 text-blue-900 rounded-lg">
+              <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-navy-900 text-sm">Modul Ekspor Laporan Resmi K3L (Excel .xlsx)</h3>
+              <p class="text-xs text-slate-500">
+                ${isManajemen ? 'Mode Monitoring Manajemen: Hanya data tervalidasi yang ditampilkan dan dapat diekspor.' : 'Mode Unit HSSE: Akses penuh rekapitulasi data operasional K3L.'}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-1 text-xs font-semibold rounded-md ${isManajemen ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-blue-50 text-blue-900 border border-blue-200'}">
+              Role: ${currentUser.userName}
+            </span>
+          </div>
+        </div>
+
+        <!-- Navigasi Tab: Rekap RCA & Rekap HIRADC -->
+        <div class="bg-white rounded-xl border border-slate-200 p-2 shadow-sm flex space-x-2">
+          <button onclick="setRekapTab('rca')" class="flex-1 py-2.5 px-4 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-2 ${
+            rekapActiveTab === 'rca' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+          }">
+            <i data-lucide="search-check" class="w-4 h-4"></i>
+            <span>Tab A: Rekap Temuan RCA</span>
+          </button>
+          <button onclick="setRekapTab('hiradc')" class="flex-1 py-2.5 px-4 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-2 ${
+            rekapActiveTab === 'hiradc' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+          }">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            <span>Tab B: Rekap Matriks HIRADC</span>
+          </button>
+        </div>
+
+        <!-- Wadah Konten Tab Aktif -->
+        <div id="rekap-tab-content">
+          ${rekapActiveTab === 'rca' ? renderRekapRcaTabHtml() : renderRekapHiradcTabHtml()}
+        </div>
+      `;
+
+      // Eksekusi filter awal untuk render tabel
+      if (rekapActiveTab === 'rca') {
+        filterRcaTable();
+      } else {
+        filterHiradcTable();
+      }
+    }
+
+    /* --- TAB A: REKAP RCA --- */
+    function renderRekapRcaTabHtml() {
+      return `
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div>
+              <h4 class="font-bold text-navy-900 text-base">Filter & Rekapitulasi Data RCA</h4>
+              <p class="text-xs text-slate-500">Sesuaikan filter untuk menyaring temuan sebelum melakukan download file Excel.</p>
+            </div>
+            <!-- Tombol Download Excel -->
+            <div class="flex items-center space-x-2">
+              <button onclick="exportRcaExcel()" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition shadow-sm">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Download Excel (.xlsx)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Baris Kontrol Filter RCA -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
+            <!-- 1. Pencarian -->
+            <div class="lg:col-span-1">
+              <label class="block font-semibold text-slate-700 mb-1">Cari Lokasi / Temuan</label>
+              <input type="text" id="rca-filter-search" oninput="filterRcaTable()" placeholder="Ketik kata kunci..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+            </div>
+            <!-- 2. Periode Mulai -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Periode Dari</label>
+              <input type="date" id="rca-filter-start" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+            </div>
+            <!-- 3. Periode Selesai -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Periode Sampai</label>
+              <input type="date" id="rca-filter-end" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+            </div>
+            <!-- 4. Severity -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Tingkat Severity</label>
+              <select id="rca-filter-severity" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+                <option value="Semua">Semua Severity</option>
+                <option value="Minor">Minor</option>
+                <option value="Moderat">Moderat</option>
+                <option value="Mayor">Mayor</option>
+                <option value="Kritis">Kritis</option>
+              </select>
+            </div>
+            <!-- 5. Status Tindak Lanjut -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Status Tindak Lanjut</label>
+              <select id="rca-filter-status" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+                <option value="Semua">Semua Status</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Baris Status Filter & Reset & Pilihan Format -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-3">
+            <div class="flex items-center space-x-3">
+              <span id="rca-filter-count" class="font-semibold text-navy-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
+                Memuat data...
+              </span>
+              <button onclick="resetRcaFilter()" class="text-rose-600 hover:underline font-medium inline-flex items-center space-x-1">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Hapus Filter</span>
+              </button>
+            </div>
+
+            <!-- Arsitektur Format Excel Perusahaan (Sesuai Ketentuan 8) -->
+            <div class="flex items-center space-x-2">
+              <span class="text-slate-500 font-medium">Format Output Excel:</span>
+              <select id="rca-export-format" class="px-2.5 py-1 border border-slate-300 rounded text-xs bg-white text-slate-700 font-medium focus:outline-none">
+                <option value="sederhana" selected>1. Rekap Excel Sederhana (Aktif)</option>
+                <option value="perusahaan" disabled>2. Format Standar Perusahaan (Segera Hadir / Tahap 2)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tabel Data Hasil Filter RCA -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
+                  <th class="p-3">No. Kasus</th>
+                  <th class="p-3">Tanggal</th>
+                  <th class="p-3">Lokasi</th>
+                  <th class="p-3">Pelapor</th>
+                  <th class="p-3">Rincian Temuan</th>
+                  <th class="p-3 text-center">Severity</th>
+                  <th class="p-3">PIC</th>
+                  <th class="p-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="rca-table-body" class="divide-y divide-slate-100">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    let filteredRcaCache = [];
+
+    function filterRcaTable() {
+      const search = (document.getElementById('rca-filter-search')?.value || '').toLowerCase();
+      const start = document.getElementById('rca-filter-start')?.value;
+      const end = document.getElementById('rca-filter-end')?.value;
+      const sev = document.getElementById('rca-filter-severity')?.value || 'Semua';
+      const st = document.getElementById('rca-filter-status')?.value || 'Semua';
+
+      let data = getRca();
+
+      // Manajemen hanya melihat data yang telah tervalidasi
+      if (currentUser.role === 'manajemen') {
+        data = data.filter(r => r.isValidated !== false);
+      }
+
+      filteredRcaCache = data.filter(r => {
+        const matchSearch = (r.finding || '').toLowerCase().includes(search) ||
+                            (r.location || '').toLowerCase().includes(search) ||
+                            (r.caseNo || '').toLowerCase().includes(search) ||
+                            (r.reporter || '').toLowerCase().includes(search);
+
+        const matchSev = (sev === 'Semua') || (r.severity === sev);
+        const matchSt = (st === 'Semua') || ((r.status || 'Open') === st);
+
+        let matchDate = true;
+        if (start && r.date) matchDate = matchDate && (r.date >= start);
+        if (end && r.date) matchDate = matchDate && (r.date <= end);
+
+        return matchSearch && matchSev && matchSt && matchDate;
+      });
+
+      const countEl = document.getElementById('rca-filter-count');
+      if (countEl) countEl.innerText = `Menampilkan ${filteredRcaCache.length} dari ${data.length} temuan RCA`;
+
+      const tbody = document.getElementById('rca-table-body');
+      if (!tbody) return;
+
+      if (filteredRcaCache.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">Tidak ada data temuan RCA yang sesuai dengan filter.</td></tr>`;
+      } else {
+        tbody.innerHTML = filteredRcaCache.map(r => `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-3 font-mono font-semibold text-slate-700">${r.caseNo}</td>
+            <td class="p-3 text-slate-500 whitespace-nowrap">${r.date || '-'}</td>
+            <td class="p-3 font-medium text-slate-800">${r.location || 'Area Lapangan'}</td>
+            <td class="p-3 text-slate-600">${r.reporter || 'Tim HSSE'}</td>
+            <td class="p-3 text-slate-700 max-w-xs truncate" title="${r.finding}">${r.finding}</td>
+            <td class="p-3 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+                r.severity === 'Kritis' ? 'bg-red-100 text-red-800' :
+                r.severity === 'Mayor' ? 'bg-amber-100 text-amber-800' :
+                r.severity === 'Moderat' ? 'bg-blue-100 text-blue-800' :
+                'bg-emerald-100 text-emerald-800'
+              }">${r.severity}</span>
+            </td>
+            <td class="p-3 text-slate-800 font-medium">${r.pic || '-'}</td>
+            <td class="p-3 text-center">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                r.status === 'Closed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                r.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
+                'bg-rose-50 text-rose-700 border border-rose-200'
+              }">${r.status || 'Open'}</span>
+            </td>
+          </tr>
+        `).join('');
+      }
+      lucide.createIcons();
+    }
+
+    function resetRcaFilter() {
+      const s = document.getElementById('rca-filter-search'); if (s) s.value = '';
+      const st = document.getElementById('rca-filter-start'); if (st) st.value = '';
+      const en = document.getElementById('rca-filter-end'); if (en) en.value = '';
+      const sv = document.getElementById('rca-filter-severity'); if (sv) sv.value = 'Semua';
+      const sta = document.getElementById('rca-filter-status'); if (sta) sta.value = 'Semua';
+      filterRcaTable();
+    }
+
+    /* --- EKSPOR EXCEL RCA (Format Sederhana Lengkap 12 Kolom) --- */
+    function exportRcaExcel() {
+      if (!filteredRcaCache || filteredRcaCache.length === 0) {
+        alert("Tidak ada data yang tersedia untuk diekspor.");
+        return;
+      }
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const yyyymmdd = todayStr.replace(/-/g, '');
+
+      // Menyiapkan Baris Metadata & Judul
+      const wsData = [
+        ["PT SOLUSI ENERGY NUSANTARA"],
+        ["REKAPITULASI DATA ROOT CAUSE ANALYSIS (RCA) - K3L"],
+        [`Tanggal Ekspor: ${todayStr} | Diekspor Oleh: ${currentUser.userName} (${currentUser.department})`],
+        [`Jumlah Data: ${filteredRcaCache.length} Temuan | Status Hak Akses: ${currentUser.role === 'manajemen' ? 'Monitoring Manajemen (Validated Data)' : 'Full Access Unit HSSE'}`],
+        [], // Baris kosong pemisah
+        [
+          "No.",
+          "Tanggal Temuan",
+          "Lokasi",
+          "Nama Pelapor",
+          "PIC Department",
+          "Indikator",
+          "Good Citizen / Violator",
+          "Rincian Temuan",
+          "Severity",
+          "Usulan Perbaikan",
+          "Tanggal Tindak Lanjut",
+          "Status Tindak Lanjut"
+        ]
+      ];
+
+      // Memasukkan Record Data
+      filteredRcaCache.forEach((r, idx) => {
+        wsData.push([
+          idx + 1,
+          r.date || todayStr,
+          r.location || "Area Operasional Lapangan",
+          r.reporter || "Tim HSSE / Pelapor Lapangan",
+          r.pic || "Unit Terkait",
+          r.indicator || "Kondisi Tidak Aman (Unsafe Condition)",
+          r.behaviorCategory || "Unsafe Condition",
+          r.finding,
+          r.severity,
+          r.action || r.rootCause || "-",
+          r.date || todayStr,
+          r.status || "Open"
+        ]);
+      });
+
+      // Buat Worksheet & Workbook via SheetJS
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Konfigurasi Lebar Kolom (Width) agar rapi
+      ws['!cols'] = [
+        { wch: 6 },  // No.
+        { wch: 15 }, // Tanggal
+        { wch: 25 }, // Lokasi
+        { wch: 22 }, // Pelapor
+        { wch: 22 }, // PIC
+        { wch: 30 }, // Indikator
+        { wch: 24 }, // Good Citizen/Violator
+        { wch: 45 }, // Rincian Temuan
+        { wch: 12 }, // Severity
+        { wch: 45 }, // Usulan Perbaikan
+        { wch: 20 }, // Tgl Tindak Lanjut
+        { wch: 18 }  // Status
+      ];
+
+      // Bekukan Baris Header (Freeze pane di baris ke-6)
+      ws['!freeze'] = { xSplit: 0, ySplit: 6 };
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap_RCA");
+
+      // Tulis file Excel .xlsx
+      XLSX.writeFile(wb, `Rekap_RCA_${yyyymmdd}.xlsx`);
+      showToast(`File Rekap_RCA_${yyyymmdd}.xlsx berhasil diunduh!`);
+    }
+
+    /* --- TAB B: REKAP HIRADC --- */
+    function renderRekapHiradcTabHtml() {
+      return `
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div>
+              <h4 class="font-bold text-navy-900 text-base">Filter & Rekapitulasi Data HIRADC</h4>
+              <p class="text-xs text-slate-500">Penyaringan penilaian risiko dan hierarki pengendalian operasional perusahaan.</p>
+            </div>
+            <!-- Tombol Download Excel -->
+            <div class="flex items-center space-x-2">
+              <button onclick="exportHiradcExcel()" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition shadow-sm">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Download Excel (.xlsx)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Baris Kontrol Filter HIRADC -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
+            <!-- 1. Pencarian -->
+            <div class="lg:col-span-2">
+              <label class="block font-semibold text-slate-700 mb-1">Cari Aktivitas / Potensi Bahaya</label>
+              <input type="text" id="hiradc-filter-search" oninput="filterHiradcTable()" placeholder="Ketik aktivitas atau bahaya..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+            </div>
+            <!-- 2. Tingkat Risiko -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Tingkat Risiko</label>
+              <select id="hiradc-filter-level" onchange="filterHiradcTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+                <option value="Semua">Semua Tingkat Risiko</option>
+                <option value="Rendah">Rendah (Low)</option>
+                <option value="Sedang">Sedang (Medium)</option>
+                <option value="Tinggi">Tinggi (High)</option>
+                <option value="Ekstrem">Ekstrem (Extreme)</option>
+              </select>
+            </div>
+            <!-- 3. Filter Periode Tanggal -->
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Periode Tanggal</label>
+              <input type="date" id="hiradc-filter-date" onchange="filterHiradcTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
+            </div>
+          </div>
+
+          <!-- Status Filter & Reset & Pilihan Format -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-3">
+            <div class="flex items-center space-x-3">
+              <span id="hiradc-filter-count" class="font-semibold text-navy-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
+                Memuat data...
+              </span>
+              <button onclick="resetHiradcFilter()" class="text-rose-600 hover:underline font-medium inline-flex items-center space-x-1">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Hapus Filter</span>
+              </button>
+            </div>
+
+            <!-- Arsitektur Format Excel Perusahaan (Sesuai Ketentuan 8) -->
+            <div class="flex items-center space-x-2">
+              <span class="text-slate-500 font-medium">Format Output Excel:</span>
+              <select id="hiradc-export-format" class="px-2.5 py-1 border border-slate-300 rounded text-xs bg-white text-slate-700 font-medium focus:outline-none">
+                <option value="sederhana" selected>1. Rekap Excel Sederhana (Aktif)</option>
+                <option value="perusahaan" disabled>2. Format Standar Perusahaan (Segera Hadir / Tahap 2)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tabel Data Hasil Filter HIRADC -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
+                  <th class="p-3">Kode</th>
+                  <th class="p-3">Aktivitas Pekerjaan</th>
+                  <th class="p-3">Potensi Bahaya</th>
+                  <th class="p-3 text-center">Tingkat Risiko</th>
+                  <th class="p-3">Tindakan Pengendalian</th>
+                  <th class="p-3">Tanggal Review</th>
+                </tr>
+              </thead>
+              <tbody id="hiradc-table-body" class="divide-y divide-slate-100">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    let filteredHiradcCache = [];
+
+    function filterHiradcTable() {
+      const search = (document.getElementById('hiradc-filter-search')?.value || '').toLowerCase();
+      const level = document.getElementById('hiradc-filter-level')?.value || 'Semua';
+      const dateFilter = document.getElementById('hiradc-filter-date')?.value;
+
+      let data = getHiradc();
+
+      filteredHiradcCache = data.filter(h => {
+        const matchSearch = (h.activity || '').toLowerCase().includes(search) ||
+                            (h.hazard || '').toLowerCase().includes(search) ||
+                            (h.code || '').toLowerCase().includes(search) ||
+                            (h.control || '').toLowerCase().includes(search);
+
+        const matchLevel = (level === 'Semua') || (h.level === level);
+        let matchDate = true;
+        if (dateFilter && h.date) {
+          matchDate = (h.date === dateFilter);
+        }
+
+        return matchSearch && matchLevel && matchDate;
+      });
+
+      const countEl = document.getElementById('hiradc-filter-count');
+      if (countEl) countEl.innerText = `Menampilkan ${filteredHiradcCache.length} dari ${data.length} aktivitas HIRADC`;
+
+      const tbody = document.getElementById('hiradc-table-body');
+      if (!tbody) return;
+
+      if (filteredHiradcCache.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400">Tidak ada data HIRADC yang sesuai dengan filter.</td></tr>`;
+      } else {
+        tbody.innerHTML = filteredHiradcCache.map(h => `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-3 font-mono font-semibold text-slate-700">${h.code}</td>
+            <td class="p-3 font-semibold text-slate-900">${h.activity}</td>
+            <td class="p-3 text-slate-600 max-w-xs">${h.hazard}</td>
+            <td class="p-3 text-center">
+              <span class="px-2.5 py-1 rounded text-[10px] font-bold ${
+                h.level === 'Ekstrem' ? 'bg-red-100 text-red-800' :
+                h.level === 'Tinggi' ? 'bg-amber-100 text-amber-800' :
+                h.level === 'Sedang' ? 'bg-blue-100 text-blue-800' :
+                'bg-emerald-100 text-emerald-800'
+              }">${h.level}</span>
+            </td>
+            <td class="p-3 text-slate-600 max-w-xs">${h.control || '-'}</td>
+            <td class="p-3 text-slate-500 whitespace-nowrap">${h.date || '2024-05-15'}</td>
+          </tr>
+        `).join('');
+      }
+      lucide.createIcons();
+    }
+
+    function resetHiradcFilter() {
+      const s = document.getElementById('hiradc-filter-search'); if (s) s.value = '';
+      const lv = document.getElementById('hiradc-filter-level'); if (lv) lv.value = 'Semua';
+      const dt = document.getElementById('hiradc-filter-date'); if (dt) dt.value = '';
+      filterHiradcTable();
+    }
+
+    /* --- EKSPOR EXCEL HIRADC (Format Sederhana Lengkap 6 Kolom) --- */
+    function exportHiradcExcel() {
+      if (!filteredHiradcCache || filteredHiradcCache.length === 0) {
+        alert("Tidak ada data yang tersedia untuk diekspor.");
+        return;
+      }
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const yyyymmdd = todayStr.replace(/-/g, '');
+
+      // Menyiapkan Baris Metadata & Judul
+      const wsData = [
+        ["PT SOLUSI ENERGY NUSANTARA"],
+        ["REKAPITULASI DOKUMEN PENILAIAN RISIKO HIRADC - K3L"],
+        [`Tanggal Ekspor: ${todayStr} | Diekspor Oleh: ${currentUser.userName} (${currentUser.department})`],
+        [`Jumlah Data: ${filteredHiradcCache.length} Aktivitas | Status Hak Akses: ${currentUser.role === 'manajemen' ? 'Monitoring Manajemen (Read-Only)' : 'Full Access Unit HSSE'}`],
+        [], // Baris kosong pemisah
+        [
+          "No.",
+          "Aktivitas Pekerjaan",
+          "Potensi Bahaya",
+          "Dampak atau Risiko",
+          "Tingkat Risiko",
+          "Tindakan Pengendalian"
+        ]
+      ];
+
+      // Memasukkan Record Data
+      filteredHiradcCache.forEach((h, idx) => {
+        wsData.push([
+          idx + 1,
+          h.activity,
+          h.hazard,
+          h.hazard, // Sesuai mapping dampak/risiko
+          h.level,
+          h.control || "Prosedur SOP & APD Terstandar"
+        ]);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Konfigurasi Lebar Kolom (Width)
+      ws['!cols'] = [
+        { wch: 6 },  // No.
+        { wch: 38 }, // Aktivitas Pekerjaan
+        { wch: 45 }, // Potensi Bahaya
+        { wch: 45 }, // Dampak atau Risiko
+        { wch: 18 }, // Tingkat Risiko
+        { wch: 50 }  // Tindakan Pengendalian
+      ];
+
+      // Bekukan Baris Header (Freeze pane baris ke-6)
+      ws['!freeze'] = { xSplit: 0, ySplit: 6 };
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap_HIRADC");
+
+      XLSX.writeFile(wb, `Rekap_HIRADC_${yyyymmdd}.xlsx`);
+      showToast(`File Rekap_HIRADC_${yyyymmdd}.xlsx berhasil diunduh!`);
+    }
+
+    /* =============================================================
+       KOMPONEN: KARYAWAN - LAPOR TEMUAN K3L
        ============================================================= */
     function renderKaryawanLaporTemuan(container) {
       const today = new Date().toISOString().split('T')[0];
       const myFindings = getFindings().filter(f => f.reporter.toLowerCase() === currentUser.userName.toLowerCase());
 
       container.innerHTML = `
-        <!-- FORMULIR LAPOR TEMUAN -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-7">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-slate-100 mb-6">
             <div>
@@ -825,7 +1387,6 @@
           </form>
         </div>
 
-        <!-- RIWAYAT LAPORAN TEMUAN PRIBADI -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-6">
           <h3 class="font-bold text-navy-900 mb-1">Riwayat Pelaporan Temuan Anda</h3>
           <p class="text-xs text-slate-500 mb-4">Pantau validasi dan tindak lanjut dari tim Unit HSSE</p>
@@ -911,7 +1472,7 @@
     }
 
     /* =============================================================
-       FITUR BARU 2A: UNIT HSSE - VALIDASI TEMUAN
+       KOMPONEN: UNIT HSSE - VALIDASI TEMUAN
        ============================================================= */
     function renderHsseValidateFindings(container) {
       const findings = getFindings();
@@ -1072,7 +1633,7 @@
     }
 
     /* =============================================================
-       FITUR BARU 2B: UNIT HSSE - PENGELOLAAN HIRADC
+       KOMPONEN: UNIT HSSE - PENGELOLAAN HIRADC
        ============================================================= */
     function renderHsseManageHiradc(container) {
       const hiradc = getHiradc();
@@ -1185,6 +1746,7 @@
           hazard,
           level,
           control,
+          date: new Date().toISOString().split('T')[0],
           isDemo: false
         });
         showToast("Aktivitas HIRADC baru berhasil ditambahkan.");
@@ -1206,7 +1768,7 @@
     }
 
     /* =============================================================
-       FITUR BARU 2C: UNIT HSSE - PENGELOLAAN RCA
+       KOMPONEN: UNIT HSSE - PENGELOLAAN RCA
        ============================================================= */
     function renderHsseManageRca(container) {
       const rcaList = getRca();
@@ -1302,6 +1864,8 @@
           document.getElementById('rca-action').value = item.action || '';
           document.getElementById('rca-pic').value = item.pic || '';
           document.getElementById('rca-status').value = item.status || 'Open';
+          document.getElementById('rca-location').value = item.location || '';
+          document.getElementById('rca-reporter').value = item.reporter || '';
         }
       } else if (sourceFinding) {
         const rcaList = getRca();
@@ -1311,6 +1875,8 @@
         document.getElementById('rca-action').value = sourceFinding.recommendation;
         document.getElementById('rca-severity').value = 'Mayor';
         document.getElementById('rca-status').value = 'In Progress';
+        document.getElementById('rca-location').value = sourceFinding.location || '';
+        document.getElementById('rca-reporter').value = sourceFinding.reporter || '';
       } else {
         const rcaList = getRca();
         document.getElementById('rca-modal-title').innerText = 'Tambah Data RCA Baru';
@@ -1331,10 +1897,14 @@
       const action = document.getElementById('rca-action').value;
       const pic = document.getElementById('rca-pic').value;
       const status = document.getElementById('rca-status').value;
+      const location = document.getElementById('rca-location').value || 'Area Operasional Lapangan';
+      const reporter = document.getElementById('rca-reporter').value || currentUser.userName;
       let rcaList = getRca();
 
       if (id) {
-        rcaList = rcaList.map(r => r.id === id ? { ...r, caseNo, finding, severity, rootCause, action, pic, status, isDemo: false } : r);
+        rcaList = rcaList.map(r => r.id === id ? { 
+          ...r, caseNo, finding, severity, rootCause, action, pic, status, location, reporter, isDemo: false 
+        } : r);
         showToast("Data RCA berhasil diperbarui.");
       } else {
         rcaList.unshift({
@@ -1346,7 +1916,12 @@
           action,
           pic,
           status,
+          location,
+          reporter,
           date: new Date().toISOString().split('T')[0],
+          indicator: 'Kondisi Tidak Aman (Unsafe Condition)',
+          behaviorCategory: 'Unsafe Condition',
+          isValidated: true,
           isDemo: false
         });
         showToast("Data RCA baru berhasil disimpan.");
@@ -1368,11 +1943,11 @@
     }
 
     /* =============================================================
-       FITUR BARU 3: DASHBOARD MANAJEMEN LENGKAP & DINAMIS
+       KOMPONEN: DASHBOARD MANAJEMEN DINAMIS & MONITORING
        ============================================================= */
     function renderManajemenDashboard(container) {
       const hiradc = getHiradc();
-      const rca = getRca();
+      const rca = getRca().filter(r => r.isValidated !== false);
 
       const hiradcStats = {
         'Rendah': hiradc.filter(h => h.level === 'Rendah').length,
@@ -1405,10 +1980,12 @@
               <p class="text-xs text-slate-600">Visualisasi profil risiko HIRADC, keparahan RCA, dan status tindak lanjut K3L secara real-time.</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 text-[11px] font-bold bg-white text-navy-900 border border-blue-200 rounded-md">LIVE DATABASE</span>
+          <button onclick="switchMenu('rekap-laporan')" class="inline-flex items-center space-x-2 px-3 py-1.5 text-xs font-bold bg-navy-900 text-white rounded-md shadow-sm hover:bg-navy-800">
+            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+            <span>Buka Rekap Laporan & Excel</span>
+          </button>
         </div>
 
-        <!-- Metric Counter Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <span class="text-xs font-medium text-slate-500">Total Aktivitas HIRADC</span>
@@ -1432,7 +2009,6 @@
           </div>
         </div>
 
-        <!-- Visualisasi 3 Grafik Lengkap -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4">
@@ -1465,10 +2041,12 @@
           </div>
         </div>
 
-        <!-- Tabel Ringkasan Terintegrasi -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider mb-3">Ringkasan Matriks HIRADC</h4>
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider">Ringkasan Matriks HIRADC</h4>
+              <button onclick="switchMenu('rekap-laporan')" class="text-xs text-blue-700 font-semibold hover:underline">Lihat Selengkapnya →</button>
+            </div>
             <div class="max-h-72 overflow-y-auto custom-scrollbar">
               <table class="w-full text-left text-xs border-collapse">
                 <thead>
@@ -1501,7 +2079,10 @@
           </div>
 
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider mb-3">Ringkasan Tindak Lanjut RCA</h4>
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider">Ringkasan Tindak Lanjut RCA</h4>
+              <button onclick="switchMenu('rekap-laporan')" class="text-xs text-blue-700 font-semibold hover:underline">Lihat Selengkapnya →</button>
+            </div>
             <div class="max-h-72 overflow-y-auto custom-scrollbar">
               <table class="w-full text-left text-xs border-collapse">
                 <thead>
@@ -1517,7 +2098,7 @@
                       <td class="p-2 font-medium text-slate-800 truncate max-w-[200px]" title="${r.finding}">${r.finding}</td>
                       <td class="p-2 text-slate-600">${r.pic || '-'}</td>
                       <td class="p-2 text-center">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                           r.status === 'Closed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
                           r.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
                           'bg-rose-50 text-rose-700 border border-rose-200'
@@ -1535,12 +2116,10 @@
       `;
 
       setTimeout(() => {
-        // Destroy existing chart instances if any
         Chart.getChart("mgmtHiradcChart")?.destroy();
         Chart.getChart("mgmtRcaSeverityChart")?.destroy();
         Chart.getChart("mgmtRcaStatusChart")?.destroy();
 
-        // 1. Bar Chart HIRADC
         const ctxBar = document.getElementById('mgmtHiradcChart');
         if (ctxBar) {
           new Chart(ctxBar, {
@@ -1562,7 +2141,6 @@
           });
         }
 
-        // 2. Doughnut Chart RCA Severity
         const ctxDoughnut = document.getElementById('mgmtRcaSeverityChart');
         if (ctxDoughnut) {
           new Chart(ctxDoughnut, {
@@ -1582,7 +2160,6 @@
           });
         }
 
-        // 3. Pie Chart RCA Status
         const ctxPie = document.getElementById('mgmtRcaStatusChart');
         if (ctxPie) {
           new Chart(ctxPie, {
@@ -1605,7 +2182,7 @@
     }
 
     /* =============================================================
-       KOMPONEN LAMA: DASHBOARD HSSE, SOP, APD, & DOC REQS (DIPERTAHANKAN)
+       KOMPONEN: DASHBOARD HSSE, SOP, APD, & DOC REQS
        ============================================================= */
     function renderHsseDashboard(container) {
       const sops = getSops();
@@ -1642,8 +2219,16 @@
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-          <h3 class="font-bold text-navy-900 mb-1">Perlu Tindakan Persetujuan & Validasi Segera</h3>
-          <p class="text-xs text-slate-500 mb-4">Pengajuan dokumen, APD, dan temuan bahaya dari karyawan</p>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-navy-900">Perlu Tindakan Persetujuan & Validasi Segera</h3>
+              <p class="text-xs text-slate-500">Pengajuan dokumen, APD, dan temuan bahaya dari karyawan</p>
+            </div>
+            <button onclick="switchMenu('rekap-laporan')" class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 inline-flex items-center space-x-1">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+              <span>Buka Menu Rekap Laporan</span>
+            </button>
+          </div>
 
           ${(pendingDoc === 0 && pendingApd === 0 && pendingFind === 0) ? `
             <div class="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
@@ -1885,7 +2470,7 @@
     }
 
     /* =============================================================
-       KOMPONEN LAMA: DASHBOARD KARYAWAN & FORM PEMINJAMAN APD (GAMBAR 1)
+       KOMPONEN: DASHBOARD KARYAWAN & FORM PEMINJAMAN APD (GAMBAR 1)
        ============================================================= */
     function renderKaryawanDashboard(container) {
       const docReqs = getDocRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
@@ -2424,5 +3009,3 @@
   </script>
 </body>
 </html>
-
-
