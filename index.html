@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- SheetJS (xlsx) CDN untuk Download Excel Resmi -->
+  <!-- SheetJS (xlsx) CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -17,11 +17,7 @@
       theme: {
         extend: {
           colors: {
-            navy: {
-              800: '#152544',
-              900: '#0c182c',
-              950: '#070f1e',
-            }
+            navy: { 800: '#152544', 900: '#0c182c', 950: '#070f1e' }
           }
         }
       }
@@ -35,13 +31,13 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-  <!-- ==================== NOTIFIKASI TOAST ==================== -->
+  <!-- NOTIFIKASI TOAST -->
   <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 translate-y-[-150%] opacity-0 bg-white border-l-4 border-emerald-600 shadow-xl rounded-md p-4 flex items-center space-x-3 text-slate-800">
     <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
-    <span id="toast-msg" class="text-sm font-medium">Operasi berhasil dilakukan!</span>
+    <span id="toast-msg" class="text-sm font-medium">Operasi berhasil!</span>
   </div>
 
-  <!-- ==================== MODAL LOGIN REAL KREDENSIAL ==================== -->
+  <!-- MODAL LOGIN -->
   <div id="login-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-100">
       <div class="text-center mb-6">
@@ -54,20 +50,19 @@
 
       <div id="login-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center space-x-2">
         <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-        <span id="login-error-text">Username atau password tidak sesuai.</span>
+        <span id="login-error-text">Username atau kata sandi tidak sesuai.</span>
       </div>
 
       <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Username / ID Pengguna</label>
-          <input type="text" id="login-username" required placeholder="Masukkan username atau nama Anda" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-600">
+          <input type="text" id="login-username" required placeholder="Masukkan username" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-600">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
           <input type="password" id="login-password" required placeholder="Masukkan kata sandi" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-600">
         </div>
-
-        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg text-sm hover:bg-blue-700 transition shadow-sm">
+        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg text-sm hover:bg-blue-700 transition">
           Masuk ke Sistem
         </button>
       </form>
@@ -92,10 +87,9 @@
     </div>
   </div>
 
-  <!-- ==================== LAYOUT UTAMA DASHBOARD ==================== -->
+  <!-- LAYOUT UTAMA DASHBOARD -->
   <div class="flex flex-1 min-h-screen overflow-hidden">
-    
-    <!-- SIDEBAR KIRI -->
+    <!-- SIDEBAR -->
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0">
       <div class="overflow-y-auto custom-scrollbar flex-1">
         <div class="h-16 flex items-center px-6 border-b border-slate-200 space-x-3 sticky top-0 bg-white z-10">
@@ -115,9 +109,7 @@
           </div>
         </div>
 
-        <!-- Menu Navigasi Dinamis -->
-        <nav id="sidebar-menu" class="px-3 space-y-1 pb-4">
-        </nav>
+        <nav id="sidebar-menu" class="px-3 space-y-1 pb-4"></nav>
       </div>
 
       <div class="p-4 border-t border-slate-200 bg-white">
@@ -146,32 +138,142 @@
         </div>
       </header>
 
-      <div id="main-content" class="p-8 max-w-7xl w-full mx-auto space-y-6">
-        <!-- Render dinamis via JS -->
-      </div>
+      <div id="main-content" class="p-8 max-w-7xl w-full mx-auto space-y-6"></div>
     </main>
   </div>
 
-  <!-- ==================== MODAL FORM SOP (HSSE) ==================== -->
+  <!-- MODAL PEMERIKSAAN APAR -->
+  <div id="apar-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="apar-modal-title" class="font-bold text-navy-900">Tambah Pemeriksaan APAR</h3>
+        <button onclick="closeModal('apar-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="apar-form" onsubmit="saveApar(event)" class="mt-4 space-y-3.5 text-xs">
+        <input type="hidden" id="apar-id">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Tanggal Pemeriksaan</label>
+            <input type="date" id="apar-date" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Kode APAR</label>
+            <input type="text" id="apar-code" required placeholder="Contoh: APAR-01" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Lokasi APAR</label>
+          <input type="text" id="apar-location" required placeholder="Contoh: Ruang Panel Lt. 1" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Kondisi</label>
+            <select id="apar-condition" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+              <option value="Baik">Baik</option>
+              <option value="Tidak Baik">Tidak Baik</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
+            <select id="apar-status" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+              <option value="Belum">Belum</option>
+              <option value="Proses">Proses</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa (Otomatis)</label>
+          <input type="text" id="apar-inspector" readonly class="w-full px-3 py-2 border bg-slate-100 text-slate-500 rounded-lg cursor-not-allowed">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Catatan Pemeriksaan</label>
+          <textarea id="apar-notes" rows="2" placeholder="Keterangan tekanan, pin, atau selang..." class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900"></textarea>
+        </div>
+        <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('apar-modal')" class="px-4 py-2 border text-slate-600 hover:bg-slate-50 rounded-lg">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-navy-900 text-white rounded-lg hover:bg-navy-800 font-medium">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PEMERIKSAAN KENDARAAN -->
+  <div id="kendaraan-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="kendaraan-modal-title" class="font-bold text-navy-900">Tambah Pemeriksaan Kendaraan</h3>
+        <button onclick="closeModal('kendaraan-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="kendaraan-form" onsubmit="saveKendaraan(event)" class="mt-4 space-y-3.5 text-xs">
+        <input type="hidden" id="kendaraan-id">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Tanggal Pemeriksaan</label>
+            <input type="date" id="kendaraan-date" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Nomor Polisi</label>
+            <input type="text" id="kendaraan-nopol" required placeholder="Contoh: B 1234 SEN" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Jenis Kendaraan</label>
+          <input type="text" id="kendaraan-type" required placeholder="Contoh: Toyota Hilux / Blind Van" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Kondisi</label>
+            <select id="kendaraan-condition" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+              <option value="Baik">Baik</option>
+              <option value="Tidak Baik">Tidak Baik</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
+            <select id="kendaraan-status" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900">
+              <option value="Belum">Belum</option>
+              <option value="Proses">Proses</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa (Otomatis)</label>
+          <input type="text" id="kendaraan-inspector" readonly class="w-full px-3 py-2 border bg-slate-100 text-slate-500 rounded-lg cursor-not-allowed">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">Catatan Pemeriksaan</label>
+          <textarea id="kendaraan-notes" rows="2" placeholder="Keterangan rem, ban, kotak P3K, dll..." class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-navy-900"></textarea>
+        </div>
+        <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="closeModal('kendaraan-modal')" class="px-4 py-2 border text-slate-600 hover:bg-slate-50 rounded-lg">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-navy-900 text-white rounded-lg hover:bg-navy-800 font-medium">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL SOP -->
   <div id="sop-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <h3 id="sop-modal-title" class="font-bold text-navy-900">Tambah Dokumen SOP</h3>
         <button onclick="closeModal('sop-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <form id="sop-form" onsubmit="saveSop(event)" class="mt-4 space-y-4">
+      <form id="sop-form" onsubmit="saveSop(event)" class="mt-4 space-y-4 text-xs">
         <input type="hidden" id="sop-id">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Nomor Dokumen</label>
-          <input type="text" id="sop-code" required placeholder="Contoh: SOP-HSSE-033" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+          <label class="block font-semibold text-slate-600 mb-1">Nomor Dokumen</label>
+          <input type="text" id="sop-code" required placeholder="Contoh: SOP-HSSE-001" class="w-full px-3 py-2 border rounded-lg">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Judul SOP</label>
-          <input type="text" id="sop-title" required placeholder="Contoh: Prosedur Pengujian Gas Atmosfer" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+          <label class="block font-semibold text-slate-600 mb-1">Judul SOP</label>
+          <input type="text" id="sop-title" required placeholder="Contoh: Izin Kerja Aman" class="w-full px-3 py-2 border rounded-lg">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-          <select id="sop-category" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
+          <label class="block font-semibold text-slate-600 mb-1">Kategori</label>
+          <select id="sop-category" required class="w-full px-3 py-2 border rounded-lg">
             <option value="Keselamatan Kerja">Keselamatan Kerja</option>
             <option value="Operasional Lapangan">Operasional Lapangan</option>
             <option value="Kesehatan Kerja">Kesehatan Kerja</option>
@@ -179,499 +281,111 @@
             <option value="Tanggap Darurat">Tanggap Darurat</option>
           </select>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Unggah Dokumen Asli</label>
-          <input type="file" id="sop-file" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-800 hover:file:bg-blue-100">
-        </div>
-        <div class="flex justify-end space-x-2 pt-4 border-t border-slate-100">
-          <button type="button" onclick="closeModal('sop-modal')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-sm bg-navy-900 text-white rounded-lg hover:bg-navy-800 font-medium">Simpan Dokumen</button>
+        <div class="flex justify-end space-x-2 pt-4 border-t">
+          <button type="button" onclick="closeModal('sop-modal')" class="px-4 py-2 border rounded-lg">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-navy-900 text-white rounded-lg">Simpan</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ==================== MODAL FORM REQUEST DOKUMEN ==================== -->
-  <div id="req-doc-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="font-bold text-navy-900">Form Permintaan Salinan Dokumen SOP</h3>
-        <button onclick="closeModal('req-doc-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <form id="req-doc-form" onsubmit="submitDocRequest(event)" class="mt-4 space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Dokumen SOP</label>
-          <select id="req-sop-id" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Tujuan Penggunaan Dokumen</label>
-          <textarea id="req-doc-purpose" rows="3" required placeholder="Jelaskan kebutuhan dokumen..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
-        </div>
-        <div class="flex justify-end space-x-2 pt-4 border-t border-slate-100">
-          <button type="button" onclick="closeModal('req-doc-modal')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-sm bg-navy-900 text-white rounded-lg hover:bg-navy-800">Kirim Permintaan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL CRUD HIRADC (HSSE) ==================== -->
-  <div id="hiradc-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 id="hiradc-modal-title" class="font-bold text-navy-900">Tambah Penilaian HIRADC</h3>
-        <button onclick="closeModal('hiradc-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <form id="hiradc-form" onsubmit="saveHiradc(event)" class="mt-4 space-y-4">
-        <input type="hidden" id="hiradc-id">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Kode Identifikasi</label>
-          <input type="text" id="hiradc-code" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Aktivitas Pekerjaan</label>
-          <input type="text" id="hiradc-activity" required placeholder="Contoh: Pengelasan pipa tekanan tinggi" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Potensi Bahaya & Dampak</label>
-          <textarea id="hiradc-hazard" required rows="2" placeholder="Contoh: Kebocoran gas panas, percikan api" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Tingkat Risiko</label>
-            <select id="hiradc-level" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-              <option value="Rendah">Rendah (Low)</option>
-              <option value="Sedang">Sedang (Medium)</option>
-              <option value="Tinggi">Tinggi (High)</option>
-              <option value="Ekstrem">Ekstrem (Extreme)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Hierarki Pengendalian</label>
-            <input type="text" id="hiradc-control" required placeholder="Contoh: Izin Kerja Panas & APD Lengkap" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-          </div>
-        </div>
-        <div class="flex justify-end space-x-2 pt-4 border-t border-slate-100">
-          <button type="button" onclick="closeModal('hiradc-modal')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-sm bg-navy-900 text-white rounded-lg hover:bg-navy-800">Simpan HIRADC</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL CRUD RCA (HSSE) ==================== -->
-  <div id="rca-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-xl w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 id="rca-modal-title" class="font-bold text-navy-900">Kelola Data Root Cause Analysis (RCA)</h3>
-        <button onclick="closeModal('rca-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <form id="rca-form" onsubmit="saveRca(event)" class="mt-4 space-y-3.5">
-        <input type="hidden" id="rca-id">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">No. Kasus / Referensi</label>
-            <input type="text" id="rca-caseno" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Tingkat Severity</label>
-            <select id="rca-severity" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-              <option value="Minor">Minor</option>
-              <option value="Moderat">Moderat</option>
-              <option value="Mayor">Mayor</option>
-              <option value="Kritis">Kritis</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi Temuan</label>
-            <input type="text" id="rca-location" placeholder="Contoh: Area Turbin Unit 2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pelapor</label>
-            <input type="text" id="rca-reporter" placeholder="Contoh: Davi Adhimukti" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi Temuan Lapangan</label>
-          <textarea id="rca-finding" required rows="2" placeholder="Deskripsikan temuan K3L..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Akar Masalah (Root Cause)</label>
-          <textarea id="rca-rootcause" required rows="2" placeholder="Identifikasi akar penyebab terjadinya temuan..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Rencana Tindakan Perbaikan (Corrective Action)</label>
-          <textarea id="rca-action" required rows="2" placeholder="Rencana tindakan pencegahan & perbaikan..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900"></textarea>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">PIC Department / Penanggung Jawab</label>
-            <input type="text" id="rca-pic" required placeholder="Contoh: Maintenance Team" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
-            <select id="rca-status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-navy-900">
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Closed">Closed</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModal('rca-modal')" class="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
-          <button type="submit" class="px-4 py-2 text-sm bg-navy-900 text-white rounded-lg hover:bg-navy-800">Simpan Data RCA</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== MODAL DETAIL VALIDASI TEMUAN (HSSE) ==================== -->
-  <div id="validate-finding-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 class="font-bold text-navy-900">Detail & Validasi Laporan Temuan K3L</h3>
-        <button onclick="closeModal('validate-finding-modal')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-      <div id="validate-modal-content" class="mt-4 space-y-3.5 text-xs">
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
     const STORAGE_KEYS = {
       SOPS: 'hsse_sops_data_v2',
       HIRADC: 'hsse_hiradc_data_v2',
       RCA: 'hsse_rca_data_v2',
-      DOC_REQS: 'hsse_doc_requests_data_v2',
-      APD_REQS: 'hsse_apd_requests_data_v2',
       FINDINGS: 'hsse_findings_data_v2',
-      CURRENT_USER: 'hsse_logged_user_v2'
+      CURRENT_USER: 'hsse_logged_user_v2',
+      APAR: 'hsse_apar_records_v2',
+      KENDARAAN: 'hsse_kendaraan_records_v2'
     };
 
-    /* -------------------------------------------------------------
-       1. DATA SEEDING SIMULASI (SOP, HIRADC, RCA, LAPORAN)
-       ------------------------------------------------------------- */
-    function initSopData() {
-      const titles = [
-        "Izin Kerja Aman (Permit to Work)", "Bekerja di Ketinggian (Working at Height)",
-        "Memasuki Ruang Terbatas (Confined Space)", "Pengisolasian Energi Berbahaya (LOTO)",
-        "Pengangkatan dan Pengikatan Beban (Lifting & Rigging)", "Pekerjaan Panas dan Pengelasan",
-        "Pengelolaan Limbah B3", "Penggunaan dan Inspeksi Alat Pelindung Diri",
-        "Kesiapsiagaan Tanggap Darurat Medis", "Evakuasi Bahaya Kebakaran Gedung",
-        "Pengoperasian Mobile Crane", "Investigasi dan Pelaporan Insiden",
-        "Penanganan Tumpahan Bahan Kimia", "Inspeksi Berkala APAR dan Hydrant",
-        "Keselamatan Berkendara Operasional (Defensive Driving)", "Pemeriksaan Kesehatan Berkala Karyawan",
-        "Pemasangan Scaffolding/Perancah", "Manajemen Perubahan (Management of Change)",
-        "Pengoperasian Genset Darurat", "Pemberitahuan Hazard Karyawan (Hazard Notification)",
-        "Uji Kualitas Udara Emisi Genset", "Pengendalian Kebisingan Tempat Kerja",
-        "Prosedur Penggalian Tanah Kedalaman > 1.5m", "SOP Keselamatan Radiografi Non-Destructive",
-        "Penyimpanan Tabung Gas Bertekanan", "Pemeriksaan Grounding Penangkal Petir",
-        "Penanganan Limbah Non-B3", "Penanganan Cedera Sengatan Listrik",
-        "Housekeeping 5S Wilayah Kerja", "SOP Kesiapsiagaan Bencana Gempa Bumi",
-        "Audit Kepatuhan K3 Internal", "Prosedur Pengembalian APD Rusak"
-      ];
-      const categories = ["Keselamatan Kerja", "Operasional Lapangan", "Kesehatan Kerja", "Pengelolaan Lingkungan", "Tanggap Darurat"];
-      return titles.map((title, i) => ({
-        id: 'sop-' + (i + 1),
-        code: `SOP-HSSE-${String(i + 1).padStart(3, '0')}`,
-        title: title,
-        category: categories[i % categories.length],
-        rev: 'Rev 0' + ((i % 3) + 1),
-        date: '2024-05-15',
-        isDemo: true,
-        fileName: `SOP-HSSE-${String(i + 1).padStart(3, '0')}.txt`,
-        fileContent: `DOKUMEN RESMI PT SOLUSI ENERGY NUSANTARA\nNOMOR: SOP-HSSE-${String(i + 1).padStart(3, '0')}\nJUDUL: ${title}`
-      }));
-    }
-
-    function initHiradcData() {
-      const activities = [
-        { act: "Pekerjaan Pengelasan Pipa Gas", hazard: "Percikan api, gas mudah meledak", risk: "Ekstrem", ctrl: "Permit to Work, Fire Watcher, APD Las", date: "2024-05-02" },
-        { act: "Bekerja pada Ketinggian 15 Meter", hazard: "Terjatuh dari perancah", risk: "Tinggi", ctrl: "Full Body Harness Double Lanyard, Scaffolding Tag", date: "2024-05-03" },
-        { act: "Pemindahan Drum Kimia Berbahaya", hazard: "Kebocoran zat asam / korosif", risk: "Sedang", ctrl: "Secondary Containment, Sarung Tangan Nitril", date: "2024-05-05" },
-        { act: "Pembersihan Saluran Air Internal", hazard: "Terpeleset dan bakteri patogen", risk: "Rendah", ctrl: "Safety Boots, Sarung Tangan Karet", date: "2024-05-06" },
-        { act: "Pengoperasian Forklift di Gudang", hazard: "Menabrak personel / barang roboh", risk: "Sedang", ctrl: "Batas Kecepatan 10km/jam, Klakson Sudut Buta", date: "2024-05-08" },
-        { act: "Uji Beban Crane 50 Ton", hazard: "Sling putus / crane terbalik", risk: "Ekstrem", ctrl: "Load Indicator Valid, Barikade Area Radius Putar", date: "2024-05-10" },
-        { act: "Penggalian Manual Kabel Bawah Tanah", hazard: "Kena kabel aktif / tanah longsor", risk: "Tinggi", ctrl: "Shoring Dinding Tanah, Detektor Kabel Bawah Tanah", date: "2024-05-11" },
-        { act: "Inspeksi Panel Listrik Tegangan Tinggi", hazard: "Arc flash / sengatan listrik", risk: "Tinggi", ctrl: "LOTO, Sarung Tangan Insulasi Kelas 4", date: "2024-05-12" },
-        { act: "Pengisian Bahan Bakar Solar Genset", hazard: "Tumpahan solar, potensi flash fire", risk: "Sedang", ctrl: "Grounding Clamp, Spill Kit Siaga", date: "2024-05-14" },
-        { act: "Pengecatan Struktur Luar Bangunan", hazard: "Inhalasi uap pelarut kimia", risk: "Sedang", ctrl: "Respirator Uap Organik, Ventilasi Alami", date: "2024-05-15" },
-        { act: "Pembersihan Tangki Bahan Bakar", hazard: "Kekurangan oksigen di ruang tertutup", risk: "Ekstrem", ctrl: "Gas Testing Berkala, SCBA, Standby Rescue Team", date: "2024-05-16" },
-        { act: "Pengujian Alarm Kebakaran Gedung", hazard: "Paparan suara bising mendadak", risk: "Rendah", ctrl: "Earplug bagi Tim Penguji", date: "2024-05-17" },
-        { act: "Perapian Arsip Dokumen Kantor", hazard: "Tergelincir tangga kecil", risk: "Rendah", ctrl: "Tangga A-Frame Karet Anti-Slip", date: "2024-05-18" },
-        { act: "Inspeksi Visual Pemadam Api Ringan", hazard: "Beban angkut manual berulang", risk: "Rendah", ctrl: "Teknik Manual Handling Ergonomis", date: "2024-05-19" },
-        { act: "Penggantian Filter Dust Collector", hazard: "Paparan debu partikulat halus", risk: "Sedang", ctrl: "Masker N95 / FFP2, Kacamata Goggles", date: "2024-05-20" },
-        { act: "Pemotongan Plat Baja dengan Plasma", hazard: "Radiasi UV & radiasi termal", risk: "Tinggi", ctrl: "Tabir Pelindung Las, Apron Kulit", date: "2024-05-21" },
-        { act: "Pembersihan Lumut di Cooling Tower", hazard: "Permukaan licin & ketinggian", risk: "Sedang", ctrl: "Sepatu Karet Bergerigi, Tali Pengaman Lifeline", date: "2024-05-22" },
-        { act: "Pengangkutan Tabung Oksigen & Asetilen", hazard: "Tabung terguling / katup bocor", risk: "Tinggi", ctrl: "Troli Rantai Khusus Tabung, Cap Pelindung Katup", date: "2024-05-23" },
-        { act: "Pemberian Pakan Kimia Water Treatment", hazard: "Cipratan bahan cair basa kuat", risk: "Sedang", ctrl: "Face Shield Utuh, Jas Lab Kimiawi", date: "2024-05-24" },
-        { act: "Pemeriksaan Lampu Penerangan Pabrik", hazard: "Menggunakan tangga lipat aluminium", risk: "Rendah", ctrl: "Pengawasan 2 Orang (1 Orang Memegangi Tangga)", date: "2024-05-25" },
-        { act: "Kalibrasi Instrumen Pengukur Tekanan", hazard: "Paparan fluida bertekanan", risk: "Sedang", ctrl: "Depressurizing Total Sebelum Pelepasan Sensor", date: "2024-05-26" }
-      ];
-      return activities.map((item, index) => ({
-        id: 'hiradc-' + (index + 1),
-        code: `HRA-2024-${String(index + 1).padStart(3, '0')}`,
-        activity: item.act,
-        hazard: item.hazard,
-        level: item.risk,
-        control: item.ctrl,
-        date: item.date,
-        isDemo: true
-      }));
-    }
-
-    function initRcaData() {
-      const descriptions = [
-        { desc: "Trip breaker genset utama menyebabkan padam site mendadak", sev: "Kritis", rc: "Relai proteksi kelebihan beban aus tanpa kalibrasi rutin", act: "Ganti relai baru & jadwalkan preventif tiap 3 bulan", pic: "Tim Elektrikal", st: "Closed", loc: "Powerhouse Genset", rep: "Budi Santoso", date: "2024-05-02" },
-        { desc: "Tumpahan oli hidrolik crane seluas 4m2 di dermaga pelabuhan", sev: "Mayor", rc: "Selang hidrolik bergesekan dengan sasis hingga pecah", act: "Pasang spiral guard selang & bersihkan tumpahan", pic: "Maintenance Dermaga", st: "Closed", loc: "Dermaga Jetty 1", rep: "Ahmad Fauzi", date: "2024-05-04" },
-        { desc: "Kabel gerinda tangan terkelupas tanpa pembungkus insulasi", sev: "Moderat", rc: "Inspeksi bulanan alat portabel terlewat", act: "Tarik alat dari lapangan dan re-tagging kelistrikan", pic: "Safety Officer Site", st: "Closed", loc: "Workshop Fabrikasi", rep: "Davi Adhimukti", date: "2024-05-05" },
-        { desc: "Penyimpanan APAR terhalang tumpukan palet kayu", sev: "Minor", rc: "Housekeeping vendor gudang tidak disiplin 5S", act: "Pembersihan jalur dan sosialisasi batas demarkasi", pic: "Gudang Logistik", st: "Closed", loc: "Warehouse Bahan Baku", rep: "Siti Rahma", date: "2024-05-07" },
-        { desc: "Pekerja tidak mengaitkan lanyard saat berada di platform 4 meter", sev: "Mayor", rc: "Titik anchor tetap sulit dijangkau pekerja", act: "Instalasi horizontal lifeline kawat baja permanen", pic: "Konstruksi Sipil", st: "In Progress", loc: "Area Tangki T-102", rep: "Davi Adhimukti", date: "2024-05-09" },
-        { desc: "Sensor deteksi kebocoran gas metana error saat uji coba", sev: "Kritis", rc: "Sensor teracuni senyawa silikon atmosferik", act: "Penggantian modul sensor infrared tahan racun", pic: "Tim Instrumentasi", st: "Open", loc: "Stasiun Gas Metering", rep: "Hendra Gunawan", date: "2024-05-11" },
-        { desc: "Kacamata pelindung safety tergores berat dan tetap digunakan", sev: "Minor", rc: "Stok APD kacamata cadangan di gudang habis", act: "Pengadaan rutin stok minimal 50 pcs", pic: "Logistik K3", st: "Closed", loc: "Workshop Bubut", rep: "Budi Santoso", date: "2024-05-13" },
-        { desc: "Ventilasi udara ruangan baterai aki UPS tidak berfungsi", sev: "Moderat", rc: "Exhaust fan mati karena motor terbakar", act: "Ganti exhaust fan tipe explosion proof", pic: "Mekanikal Fasilitas", st: "In Progress", loc: "Ruang UPS Control Room", rep: "Ahmad Fauzi", date: "2024-05-14" },
-        { desc: "Tutup botol larutan asam laboratorium tidak tersegel rapat", sev: "Moderat", rc: "Tutup botol drat pecah namun belum diganti", act: "Ganti kontainer kaca berstandar reagent", pic: "Analis Lab K3", st: "Closed", loc: "Laboratorium Uji Air", rep: "Siti Rahma", date: "2024-05-16" },
-        { desc: "Pintu darurat tangga timur gedung tertutup gembok ilegal", sev: "Mayor", rc: "Pihak sekuriti mengunci demi keamanan pencurian", act: "Pasang panic bar dan door contact alarm otomatis", pic: "Dept Sekuriti & HSSE", st: "Closed", loc: "Gedung Kantor Pusat Lt 2", rep: "Davi Adhimukti", date: "2024-05-17" },
-        { desc: "Tanda bahaya tegangan tinggi lepas dari pintu panel trafo", sev: "Minor", rc: "Perekat signage lapuk karena panas luar ruangan", act: "Ganti plat aluminium rivet permanen", pic: "Divisi Listrik", st: "Closed", loc: "Yard Trafo Utama", rep: "Budi Santoso", date: "2024-05-18" },
-        { desc: "Pengikatan sling pipa baja tidak seimbang saat diangkat", sev: "Mayor", rc: "Rigger belum tersertifikasi migas/kemnaker", act: "Wajibkan rigger bersertifikat & toolbox meeting", pic: "Pengawas Lifting", st: "In Progress", loc: "Laydown Area Pipa", rep: "Ahmad Fauzi", date: "2024-05-19" },
-        { desc: "Lampu penerangan jalan inspeksi mati 3 unit berturut-turut", sev: "Minor", rc: "Lampu jalan kemasukan air hujan", act: "Ganti kap lampu waterproof IP66", pic: "Maintenance Sipil", st: "Closed", loc: "Jalan Perimeter Selatan", rep: "Siti Rahma", date: "2024-05-20" },
-        { desc: "Jalur evakuasi terhalang drum bahan baku sementara", sev: "Moderat", rc: "Kapasitas tempat bongkar muat sementara penuh", act: "Relokasi drop zone muatan ke zona barat", pic: "Logistik Lapangan", st: "Open", loc: "Koridor Produksi Timur", rep: "Davi Adhimukti", date: "2024-05-21" },
-        { desc: "Kegagalan fungsi katup pelepas tekanan di boiler cadangan", sev: "Kritis", rc: "Pegas katup terkorosi oleh uap asam sulfat", act: "Overhaul dan uji sertifikasi ulang Disnaker", pic: "Engineer Boiler", st: "In Progress", loc: "Boiler House", rep: "Budi Santoso", date: "2024-05-22" },
-        { desc: "Sarung tangan tahan panas aus dan robek pada bagian ibu jari", sev: "Minor", rc: "Masa pakai melebihi 6 bulan kerja terus menerus", act: "Buat jadwal ganti berkala APD setiap 3 bulan", pic: "Supervisor Las", st: "Closed", loc: "Workshop Pengelasan", rep: "Ahmad Fauzi", date: "2024-05-23" },
-        { desc: "Eye-wash station darurat bertekanan air lemah saat diuji", sev: "Moderat", rc: "Kerak pipa galvanis menyumbat filter nozzle", act: "Flushing pipa dan ganti pipa stainless steel", pic: "Plumbing Utility", st: "Closed", loc: "Area Pengisian Kimia", rep: "Siti Rahma", date: "2024-05-24" },
-        { desc: "Kadar karbon monoksida ruangan genset melebihi batas ambang aman", sev: "Mayor", rc: "Pipa knalpot pembuangan mengalami retak mikro", act: "Pengelasan ulang sambungan flange knalpot", pic: "Mekanik Genset", st: "In Progress", loc: "Ruang Genset Barat", rep: "Davi Adhimukti", date: "2024-05-25" }
-      ];
-      return descriptions.map((item, index) => ({
-        id: 'rca-' + (index + 1),
-        caseNo: `RCA-SEN-2024-${String(index + 1).padStart(3, '0')}`,
-        finding: item.desc,
-        severity: item.sev,
-        rootCause: item.rc,
-        action: item.act,
-        pic: item.pic,
-        status: item.st,
-        location: item.loc,
-        reporter: item.rep,
-        date: item.date,
-        indicator: 'Kondisi Tidak Aman (Unsafe Condition)',
-        behaviorCategory: 'Unsafe Condition',
-        isValidated: true,
-        isDemo: true
-      }));
-    }
-
-    function initFindingsData() {
-      return [
-        {
-          id: 'find-1',
-          code: 'LAP-K3L-001',
-          date: '2024-05-20',
-          location: 'Area Fabrikasi Workshop 2',
-          reporter: 'Davi Adhimukti',
-          dept: 'Engineering & Design',
-          description: 'Ditemukan kabel power mesin bor duduk terkelupas dan bersentuhan dengan meja besi kerja.',
-          recommendation: 'Segera lakukan isolasi standar kelistrikan dan pasang grounding pengaman.',
-          photo: '',
-          status: 'Menunggu Validasi',
-          feedback: ''
-        },
-        {
-          id: 'find-2',
-          code: 'LAP-K3L-002',
-          date: '2024-05-19',
-          location: 'Gudang Kimia Samping',
-          reporter: 'Budi Santoso',
-          dept: 'Operasi Lapangan',
-          description: 'Spill kit tidak memiliki pasir penyerap dan bantalan absorben kotor belum diganti.',
-          recommendation: 'Restok kelengkapan spill kit sebelum penerimaan pelumas baru.',
-          photo: '',
-          status: 'Tervalidasi',
-          feedback: 'Temuan valid. Diteruskan ke pengelolaan perbaikan gudang.'
-        }
-      ];
-    }
-
-    function setupDatabase() {
+    function initDatabase() {
       if (!localStorage.getItem(STORAGE_KEYS.SOPS)) {
-        localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify(initSopData()));
+        localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify([
+          { id: 'sop-1', code: 'SOP-HSSE-001', title: 'Izin Kerja Aman (Permit to Work)', category: 'Keselamatan Kerja', rev: 'Rev 01', date: '2024-05-15' },
+          { id: 'sop-2', code: 'SOP-HSSE-002', title: 'Bekerja di Ketinggian (Working at Height)', category: 'Keselamatan Kerja', rev: 'Rev 01', date: '2024-05-15' },
+          { id: 'sop-3', code: 'SOP-HSSE-003', title: 'Inspeksi APAR dan Kendaraan Operasional', category: 'Operasional Lapangan', rev: 'Rev 01', date: '2024-05-15' }
+        ]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.HIRADC)) {
-        localStorage.setItem(STORAGE_KEYS.HIRADC, JSON.stringify(initHiradcData()));
-      }
-      if (!localStorage.getItem(STORAGE_KEYS.RCA)) {
-        localStorage.setItem(STORAGE_KEYS.RCA, JSON.stringify(initRcaData()));
-      }
-      if (!localStorage.getItem(STORAGE_KEYS.FINDINGS)) {
-        localStorage.setItem(STORAGE_KEYS.FINDINGS, JSON.stringify(initFindingsData()));
-      }
-      if (!localStorage.getItem(STORAGE_KEYS.DOC_REQS)) {
-        localStorage.setItem(STORAGE_KEYS.DOC_REQS, JSON.stringify([
-          {
-            id: 'doc-1',
-            reqCode: 'REQ-DOC-001',
-            sopId: 'sop-1',
-            sopTitle: 'Izin Kerja Aman (Permit to Work)',
-            requester: 'Davi Adhimukti',
-            dept: 'Engineering & Design',
-            purpose: 'Persiapan audit pihak ketiga',
-            date: '2024-05-18',
-            status: 'Menunggu Persetujuan'
-          }
+        localStorage.setItem(STORAGE_KEYS.HIRADC, JSON.stringify([
+          { id: 'h-1', code: 'HRA-001', activity: 'Pengelasan Pipa Gas', hazard: 'Percikan api & ledakan gas', level: 'Ekstrem', control: 'Hot Work Permit, APAR Siaga', date: '2024-05-02' },
+          { id: 'h-2', code: 'HRA-002', activity: 'Bekerja Ketinggian 15m', hazard: 'Jatuh dari perancah', level: 'Tinggi', control: 'Full Body Harness Double Lanyard', date: '2024-05-03' }
         ]));
       }
-      if (!localStorage.getItem(STORAGE_KEYS.APD_REQS)) {
-        localStorage.setItem(STORAGE_KEYS.APD_REQS, JSON.stringify([
-          {
-            id: 'apd-1',
-            reqCode: 'REQ-APD-001',
-            requester: 'Davi Adhimukti',
-            nip: '1020123002',
-            dept: 'Engineering & Design',
-            duration: 2,
-            items: ['Safety Helmet', 'Safety Shoes'],
-            purpose: 'Site visit inspeksi pipa transmisi gas area Bogor',
-            date: '2024-05-19',
-            status: 'Menunggu Persetujuan'
-          }
+      if (!localStorage.getItem(STORAGE_KEYS.RCA)) {
+        localStorage.setItem(STORAGE_KEYS.RCA, JSON.stringify([
+          { id: 'r-1', caseNo: 'RCA-001', finding: 'Tekanan APAR koridor utama turun', severity: 'Minor', rootCause: 'Seal pin bocor halus', action: 'Ganti seal & isi ulang', pic: 'Tim HSSE', status: 'Closed', location: 'Koridor Utama', reporter: 'Admin HSSE', date: '2024-05-02', isValidated: true },
+          { id: 'r-2', caseNo: 'RCA-002', finding: 'Lampu sein mobil operasional mati', severity: 'Moderat', rootCause: 'Sekring putus', action: 'Ganti sekring baru', pic: 'Logistik', status: 'Closed', location: 'Pool Kendaraan', reporter: 'Admin HSSE', date: '2024-05-04', isValidated: true }
+        ]));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.APAR)) {
+        localStorage.setItem(STORAGE_KEYS.APAR, JSON.stringify([
+          { id: 'apar-1', date: '2024-05-20', code: 'APAR-GD1-01', location: 'Lantai 1 Koridor Timur', condition: 'Baik', notes: 'Tekanan hijau, segel utuh.', status: 'Selesai', inspector: 'Unit HSSE (Admin)' },
+          { id: 'apar-2', date: '2024-05-21', code: 'APAR-WS-02', location: 'Workshop Fabrikasi', condition: 'Tidak Baik', notes: 'Jarum berada di area merah.', status: 'Proses', inspector: 'Unit HSSE (Admin)' }
+        ]));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.KENDARAAN)) {
+        localStorage.setItem(STORAGE_KEYS.KENDARAAN, JSON.stringify([
+          { id: 'kdr-1', date: '2024-05-20', nopol: 'B 1024 SEN', type: 'Toyota Hilux 4x4', condition: 'Baik', notes: 'Kondisi prima siap operasional.', status: 'Selesai', inspector: 'Unit HSSE (Admin)' },
+          { id: 'kdr-2', date: '2024-05-22', nopol: 'B 2419 SEN', type: 'Blind Van Logistik', condition: 'Tidak Baik', notes: 'Ban cadangan kempes, wiper aus.', status: 'Belum', inspector: 'Unit HSSE (Admin)' }
         ]));
       }
     }
-    setupDatabase();
+    initDatabase();
 
-    /* -------------------------------------------------------------
-       2. AUTH MANAGEMENT
-       ------------------------------------------------------------- */
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
     let currentActiveMenu = 'dashboard';
-    let rekapActiveTab = 'rca'; // 'rca' atau 'hiradc'
 
-    function handleAuthSubmit(event) {
-      event.preventDefault();
+    function getApar() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.APAR)) || []; }
+    function setApar(d) { localStorage.setItem(STORAGE_KEYS.APAR, JSON.stringify(d)); }
+    function getKendaraan() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.KENDARAAN)) || []; }
+    function setKendaraan(d) { localStorage.setItem(STORAGE_KEYS.KENDARAAN, JSON.stringify(d)); }
+    function getSops() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.SOPS)) || []; }
+    function setSops(d) { localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify(d)); }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
       const u = document.getElementById('login-username').value.trim();
       const p = document.getElementById('login-password').value.trim();
       const errorBox = document.getElementById('login-error');
-      const errorText = document.getElementById('login-error-text');
-      errorBox.classList.add('hidden');
 
       if (u === 'HSSEADMIN' && p === 'hsse123') {
-        currentUser = {
-          role: 'hsse',
-          userName: 'Unit HSSE (Admin)',
-          department: 'Divisi K3 & Lingkungan PT SEN',
-          avatar: 'HS'
-        };
+        currentUser = { role: 'hsse', userName: 'Unit HSSE (Admin)', department: 'Divisi K3 & Lingkungan PT SEN', avatar: 'HS' };
       } else if (u === 'manajemen' && p === 'manajemen123') {
-        currentUser = {
-          role: 'manajemen',
-          userName: 'Direksi Manajemen PT SEN',
-          department: 'Executive Management',
-          avatar: 'MG'
-        };
+        currentUser = { role: 'manajemen', userName: 'Direksi Manajemen PT SEN', department: 'Executive Management', avatar: 'MG' };
       } else if (p === 'hsse123' && u.length > 0 && u !== 'HSSEADMIN') {
-        currentUser = {
-          role: 'karyawan',
-          userName: u,
-          department: 'Engineering & Design',
-          avatar: u.substring(0, 2).toUpperCase()
-        };
+        currentUser = { role: 'karyawan', userName: u, department: 'Operasional Lapangan', avatar: u.substring(0,2).toUpperCase() };
       } else {
-        errorText.innerText = "Username atau password salah! Silakan cek petunjuk login di bawah.";
         errorBox.classList.remove('hidden');
         return;
       }
-
       localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(currentUser));
       document.getElementById('login-modal').classList.add('hidden');
       currentActiveMenu = 'dashboard';
       renderApp();
-      showToast(`Berhasil masuk sebagai ${currentUser.userName}`);
+      showToast(`Selamat datang, ${currentUser.userName}`);
     }
 
     function handleLogout() {
       currentUser = null;
       localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-      document.getElementById('login-username').value = '';
-      document.getElementById('login-password').value = '';
-      document.getElementById('login-error').classList.add('hidden');
       document.getElementById('login-modal').classList.remove('hidden');
     }
 
-    function showToast(message) {
+    function showToast(msg) {
       const toast = document.getElementById('toast');
-      document.getElementById('toast-msg').innerText = message;
+      document.getElementById('toast-msg').innerText = msg;
       toast.classList.remove('translate-y-[-150%]', 'opacity-0');
-      setTimeout(() => {
-        toast.classList.add('translate-y-[-150%]', 'opacity-0');
-      }, 3000);
+      setTimeout(() => toast.classList.add('translate-y-[-150%]', 'opacity-0'), 3000);
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-      document.getElementById(id).classList.remove('flex');
-    }
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
 
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-      document.getElementById(id).classList.add('flex');
-    }
-
-    // Getters & Setters
-    function getSops() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.SOPS)) || []; }
-    function setSops(data) { localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify(data)); }
-    function getHiradc() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.HIRADC)) || []; }
-    function setHiradc(data) { localStorage.setItem(STORAGE_KEYS.HIRADC, JSON.stringify(data)); }
-    function getRca() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.RCA)) || []; }
-    function setRca(data) { localStorage.setItem(STORAGE_KEYS.RCA, JSON.stringify(data)); }
-    function getDocRequests() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.DOC_REQS)) || []; }
-    function setDocRequests(data) { localStorage.setItem(STORAGE_KEYS.DOC_REQS, JSON.stringify(data)); }
-    function getApdRequests() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.APD_REQS)) || []; }
-    function setApdRequests(data) { localStorage.setItem(STORAGE_KEYS.APD_REQS, JSON.stringify(data)); }
-    function getFindings() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.FINDINGS)) || []; }
-    function setFindings(data) { localStorage.setItem(STORAGE_KEYS.FINDINGS, JSON.stringify(data)); }
-
-    /* -------------------------------------------------------------
-       3. DOWNLOAD NYATA DOKUMEN SOP
-       ------------------------------------------------------------- */
-    function downloadSopFile(sopId) {
-      const sops = getSops();
-      const sop = sops.find(s => s.id === sopId);
-      if (!sop) {
-        showToast("Dokumen tidak ditemukan!");
-        return;
-      }
-
-      if (sop.fileDataUrl) {
-        const a = document.createElement('a');
-        a.href = sop.fileDataUrl;
-        a.download = sop.fileName || `${sop.code}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showToast(`Mengunduh berkas: ${sop.fileName}`);
-      } else {
-        const text = sop.fileContent || `PT SOLUSI ENERGY NUSANTARA\nNOMOR: ${sop.code}\nJUDUL: ${sop.title}\nKATEGORI: ${sop.category}\nSTATUS: Dokumen Resmi Terverifikasi`;
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${sop.code}_${sop.title.replace(/[\/\\?%*:|"<>]/g, '_')}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showToast(`Mengunduh berkas resmi: ${sop.code}.txt`);
-      }
-    }
-
-    /* -------------------------------------------------------------
-       4. NAVIGASI SIDEBAR
-       ------------------------------------------------------------- */
     function renderSidebar() {
       if (!currentUser) return;
-      const menuContainer = document.getElementById('sidebar-menu');
       document.getElementById('sidebar-role-label').innerHTML = `
         <span class="inline-block w-2.5 h-2.5 rounded-full ${currentUser.role === 'hsse' ? 'bg-blue-600' : currentUser.role === 'manajemen' ? 'bg-emerald-600' : 'bg-amber-600'}"></span>
         <span class="truncate">${currentUser.role === 'hsse' ? 'Unit HSSE (Admin)' : currentUser.role === 'manajemen' ? 'Manajemen' : 'Karyawan'}</span>
@@ -680,61 +394,66 @@
       document.getElementById('user-display-dept').innerText = currentUser.department;
       document.getElementById('user-avatar').innerText = currentUser.avatar;
 
-      let menuItems = [];
-      if (currentUser.role === 'hsse') {
-        menuItems = [
-          { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
-          { id: 'rekap-laporan', label: 'Rekap Laporan', icon: 'file-spreadsheet' },
-          { id: 'dokumen-sop', label: 'Dokumen SOP', icon: 'file-text' },
-          { id: 'permintaan-dokumen', label: 'Permintaan Dokumen', icon: 'clipboard-list' },
-          { id: 'peminjaman-apd', label: 'Peminjaman APD', icon: 'hard-hat' },
-          { id: 'validasi-temuan', label: 'Validasi Temuan', icon: 'check-square' },
-          { id: 'kelola-hiradc', label: 'Pengelolaan HIRADC', icon: 'alert-triangle' },
-          { id: 'kelola-rca', label: 'Pengelolaan RCA', icon: 'search-check' },
-        ];
-      } else if (currentUser.role === 'manajemen') {
-        menuItems = [
-          { id: 'dashboard', label: 'Dashboard Monitoring', icon: 'bar-chart-3' },
-          { id: 'rekap-laporan', label: 'Rekap Laporan', icon: 'file-spreadsheet' },
-        ];
-      } else if (currentUser.role === 'karyawan') {
-        menuItems = [
-          { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
-          { id: 'lapor-temuan', label: 'Lapor Temuan K3L', icon: 'camera' },
-          { id: 'dokumen-sop', label: 'Dokumen SOP', icon: 'book-open' },
-          { id: 'permintaan-dokumen', label: 'Permintaan Dokumen', icon: 'file-plus' },
-          { id: 'peminjaman-apd', label: 'Peminjaman APD', icon: 'shield-alert' },
-        ];
-      }
+      let menuHtml = `
+        <button onclick="switchMenu('dashboard')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+          currentActiveMenu === 'dashboard' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
+        }">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Dashboard</span>
+        </button>
+      `;
 
-      menuContainer.innerHTML = menuItems.map(item => {
-        const isActive = currentActiveMenu === item.id;
-        return `
-          <button onclick="switchMenu('${item.id}')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
-            isActive ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
+      if (currentUser.role === 'hsse') {
+        menuHtml += `
+          <button onclick="switchMenu('dokumen-sop')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+            currentActiveMenu === 'dokumen-sop' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
           }">
-            <i data-lucide="${item.icon}" class="w-4 h-4"></i>
-            <span>${item.label}</span>
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>Dokumen SOP</span>
+          </button>
+
+          <div class="pt-4 mt-2 border-t border-slate-100">
+            <div class="px-3 pb-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+              Inspeksi HSSE
+            </div>
+            <button onclick="switchMenu('inspeksi-apar')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+              currentActiveMenu === 'inspeksi-apar' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
+            }">
+              <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
+              <span>Pemeriksaan APAR</span>
+            </button>
+            <button onclick="switchMenu('inspeksi-kendaraan')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+              currentActiveMenu === 'inspeksi-kendaraan' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
+            }">
+              <i data-lucide="truck" class="w-4 h-4 text-blue-500"></i>
+              <span>Pemeriksaan Kendaraan</span>
+            </button>
+          </div>
+        `;
+      } else if (currentUser.role === 'karyawan') {
+        menuHtml += `
+          <button onclick="switchMenu('dokumen-sop')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+            currentActiveMenu === 'dokumen-sop' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-navy-900'
+          }">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>Katalog Dokumen SOP</span>
           </button>
         `;
-      }).join('');
+      }
 
+      document.getElementById('sidebar-menu').innerHTML = menuHtml;
       lucide.createIcons();
     }
 
     function switchMenu(menuId) {
-      // Pembatasan hak akses Frontend: Karyawan dilarang membuka rekap-laporan
-      if (menuId === 'rekap-laporan' && currentUser.role === 'karyawan') {
-        showToast("Akses ditolak: Menu Rekap Laporan hanya untuk Unit HSSE dan Manajemen.");
+      if ((menuId === 'inspeksi-apar' || menuId === 'inspeksi-kendaraan') && currentUser.role !== 'hsse') {
+        showToast("Akses ditolak: Menu ini khusus Admin Unit HSSE.");
         return;
       }
       currentActiveMenu = menuId;
       renderApp();
     }
 
-    /* -------------------------------------------------------------
-       5. ROUTER DAN RENDER KONTEN
-       ------------------------------------------------------------- */
     function renderApp() {
       if (!currentUser) {
         document.getElementById('login-modal').classList.remove('hidden');
@@ -745,2266 +464,382 @@
       const pageTitle = document.getElementById('page-title');
       const pageSubtitle = document.getElementById('page-subtitle');
 
-      // Set Topbar Titles
       if (currentActiveMenu === 'dashboard') {
         pageTitle.innerText = currentUser.role === 'manajemen' ? 'Dashboard Monitoring Eksekutif' : 'Dashboard Operasional';
         pageSubtitle.innerText = 'Sistem Informasi HSSE & Manajemen Risiko Terpadu';
-      } else if (currentActiveMenu === 'rekap-laporan') {
-        pageTitle.innerText = 'Rekap Laporan & Ekspor Data Excel';
-        pageSubtitle.innerText = 'Pusat rekapitulasi data temuan RCA dan penilaian risiko HIRADC terintegrasi';
-      } else if (currentActiveMenu === 'lapor-temuan') {
-        pageTitle.innerText = 'Pelaporan Temuan Bahaya & Kondisi K3L';
-        pageSubtitle.innerText = 'Laporkan potensi bahaya di area kerja secara real-time ke Unit HSSE';
-      } else if (currentActiveMenu === 'validasi-temuan') {
-        pageTitle.innerText = 'Validasi & Peninjauan Temuan Lapangan';
-        pageSubtitle.innerText = 'Verifikasi laporan temuan karyawan dan eskalasi ke tindakan korektif';
-      } else if (currentActiveMenu === 'kelola-hiradc') {
-        pageTitle.innerText = 'Pengelolaan HIRADC (Hazard Identification & Risk Assessment)';
-        pageSubtitle.innerText = 'Pembaruan matriks risiko dan hierarki pengendalian bahaya pekerjaan';
-      } else if (currentActiveMenu === 'kelola-rca') {
-        pageTitle.innerText = 'Pengelolaan Root Cause Analysis (RCA)';
-        pageSubtitle.innerText = 'Investigasi akar masalah, penugasan PIC, dan pemantauan status tindak lanjut';
+        renderDashboard(content);
+      } else if (currentActiveMenu === 'inspeksi-apar' && currentUser.role === 'hsse') {
+        pageTitle.innerText = 'Pemeriksaan APAR';
+        pageSubtitle.innerText = 'Pencatatan riwayat kondisi dan kelaikan APAR berkala';
+        renderHsseApar(content);
+      } else if (currentActiveMenu === 'inspeksi-kendaraan' && currentUser.role === 'hsse') {
+        pageTitle.innerText = 'Pemeriksaan Kendaraan';
+        pageSubtitle.innerText = 'Pencatatan kelaikan fisik dan keselamatan kendaraan operasional';
+        renderHsseKendaraan(content);
       } else if (currentActiveMenu === 'dokumen-sop') {
         pageTitle.innerText = 'Katalog Dokumen SOP K3L';
         pageSubtitle.innerText = 'Standar Operasional Prosedur PT Solusi Energy Nusantara';
-      } else if (currentActiveMenu === 'permintaan-dokumen') {
-        pageTitle.innerText = 'Permintaan Dokumen SOP';
-        pageSubtitle.innerText = 'Pengajuan dan persetujuan salinan SOP resmi';
-      } else if (currentActiveMenu === 'peminjaman-apd') {
-        pageTitle.innerText = 'Peminjaman Alat Pelindung Diri (APD)';
-        pageSubtitle.innerText = 'Formulir digital peminjaman peralatan keselamatan';
-      }
-
-      // Router View
-      if (currentActiveMenu === 'rekap-laporan') {
-        renderRekapLaporan(content);
-      } else if (currentUser.role === 'hsse') {
-        if (currentActiveMenu === 'dashboard') renderHsseDashboard(content);
-        else if (currentActiveMenu === 'dokumen-sop') renderHsseSop(content);
-        else if (currentActiveMenu === 'permintaan-dokumen') renderHsseDocReq(content);
-        else if (currentActiveMenu === 'peminjaman-apd') renderHsseApdReq(content);
-        else if (currentActiveMenu === 'validasi-temuan') renderHsseValidateFindings(content);
-        else if (currentActiveMenu === 'kelola-hiradc') renderHsseManageHiradc(content);
-        else if (currentActiveMenu === 'kelola-rca') renderHsseManageRca(content);
-      } else if (currentUser.role === 'manajemen') {
-        renderManajemenDashboard(content);
-      } else if (currentUser.role === 'karyawan') {
-        if (currentActiveMenu === 'dashboard') renderKaryawanDashboard(content);
-        else if (currentActiveMenu === 'lapor-temuan') renderKaryawanLaporTemuan(content);
-        else if (currentActiveMenu === 'dokumen-sop') renderKaryawanSop(content);
-        else if (currentActiveMenu === 'permintaan-dokumen') renderKaryawanDocReq(content);
-        else if (currentActiveMenu === 'peminjaman-apd') renderKaryawanApdForm(content);
+        renderSop(content);
       }
       lucide.createIcons();
     }
 
-    /* =============================================================
-       FITUR UTAMA BARU: REKAP LAPORAN & DOWNLOAD EXCEL (RCA & HIRADC)
-       ============================================================= */
-    function setRekapTab(tabName) {
-      rekapActiveTab = tabName;
-      renderApp();
-    }
+    // DASHBOARD DENGAN 4 KARTU RINGKASAN DATA RIIL
+    function renderDashboard(container) {
+      const aparList = getApar();
+      const kdrList = getKendaraan();
 
-    function renderRekapLaporan(container) {
-      const isManajemen = currentUser.role === 'manajemen';
+      const totalApar = aparList.length;
+      const aparTidakBaik = aparList.filter(a => a.condition === 'Tidak Baik').length;
+      const totalKdr = kdrList.length;
+      const kdrTidakBaik = kdrList.filter(k => k.condition === 'Tidak Baik').length;
 
       container.innerHTML = `
-        <!-- Banner Mode Role -->
-        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="flex items-center space-x-3">
-            <div class="p-3 bg-blue-50 text-blue-900 rounded-lg">
-              <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-navy-900 uppercase tracking-wider">Ringkasan Pemeriksaan Lapangan (Real-Time Database)</h3>
+            <span class="text-[11px] text-slate-500">Dihitung otomatis dari hasil inspeksi</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border-l-4 border-blue-600 shadow-sm border border-slate-200">
+              <div class="text-xs font-medium text-slate-500 uppercase">Total Pemeriksaan APAR</div>
+              <div class="text-3xl font-extrabold text-navy-900 mt-2">${totalApar}</div>
+              <div class="text-[11px] text-slate-400 mt-1">Total riwayat tercatat</div>
             </div>
-            <div>
-              <h3 class="font-bold text-navy-900 text-sm">Modul Ekspor Laporan Resmi K3L (Excel .xlsx)</h3>
-              <p class="text-xs text-slate-500">
-                ${isManajemen ? 'Mode Monitoring Manajemen: Hanya data tervalidasi yang ditampilkan dan dapat diekspor.' : 'Mode Unit HSSE: Akses penuh rekapitulasi data operasional K3L.'}
-              </p>
+
+            <div class="bg-white p-5 rounded-xl border-l-4 border-red-500 shadow-sm border border-slate-200">
+              <div class="text-xs font-medium text-slate-500 uppercase">APAR Kondisi Tidak Baik</div>
+              <div class="text-3xl font-extrabold text-red-600 mt-2">${aparTidakBaik}</div>
+              <div class="text-[11px] text-slate-400 mt-1">Perlu perbaikan / isi ulang</div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border-l-4 border-indigo-600 shadow-sm border border-slate-200">
+              <div class="text-xs font-medium text-slate-500 uppercase">Total Pemeriksaan Kendaraan</div>
+              <div class="text-3xl font-extrabold text-navy-900 mt-2">${totalKdr}</div>
+              <div class="text-[11px] text-slate-400 mt-1">Total riwayat tercatat</div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border-l-4 border-amber-500 shadow-sm border border-slate-200">
+              <div class="text-xs font-medium text-slate-500 uppercase">Kendaraan Tidak Baik</div>
+              <div class="text-3xl font-extrabold text-amber-600 mt-2">${kdrTidakBaik}</div>
+              <div class="text-[11px] text-slate-400 mt-1">Perlu perawatan armada</div>
             </div>
           </div>
-          <div class="flex items-center space-x-2">
-            <span class="px-2.5 py-1 text-xs font-semibold rounded-md ${isManajemen ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-blue-50 text-blue-900 border border-blue-200'}">
-              Role: ${currentUser.userName}
-            </span>
-          </div>
-        </div>
 
-        <!-- Navigasi Tab: Rekap RCA & Rekap HIRADC -->
-        <div class="bg-white rounded-xl border border-slate-200 p-2 shadow-sm flex space-x-2">
-          <button onclick="setRekapTab('rca')" class="flex-1 py-2.5 px-4 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-2 ${
-            rekapActiveTab === 'rca' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }">
-            <i data-lucide="search-check" class="w-4 h-4"></i>
-            <span>Tab A: Rekap Temuan RCA</span>
-          </button>
-          <button onclick="setRekapTab('hiradc')" class="flex-1 py-2.5 px-4 text-xs font-bold rounded-lg transition flex items-center justify-center space-x-2 ${
-            rekapActiveTab === 'hiradc' ? 'bg-navy-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }">
-            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-            <span>Tab B: Rekap Matriks HIRADC</span>
-          </button>
-        </div>
-
-        <!-- Wadah Konten Tab Aktif -->
-        <div id="rekap-tab-content">
-          ${rekapActiveTab === 'rca' ? renderRekapRcaTabHtml() : renderRekapHiradcTabHtml()}
+          ${currentUser.role === 'manajemen' ? `
+            <div class="bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-xs flex items-center space-x-3">
+              <i data-lucide="info" class="w-5 h-5 shrink-0 text-blue-600"></i>
+              <span><strong>Akses Manajemen:</strong> Anda dapat memantau ringkasan hasil pemeriksaan secara berkala (Read-Only). Manipulasi data dilakukan oleh Admin Unit HSSE.</span>
+            </div>
+          ` : ''}
         </div>
       `;
-
-      // Eksekusi filter awal untuk render tabel
-      if (rekapActiveTab === 'rca') {
-        filterRcaTable();
-      } else {
-        filterHiradcTable();
-      }
     }
 
-    /* --- TAB A: REKAP RCA --- */
-    function renderRekapRcaTabHtml() {
-      return `
-        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+    // HALAMAN PEMERIKSAAN APAR
+    let searchAparText = '';
+    let filterAparDateVal = '';
+
+    function renderHsseApar(container) {
+      const data = getApar().filter(a => {
+        const matchSearch = a.code.toLowerCase().includes(searchAparText.toLowerCase()) || a.location.toLowerCase().includes(searchAparText.toLowerCase());
+        const matchDate = !filterAparDateVal || a.date === filterAparDateVal;
+        return matchSearch && matchDate;
+      });
+
+      container.innerHTML = `
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
-              <h4 class="font-bold text-navy-900 text-base">Filter & Rekapitulasi Data RCA</h4>
-              <p class="text-xs text-slate-500">Sesuaikan filter untuk menyaring temuan sebelum melakukan download file Excel.</p>
+              <h3 class="font-bold text-navy-900 text-base">Riwayat Pemeriksaan APAR</h3>
+              <p class="text-xs text-slate-500">Pencatatan dan inspeksi berkala APAR PT Solusi Energy Nusantara</p>
             </div>
-            <!-- Tombol Download Excel -->
-            <div class="flex items-center space-x-2">
-              <button onclick="exportRcaExcel()" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition shadow-sm">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                <span>Download Excel (.xlsx)</span>
-              </button>
-            </div>
+            <button onclick="openAparModal()" class="bg-navy-900 hover:bg-navy-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm inline-flex items-center space-x-1">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Pemeriksaan APAR</span>
+            </button>
           </div>
 
-          <!-- Baris Kontrol Filter RCA -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
-            <!-- 1. Pencarian -->
-            <div class="lg:col-span-1">
-              <label class="block font-semibold text-slate-700 mb-1">Cari Lokasi / Temuan</label>
-              <input type="text" id="rca-filter-search" oninput="filterRcaTable()" placeholder="Ketik kata kunci..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-            </div>
-            <!-- 2. Periode Mulai -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Periode Dari</label>
-              <input type="date" id="rca-filter-start" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-            </div>
-            <!-- 3. Periode Selesai -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Periode Sampai</label>
-              <input type="date" id="rca-filter-end" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-            </div>
-            <!-- 4. Severity -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Tingkat Severity</label>
-              <select id="rca-filter-severity" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-                <option value="Semua">Semua Severity</option>
-                <option value="Minor">Minor</option>
-                <option value="Moderat">Moderat</option>
-                <option value="Mayor">Mayor</option>
-                <option value="Kritis">Kritis</option>
-              </select>
-            </div>
-            <!-- 5. Status Tindak Lanjut -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Status Tindak Lanjut</label>
-              <select id="rca-filter-status" onchange="filterRcaTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-                <option value="Semua">Semua Status</option>
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Closed">Closed</option>
-              </select>
-            </div>
+          <div class="flex flex-wrap gap-3 bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+            <input type="text" placeholder="Cari Kode atau Lokasi..." value="${searchAparText}" oninput="searchAparText = this.value; renderHsseApar(document.getElementById('main-content'))" class="px-3 py-2 border rounded-md bg-white w-56">
+            <input type="date" value="${filterAparDateVal}" onchange="filterAparDateVal = this.value; renderHsseApar(document.getElementById('main-content'))" class="px-3 py-2 border rounded-md bg-white">
+            ${filterAparDateVal ? `<button onclick="filterAparDateVal = ''; renderHsseApar(document.getElementById('main-content'))" class="text-rose-600 underline">Reset Tanggal</button>` : ''}
           </div>
 
-          <!-- Baris Status Filter & Reset & Pilihan Format -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-3">
-            <div class="flex items-center space-x-3">
-              <span id="rca-filter-count" class="font-semibold text-navy-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
-                Memuat data...
-              </span>
-              <button onclick="resetRcaFilter()" class="text-rose-600 hover:underline font-medium inline-flex items-center space-x-1">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                <span>Hapus Filter</span>
-              </button>
-            </div>
-
-            <!-- Arsitektur Format Excel Perusahaan (Sesuai Ketentuan 8) -->
-            <div class="flex items-center space-x-2">
-              <span class="text-slate-500 font-medium">Format Output Excel:</span>
-              <select id="rca-export-format" class="px-2.5 py-1 border border-slate-300 rounded text-xs bg-white text-slate-700 font-medium focus:outline-none">
-                <option value="sederhana" selected>1. Rekap Excel Sederhana (Aktif)</option>
-                <option value="perusahaan" disabled>2. Format Standar Perusahaan (Segera Hadir / Tahap 2)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Tabel Data Hasil Filter RCA -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">No. Kasus</th>
                   <th class="p-3">Tanggal</th>
+                  <th class="p-3">Kode APAR</th>
                   <th class="p-3">Lokasi</th>
-                  <th class="p-3">Pelapor</th>
-                  <th class="p-3">Rincian Temuan</th>
-                  <th class="p-3 text-center">Severity</th>
-                  <th class="p-3">PIC</th>
-                  <th class="p-3 text-center">Status</th>
+                  <th class="p-3 text-center">Kondisi</th>
+                  <th class="p-3 text-center">Status TL</th>
+                  <th class="p-3">Pemeriksa</th>
+                  <th class="p-3">Catatan</th>
+                  <th class="p-3 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="rca-table-body" class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100">
+                ${data.length ? data.map(a => `
+                  <tr class="hover:bg-slate-50/80 transition">
+                    <td class="p-3 whitespace-nowrap text-slate-500">${a.date}</td>
+                    <td class="p-3 font-semibold text-navy-900">${a.code}</td>
+                    <td class="p-3 text-slate-800">${a.location}</td>
+                    <td class="p-3 text-center">
+                      <span class="px-2.5 py-1 rounded text-[10px] font-bold ${a.condition === 'Baik' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                        ${a.condition}
+                      </span>
+                    </td>
+                    <td class="p-3 text-center">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 border text-slate-700">${a.status}</span>
+                    </td>
+                    <td class="p-3 text-slate-600">${a.inspector}</td>
+                    <td class="p-3 text-slate-500 max-w-xs truncate" title="${a.notes || '-'}">${a.notes || '-'}</td>
+                    <td class="p-3 text-center space-x-2">
+                      <button onclick="editApar('${a.id}')" class="text-blue-600 hover:underline">Edit</button>
+                      <button onclick="deleteApar('${a.id}')" class="text-red-600 hover:underline">Hapus</button>
+                    </td>
+                  </tr>
+                `).join('') : `<tr><td colspan="8" class="text-center py-6 text-slate-400">Belum ada data pemeriksaan APAR.</td></tr>`}
               </tbody>
             </table>
           </div>
         </div>
       `;
-    }
-
-    let filteredRcaCache = [];
-
-    function filterRcaTable() {
-      const search = (document.getElementById('rca-filter-search')?.value || '').toLowerCase();
-      const start = document.getElementById('rca-filter-start')?.value;
-      const end = document.getElementById('rca-filter-end')?.value;
-      const sev = document.getElementById('rca-filter-severity')?.value || 'Semua';
-      const st = document.getElementById('rca-filter-status')?.value || 'Semua';
-
-      let data = getRca();
-
-      // Manajemen hanya melihat data yang telah tervalidasi
-      if (currentUser.role === 'manajemen') {
-        data = data.filter(r => r.isValidated !== false);
-      }
-
-      filteredRcaCache = data.filter(r => {
-        const matchSearch = (r.finding || '').toLowerCase().includes(search) ||
-                            (r.location || '').toLowerCase().includes(search) ||
-                            (r.caseNo || '').toLowerCase().includes(search) ||
-                            (r.reporter || '').toLowerCase().includes(search);
-
-        const matchSev = (sev === 'Semua') || (r.severity === sev);
-        const matchSt = (st === 'Semua') || ((r.status || 'Open') === st);
-
-        let matchDate = true;
-        if (start && r.date) matchDate = matchDate && (r.date >= start);
-        if (end && r.date) matchDate = matchDate && (r.date <= end);
-
-        return matchSearch && matchSev && matchSt && matchDate;
-      });
-
-      const countEl = document.getElementById('rca-filter-count');
-      if (countEl) countEl.innerText = `Menampilkan ${filteredRcaCache.length} dari ${data.length} temuan RCA`;
-
-      const tbody = document.getElementById('rca-table-body');
-      if (!tbody) return;
-
-      if (filteredRcaCache.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">Tidak ada data temuan RCA yang sesuai dengan filter.</td></tr>`;
-      } else {
-        tbody.innerHTML = filteredRcaCache.map(r => `
-          <tr class="hover:bg-slate-50/80 transition">
-            <td class="p-3 font-mono font-semibold text-slate-700">${r.caseNo}</td>
-            <td class="p-3 text-slate-500 whitespace-nowrap">${r.date || '-'}</td>
-            <td class="p-3 font-medium text-slate-800">${r.location || 'Area Lapangan'}</td>
-            <td class="p-3 text-slate-600">${r.reporter || 'Tim HSSE'}</td>
-            <td class="p-3 text-slate-700 max-w-xs truncate" title="${r.finding}">${r.finding}</td>
-            <td class="p-3 text-center">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                r.severity === 'Kritis' ? 'bg-red-100 text-red-800' :
-                r.severity === 'Mayor' ? 'bg-amber-100 text-amber-800' :
-                r.severity === 'Moderat' ? 'bg-blue-100 text-blue-800' :
-                'bg-emerald-100 text-emerald-800'
-              }">${r.severity}</span>
-            </td>
-            <td class="p-3 text-slate-800 font-medium">${r.pic || '-'}</td>
-            <td class="p-3 text-center">
-              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                r.status === 'Closed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                r.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                'bg-rose-50 text-rose-700 border border-rose-200'
-              }">${r.status || 'Open'}</span>
-            </td>
-          </tr>
-        `).join('');
-      }
       lucide.createIcons();
     }
 
-    function resetRcaFilter() {
-      const s = document.getElementById('rca-filter-search'); if (s) s.value = '';
-      const st = document.getElementById('rca-filter-start'); if (st) st.value = '';
-      const en = document.getElementById('rca-filter-end'); if (en) en.value = '';
-      const sv = document.getElementById('rca-filter-severity'); if (sv) sv.value = 'Semua';
-      const sta = document.getElementById('rca-filter-status'); if (sta) sta.value = 'Semua';
-      filterRcaTable();
+    function openAparModal(id = null) {
+      document.getElementById('apar-form').reset();
+      document.getElementById('apar-id').value = id || '';
+      document.getElementById('apar-inspector').value = currentUser.userName;
+      document.getElementById('apar-date').value = new Date().toISOString().split('T')[0];
+
+      if (id) {
+        const item = getApar().find(a => a.id === id);
+        if (item) {
+          document.getElementById('apar-modal-title').innerText = 'Edit Pemeriksaan APAR';
+          document.getElementById('apar-date').value = item.date;
+          document.getElementById('apar-code').value = item.code;
+          document.getElementById('apar-location').value = item.location;
+          document.getElementById('apar-condition').value = item.condition;
+          document.getElementById('apar-status').value = item.status;
+          document.getElementById('apar-notes').value = item.notes || '';
+        }
+      } else {
+        document.getElementById('apar-modal-title').innerText = 'Tambah Pemeriksaan APAR';
+      }
+      openModal('apar-modal');
     }
 
-    /* --- EKSPOR EXCEL RCA (Format Sederhana Lengkap 12 Kolom) --- */
-    function exportRcaExcel() {
-      if (!filteredRcaCache || filteredRcaCache.length === 0) {
-        alert("Tidak ada data yang tersedia untuk diekspor.");
-        return;
+    function editApar(id) { openAparModal(id); }
+
+    function saveApar(e) {
+      e.preventDefault();
+      const id = document.getElementById('apar-id').value;
+      const record = {
+        id: id || 'apar-' + Date.now(),
+        date: document.getElementById('apar-date').value,
+        code: document.getElementById('apar-code').value.trim(),
+        location: document.getElementById('apar-location').value.trim(),
+        condition: document.getElementById('apar-condition').value,
+        status: document.getElementById('apar-status').value,
+        notes: document.getElementById('apar-notes').value.trim(),
+        inspector: currentUser.userName
+      };
+
+      let list = getApar();
+      list = id ? list.map(a => a.id === id ? record : a) : [record, ...list];
+      setApar(list);
+      closeModal('apar-modal');
+      renderApp();
+      showToast("Data pemeriksaan APAR berhasil disimpan!");
+    }
+
+    function deleteApar(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus catatan pemeriksaan APAR ini?")) {
+        setApar(getApar().filter(a => a.id !== id));
+        renderApp();
+        showToast("Data pemeriksaan berhasil dihapus.");
       }
+    }
 
-      const todayStr = new Date().toISOString().split('T')[0];
-      const yyyymmdd = todayStr.replace(/-/g, '');
+    // HALAMAN PEMERIKSAAN KENDARAAN
+    let searchKdrText = '';
+    let filterKdrDateVal = '';
 
-      // Menyiapkan Baris Metadata & Judul
-      const wsData = [
-        ["PT SOLUSI ENERGY NUSANTARA"],
-        ["REKAPITULASI DATA ROOT CAUSE ANALYSIS (RCA) - K3L"],
-        [`Tanggal Ekspor: ${todayStr} | Diekspor Oleh: ${currentUser.userName} (${currentUser.department})`],
-        [`Jumlah Data: ${filteredRcaCache.length} Temuan | Status Hak Akses: ${currentUser.role === 'manajemen' ? 'Monitoring Manajemen (Validated Data)' : 'Full Access Unit HSSE'}`],
-        [], // Baris kosong pemisah
-        [
-          "No.",
-          "Tanggal Temuan",
-          "Lokasi",
-          "Nama Pelapor",
-          "PIC Department",
-          "Indikator",
-          "Good Citizen / Violator",
-          "Rincian Temuan",
-          "Severity",
-          "Usulan Perbaikan",
-          "Tanggal Tindak Lanjut",
-          "Status Tindak Lanjut"
-        ]
-      ];
-
-      // Memasukkan Record Data
-      filteredRcaCache.forEach((r, idx) => {
-        wsData.push([
-          idx + 1,
-          r.date || todayStr,
-          r.location || "Area Operasional Lapangan",
-          r.reporter || "Tim HSSE / Pelapor Lapangan",
-          r.pic || "Unit Terkait",
-          r.indicator || "Kondisi Tidak Aman (Unsafe Condition)",
-          r.behaviorCategory || "Unsafe Condition",
-          r.finding,
-          r.severity,
-          r.action || r.rootCause || "-",
-          r.date || todayStr,
-          r.status || "Open"
-        ]);
+    function renderHsseKendaraan(container) {
+      const data = getKendaraan().filter(k => {
+        const matchSearch = k.nopol.toLowerCase().includes(searchKdrText.toLowerCase()) || k.type.toLowerCase().includes(searchKdrText.toLowerCase());
+        const matchDate = !filterKdrDateVal || k.date === filterKdrDateVal;
+        return matchSearch && matchDate;
       });
 
-      // Buat Worksheet & Workbook via SheetJS
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Konfigurasi Lebar Kolom (Width) agar rapi
-      ws['!cols'] = [
-        { wch: 6 },  // No.
-        { wch: 15 }, // Tanggal
-        { wch: 25 }, // Lokasi
-        { wch: 22 }, // Pelapor
-        { wch: 22 }, // PIC
-        { wch: 30 }, // Indikator
-        { wch: 24 }, // Good Citizen/Violator
-        { wch: 45 }, // Rincian Temuan
-        { wch: 12 }, // Severity
-        { wch: 45 }, // Usulan Perbaikan
-        { wch: 20 }, // Tgl Tindak Lanjut
-        { wch: 18 }  // Status
-      ];
-
-      // Bekukan Baris Header (Freeze pane di baris ke-6)
-      ws['!freeze'] = { xSplit: 0, ySplit: 6 };
-
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Rekap_RCA");
-
-      // Tulis file Excel .xlsx
-      XLSX.writeFile(wb, `Rekap_RCA_${yyyymmdd}.xlsx`);
-      showToast(`File Rekap_RCA_${yyyymmdd}.xlsx berhasil diunduh!`);
-    }
-
-    /* --- TAB B: REKAP HIRADC --- */
-    function renderRekapHiradcTabHtml() {
-      return `
-        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm space-y-5">
+      container.innerHTML = `
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div>
-              <h4 class="font-bold text-navy-900 text-base">Filter & Rekapitulasi Data HIRADC</h4>
-              <p class="text-xs text-slate-500">Penyaringan penilaian risiko dan hierarki pengendalian operasional perusahaan.</p>
+              <h3 class="font-bold text-navy-900 text-base">Riwayat Pemeriksaan Kendaraan</h3>
+              <p class="text-xs text-slate-500">Pencatatan kelaikan fisik armada kendaraan operasional PT SEN</p>
             </div>
-            <!-- Tombol Download Excel -->
-            <div class="flex items-center space-x-2">
-              <button onclick="exportHiradcExcel()" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold transition shadow-sm">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                <span>Download Excel (.xlsx)</span>
-              </button>
-            </div>
+            <button onclick="openKendaraanModal()" class="bg-navy-900 hover:bg-navy-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm inline-flex items-center space-x-1">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Tambah Pemeriksaan Kendaraan</span>
+            </button>
           </div>
 
-          <!-- Baris Kontrol Filter HIRADC -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 bg-slate-50 p-4 rounded-lg border border-slate-200 text-xs">
-            <!-- 1. Pencarian -->
-            <div class="lg:col-span-2">
-              <label class="block font-semibold text-slate-700 mb-1">Cari Aktivitas / Potensi Bahaya</label>
-              <input type="text" id="hiradc-filter-search" oninput="filterHiradcTable()" placeholder="Ketik aktivitas atau bahaya..." class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-            </div>
-            <!-- 2. Tingkat Risiko -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Tingkat Risiko</label>
-              <select id="hiradc-filter-level" onchange="filterHiradcTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-                <option value="Semua">Semua Tingkat Risiko</option>
-                <option value="Rendah">Rendah (Low)</option>
-                <option value="Sedang">Sedang (Medium)</option>
-                <option value="Tinggi">Tinggi (High)</option>
-                <option value="Ekstrem">Ekstrem (Extreme)</option>
-              </select>
-            </div>
-            <!-- 3. Filter Periode Tanggal -->
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">Periode Tanggal</label>
-              <input type="date" id="hiradc-filter-date" onchange="filterHiradcTable()" class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:border-navy-900 bg-white">
-            </div>
+          <div class="flex flex-wrap gap-3 bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs">
+            <input type="text" placeholder="Cari Nopol atau Jenis..." value="${searchKdrText}" oninput="searchKdrText = this.value; renderHsseKendaraan(document.getElementById('main-content'))" class="px-3 py-2 border rounded-md bg-white w-56">
+            <input type="date" value="${filterKdrDateVal}" onchange="filterKdrDateVal = this.value; renderHsseKendaraan(document.getElementById('main-content'))" class="px-3 py-2 border rounded-md bg-white">
+            ${filterKdrDateVal ? `<button onclick="filterKdrDateVal = ''; renderHsseKendaraan(document.getElementById('main-content'))" class="text-rose-600 underline">Reset Tanggal</button>` : ''}
           </div>
 
-          <!-- Status Filter & Reset & Pilihan Format -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-3">
-            <div class="flex items-center space-x-3">
-              <span id="hiradc-filter-count" class="font-semibold text-navy-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">
-                Memuat data...
-              </span>
-              <button onclick="resetHiradcFilter()" class="text-rose-600 hover:underline font-medium inline-flex items-center space-x-1">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                <span>Hapus Filter</span>
-              </button>
-            </div>
-
-            <!-- Arsitektur Format Excel Perusahaan (Sesuai Ketentuan 8) -->
-            <div class="flex items-center space-x-2">
-              <span class="text-slate-500 font-medium">Format Output Excel:</span>
-              <select id="hiradc-export-format" class="px-2.5 py-1 border border-slate-300 rounded text-xs bg-white text-slate-700 font-medium focus:outline-none">
-                <option value="sederhana" selected>1. Rekap Excel Sederhana (Aktif)</option>
-                <option value="perusahaan" disabled>2. Format Standar Perusahaan (Segera Hadir / Tahap 2)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Tabel Data Hasil Filter HIRADC -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode</th>
-                  <th class="p-3">Aktivitas Pekerjaan</th>
-                  <th class="p-3">Potensi Bahaya</th>
-                  <th class="p-3 text-center">Tingkat Risiko</th>
-                  <th class="p-3">Tindakan Pengendalian</th>
-                  <th class="p-3">Tanggal Review</th>
+                  <th class="p-3">Tanggal</th>
+                  <th class="p-3">Nomor Polisi</th>
+                  <th class="p-3">Jenis Kendaraan</th>
+                  <th class="p-3 text-center">Kondisi</th>
+                  <th class="p-3 text-center">Status TL</th>
+                  <th class="p-3">Pemeriksa</th>
+                  <th class="p-3">Catatan</th>
+                  <th class="p-3 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="hiradc-table-body" class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100">
+                ${data.length ? data.map(k => `
+                  <tr class="hover:bg-slate-50/80 transition">
+                    <td class="p-3 whitespace-nowrap text-slate-500">${k.date}</td>
+                    <td class="p-3 font-semibold text-navy-900">${k.nopol}</td>
+                    <td class="p-3 text-slate-800">${k.type}</td>
+                    <td class="p-3 text-center">
+                      <span class="px-2.5 py-1 rounded text-[10px] font-bold ${k.condition === 'Baik' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                        ${k.condition}
+                      </span>
+                    </td>
+                    <td class="p-3 text-center">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 border text-slate-700">${k.status}</span>
+                    </td>
+                    <td class="p-3 text-slate-600">${k.inspector}</td>
+                    <td class="p-3 text-slate-500 max-w-xs truncate" title="${k.notes || '-'}">${k.notes || '-'}</td>
+                    <td class="p-3 text-center space-x-2">
+                      <button onclick="editKendaraan('${k.id}')" class="text-blue-600 hover:underline">Edit</button>
+                      <button onclick="deleteKendaraan('${k.id}')" class="text-red-600 hover:underline">Hapus</button>
+                    </td>
+                  </tr>
+                `).join('') : `<tr><td colspan="8" class="text-center py-6 text-slate-400">Belum ada data pemeriksaan kendaraan.</td></tr>`}
               </tbody>
             </table>
           </div>
         </div>
       `;
-    }
-
-    let filteredHiradcCache = [];
-
-    function filterHiradcTable() {
-      const search = (document.getElementById('hiradc-filter-search')?.value || '').toLowerCase();
-      const level = document.getElementById('hiradc-filter-level')?.value || 'Semua';
-      const dateFilter = document.getElementById('hiradc-filter-date')?.value;
-
-      let data = getHiradc();
-
-      filteredHiradcCache = data.filter(h => {
-        const matchSearch = (h.activity || '').toLowerCase().includes(search) ||
-                            (h.hazard || '').toLowerCase().includes(search) ||
-                            (h.code || '').toLowerCase().includes(search) ||
-                            (h.control || '').toLowerCase().includes(search);
-
-        const matchLevel = (level === 'Semua') || (h.level === level);
-        let matchDate = true;
-        if (dateFilter && h.date) {
-          matchDate = (h.date === dateFilter);
-        }
-
-        return matchSearch && matchLevel && matchDate;
-      });
-
-      const countEl = document.getElementById('hiradc-filter-count');
-      if (countEl) countEl.innerText = `Menampilkan ${filteredHiradcCache.length} dari ${data.length} aktivitas HIRADC`;
-
-      const tbody = document.getElementById('hiradc-table-body');
-      if (!tbody) return;
-
-      if (filteredHiradcCache.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400">Tidak ada data HIRADC yang sesuai dengan filter.</td></tr>`;
-      } else {
-        tbody.innerHTML = filteredHiradcCache.map(h => `
-          <tr class="hover:bg-slate-50/80 transition">
-            <td class="p-3 font-mono font-semibold text-slate-700">${h.code}</td>
-            <td class="p-3 font-semibold text-slate-900">${h.activity}</td>
-            <td class="p-3 text-slate-600 max-w-xs">${h.hazard}</td>
-            <td class="p-3 text-center">
-              <span class="px-2.5 py-1 rounded text-[10px] font-bold ${
-                h.level === 'Ekstrem' ? 'bg-red-100 text-red-800' :
-                h.level === 'Tinggi' ? 'bg-amber-100 text-amber-800' :
-                h.level === 'Sedang' ? 'bg-blue-100 text-blue-800' :
-                'bg-emerald-100 text-emerald-800'
-              }">${h.level}</span>
-            </td>
-            <td class="p-3 text-slate-600 max-w-xs">${h.control || '-'}</td>
-            <td class="p-3 text-slate-500 whitespace-nowrap">${h.date || '2024-05-15'}</td>
-          </tr>
-        `).join('');
-      }
       lucide.createIcons();
     }
 
-    function resetHiradcFilter() {
-      const s = document.getElementById('hiradc-filter-search'); if (s) s.value = '';
-      const lv = document.getElementById('hiradc-filter-level'); if (lv) lv.value = 'Semua';
-      const dt = document.getElementById('hiradc-filter-date'); if (dt) dt.value = '';
-      filterHiradcTable();
-    }
-
-    /* --- EKSPOR EXCEL HIRADC (Format Sederhana Lengkap 6 Kolom) --- */
-    function exportHiradcExcel() {
-      if (!filteredHiradcCache || filteredHiradcCache.length === 0) {
-        alert("Tidak ada data yang tersedia untuk diekspor.");
-        return;
-      }
-
-      const todayStr = new Date().toISOString().split('T')[0];
-      const yyyymmdd = todayStr.replace(/-/g, '');
-
-      // Menyiapkan Baris Metadata & Judul
-      const wsData = [
-        ["PT SOLUSI ENERGY NUSANTARA"],
-        ["REKAPITULASI DOKUMEN PENILAIAN RISIKO HIRADC - K3L"],
-        [`Tanggal Ekspor: ${todayStr} | Diekspor Oleh: ${currentUser.userName} (${currentUser.department})`],
-        [`Jumlah Data: ${filteredHiradcCache.length} Aktivitas | Status Hak Akses: ${currentUser.role === 'manajemen' ? 'Monitoring Manajemen (Read-Only)' : 'Full Access Unit HSSE'}`],
-        [], // Baris kosong pemisah
-        [
-          "No.",
-          "Aktivitas Pekerjaan",
-          "Potensi Bahaya",
-          "Dampak atau Risiko",
-          "Tingkat Risiko",
-          "Tindakan Pengendalian"
-        ]
-      ];
-
-      // Memasukkan Record Data
-      filteredHiradcCache.forEach((h, idx) => {
-        wsData.push([
-          idx + 1,
-          h.activity,
-          h.hazard,
-          h.hazard, // Sesuai mapping dampak/risiko
-          h.level,
-          h.control || "Prosedur SOP & APD Terstandar"
-        ]);
-      });
-
-      const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Konfigurasi Lebar Kolom (Width)
-      ws['!cols'] = [
-        { wch: 6 },  // No.
-        { wch: 38 }, // Aktivitas Pekerjaan
-        { wch: 45 }, // Potensi Bahaya
-        { wch: 45 }, // Dampak atau Risiko
-        { wch: 18 }, // Tingkat Risiko
-        { wch: 50 }  // Tindakan Pengendalian
-      ];
-
-      // Bekukan Baris Header (Freeze pane baris ke-6)
-      ws['!freeze'] = { xSplit: 0, ySplit: 6 };
-
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Rekap_HIRADC");
-
-      XLSX.writeFile(wb, `Rekap_HIRADC_${yyyymmdd}.xlsx`);
-      showToast(`File Rekap_HIRADC_${yyyymmdd}.xlsx berhasil diunduh!`);
-    }
-
-    /* =============================================================
-       KOMPONEN: KARYAWAN - LAPOR TEMUAN K3L
-       ============================================================= */
-    function renderKaryawanLaporTemuan(container) {
-      const today = new Date().toISOString().split('T')[0];
-      const myFindings = getFindings().filter(f => f.reporter.toLowerCase() === currentUser.userName.toLowerCase());
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-7">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-slate-100 mb-6">
-            <div>
-              <h2 class="text-xl font-bold text-slate-900 leading-tight">Formulir Pelaporan Temuan K3L</h2>
-              <p class="text-xs text-slate-500 mt-1">Laporkan kondisi tidak aman (Unsafe Condition) atau perilaku tidak aman (Unsafe Act).</p>
-            </div>
-            <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200">
-              Pelapor: ${currentUser.userName}
-            </span>
-          </div>
-
-          <form onsubmit="handleKaryawanFindingSubmit(event)" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal Temuan</label>
-                <input type="date" id="find-form-date" required value="${today}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Lokasi Temuan Lapangan</label>
-                <input type="text" id="find-form-location" required placeholder="Contoh: Gedung Turbin Lantai 2 / Area Workshop Fabrikasi" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Temuan Bahaya</label>
-              <textarea id="find-form-desc" rows="3" required placeholder="Jelaskan secara rinci kondisi atau tindakan tidak aman yang ditemukan..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600"></textarea>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Usulan Tindakan Perbaikan</label>
-              <textarea id="find-form-recom" rows="2" required placeholder="Usulkan tindakan pencegahan atau solusi sementara..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600"></textarea>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Unggah Foto Dokumentasi Temuan</label>
-              <input type="file" id="find-form-photo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-800 hover:file:bg-blue-100">
-              <p class="text-[11px] text-slate-400 mt-1">Format gambar JPG, PNG. Foto akan disimpan untuk proses validasi Unit HSSE.</p>
-            </div>
-
-            <div class="flex justify-end pt-2">
-              <button type="submit" class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition shadow-sm">
-                <i data-lucide="send" class="w-4 h-4"></i>
-                <span>Kirim Laporan Temuan</span>
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-6">
-          <h3 class="font-bold text-navy-900 mb-1">Riwayat Pelaporan Temuan Anda</h3>
-          <p class="text-xs text-slate-500 mb-4">Pantau validasi dan tindak lanjut dari tim Unit HSSE</p>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode Laporan</th>
-                  <th class="p-3">Tanggal</th>
-                  <th class="p-3">Lokasi</th>
-                  <th class="p-3">Deskripsi Temuan</th>
-                  <th class="p-3">Usulan Perbaikan</th>
-                  <th class="p-3 text-center">Status</th>
-                  <th class="p-3">Catatan HSSE</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${myFindings.length === 0 ? `
-                  <tr><td colspan="7" class="text-center py-6 text-slate-400">Belum ada riwayat laporan temuan K3L.</td></tr>
-                ` : myFindings.map(f => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${f.code}</td>
-                    <td class="p-3 text-slate-500">${f.date}</td>
-                    <td class="p-3 font-medium text-slate-800">${f.location}</td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${f.description}">${f.description}</td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${f.recommendation}">${f.recommendation}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        f.status === 'Tervalidasi' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        f.status === 'Dikembalikan' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${f.status}
-                      </span>
-                    </td>
-                    <td class="p-3 text-slate-500 italic">${f.feedback || '-'}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    async function handleKaryawanFindingSubmit(event) {
-      event.preventDefault();
-      const date = document.getElementById('find-form-date').value;
-      const location = document.getElementById('find-form-location').value;
-      const description = document.getElementById('find-form-desc').value;
-      const recommendation = document.getElementById('find-form-recom').value;
-      const photoInput = document.getElementById('find-form-photo');
-
-      let photoBase64 = '';
-      if (photoInput.files.length > 0) {
-        photoBase64 = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(photoInput.files[0]);
-        });
-      }
-
-      const findings = getFindings();
-      const newFinding = {
-        id: 'find-' + Date.now(),
-        code: `LAP-K3L-${String(findings.length + 1).padStart(3, '0')}`,
-        date,
-        location,
-        reporter: currentUser.userName,
-        dept: currentUser.department,
-        description,
-        recommendation,
-        photo: photoBase64,
-        status: 'Menunggu Validasi',
-        feedback: ''
-      };
-
-      findings.unshift(newFinding);
-      setFindings(findings);
-      showToast("Laporan temuan berhasil dikirim! Menunggu validasi Unit HSSE.");
-      renderApp();
-    }
-
-    /* =============================================================
-       KOMPONEN: UNIT HSSE - VALIDASI TEMUAN
-       ============================================================= */
-    function renderHsseValidateFindings(container) {
-      const findings = getFindings();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="mb-6">
-            <h3 class="font-bold text-navy-900">Validasi & Verifikasi Temuan Lapangan Karyawan</h3>
-            <p class="text-xs text-slate-500">Periksa bukti foto, tentukan validitas laporan, atau eskalasi ke tindakan investigasi RCA.</p>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode</th>
-                  <th class="p-3">Pelapor</th>
-                  <th class="p-3">Tanggal & Lokasi</th>
-                  <th class="p-3">Deskripsi & Usulan</th>
-                  <th class="p-3 text-center">Foto</th>
-                  <th class="p-3 text-center">Status</th>
-                  <th class="p-3 text-center">Tindakan HSSE</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${findings.length === 0 ? `
-                  <tr><td colspan="7" class="text-center py-6 text-slate-400">Belum ada laporan temuan masuk dari karyawan.</td></tr>
-                ` : findings.map(f => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${f.code}</td>
-                    <td class="p-3">
-                      <div class="font-semibold text-slate-900">${f.reporter}</div>
-                      <div class="text-[11px] text-slate-400">${f.dept}</div>
-                    </td>
-                    <td class="p-3">
-                      <div class="font-semibold text-slate-800">${f.location}</div>
-                      <div class="text-[11px] text-slate-400">${f.date}</div>
-                    </td>
-                    <td class="p-3 max-w-xs">
-                      <div class="font-medium text-slate-800 truncate" title="${f.description}">${f.description}</div>
-                      <div class="text-[11px] text-slate-500 truncate" title="Usulan: ${f.recommendation}">Usulan: ${f.recommendation}</div>
-                    </td>
-                    <td class="p-3 text-center">
-                      ${f.photo ? `
-                        <button onclick="viewFindingDetail('${f.id}')" class="text-blue-600 hover:underline inline-flex items-center space-x-1">
-                          <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                          <span>Lihat Foto</span>
-                        </button>
-                      ` : `
-                        <span class="text-slate-400 italic">Tanpa Foto</span>
-                      `}
-                    </td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        f.status === 'Tervalidasi' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        f.status === 'Dikembalikan' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${f.status}
-                      </span>
-                    </td>
-                    <td class="p-3 text-center">
-                      <button onclick="viewFindingDetail('${f.id}')" class="px-3 py-1.5 bg-navy-900 text-white rounded text-xs hover:bg-navy-800 transition">
-                        Detail / Validasi
-                      </button>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function viewFindingDetail(id) {
-      const findings = getFindings();
-      const f = findings.find(item => item.id === id);
-      if (!f) return;
-
-      const content = document.getElementById('validate-modal-content');
-      content.innerHTML = `
-        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5">
-          <div class="flex justify-between">
-            <span class="text-slate-500">Kode Laporan:</span>
-            <span class="font-mono font-bold text-navy-900">${f.code}</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-500">Pelapor:</span>
-            <span class="font-semibold text-slate-800">${f.reporter} (${f.dept})</span>
-          </div>
-          <div class="flex justify-between">
-            <span class="text-slate-500">Tanggal & Lokasi:</span>
-            <span class="font-semibold text-slate-800">${f.date} • ${f.location}</span>
-          </div>
-        </div>
-
-        <div>
-          <span class="font-bold text-slate-700 block mb-1">Deskripsi Temuan:</span>
-          <p class="p-2.5 bg-slate-50 rounded border border-slate-200 text-slate-800">${f.description}</p>
-        </div>
-
-        <div>
-          <span class="font-bold text-slate-700 block mb-1">Usulan Tindakan Perbaikan:</span>
-          <p class="p-2.5 bg-slate-50 rounded border border-slate-200 text-slate-800">${f.recommendation}</p>
-        </div>
-
-        ${f.photo ? `
-          <div>
-            <span class="font-bold text-slate-700 block mb-1">Dokumentasi Foto Lapangan:</span>
-            <img src="${f.photo}" alt="Foto Temuan" class="w-full max-h-60 object-contain rounded-lg border border-slate-200 bg-slate-100 p-1">
-          </div>
-        ` : ''}
-
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Catatan / Umpan Balik HSSE:</label>
-          <input type="text" id="finding-feedback-input" value="${f.feedback || ''}" placeholder="Catatan perbaikan atau alasan pengembalian..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-navy-900">
-        </div>
-
-        <div class="flex flex-wrap justify-end gap-2 pt-3 border-t border-slate-100">
-          <button onclick="submitFindingDecision('${f.id}', 'Dikembalikan')" class="px-3 py-2 bg-red-600 text-white rounded font-medium hover:bg-red-700 text-xs">
-            Kembalikan untuk Diperbaiki
-          </button>
-          <button onclick="submitFindingDecision('${f.id}', 'Tervalidasi')" class="px-3 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 text-xs">
-            Validasi Temuan
-          </button>
-          <button onclick="promoteFindingToRca('${f.id}')" class="px-3 py-2 bg-blue-700 text-white rounded font-medium hover:bg-blue-800 text-xs">
-            + Eskalasi ke RCA
-          </button>
-        </div>
-      `;
-
-      openModal('validate-finding-modal');
-    }
-
-    function submitFindingDecision(id, decision) {
-      const feedback = document.getElementById('finding-feedback-input').value;
-      let findings = getFindings();
-      findings = findings.map(f => {
-        if (f.id === id) {
-          return { ...f, status: decision, feedback: feedback || (decision === 'Tervalidasi' ? 'Temuan telah diverifikasi HSSE.' : 'Perbaiki rincian laporan.') };
-        }
-        return f;
-      });
-      setFindings(findings);
-      closeModal('validate-finding-modal');
-      showToast(`Status laporan berhasil diubah: ${decision}`);
-      renderApp();
-    }
-
-    function promoteFindingToRca(findingId) {
-      const findings = getFindings();
-      const f = findings.find(item => item.id === findingId);
-      if (!f) return;
-
-      closeModal('validate-finding-modal');
-      openRcaModal(null, f);
-    }
-
-    /* =============================================================
-       KOMPONEN: UNIT HSSE - PENGELOLAAN HIRADC
-       ============================================================= */
-    function renderHsseManageHiradc(container) {
-      const hiradc = getHiradc();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="font-bold text-navy-900">Manajemen Dokumen HIRADC (${hiradc.length} Aktivitas)</h3>
-              <p class="text-xs text-slate-500">Identifikasi bahaya, penilaian risiko K3L, dan hierarki pengendalian perusahaan</p>
-            </div>
-            <button onclick="openHiradcModal()" class="inline-flex items-center space-x-2 bg-navy-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-navy-800 transition">
-              <i data-lucide="plus" class="w-4 h-4"></i>
-              <span>Tambah Aktivitas HIRADC</span>
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode</th>
-                  <th class="p-3">Aktivitas Pekerjaan</th>
-                  <th class="p-3">Potensi Bahaya & Dampak</th>
-                  <th class="p-3 text-center">Tingkat Risiko</th>
-                  <th class="p-3">Pengendalian Operasional</th>
-                  <th class="p-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${hiradc.map(h => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${h.code}</td>
-                    <td class="p-3 font-semibold text-slate-900">${h.activity}</td>
-                    <td class="p-3 text-slate-600 max-w-xs">${h.hazard}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded text-[10px] font-bold ${
-                        h.level === 'Ekstrem' ? 'bg-red-100 text-red-800 border border-red-200' :
-                        h.level === 'Tinggi' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
-                        h.level === 'Sedang' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
-                        'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                      }">
-                        ${h.level}
-                      </span>
-                    </td>
-                    <td class="p-3 text-slate-600 max-w-xs">${h.control || '-'}</td>
-                    <td class="p-3 text-center">
-                      <div class="inline-flex space-x-1">
-                        <button onclick="editHiradc('${h.id}')" title="Edit Data" class="p-1.5 hover:bg-slate-100 rounded text-blue-600">
-                          <i data-lucide="edit-2" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="deleteHiradc('${h.id}')" title="Hapus Data" class="p-1.5 hover:bg-slate-100 rounded text-red-600">
-                          <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function openHiradcModal(id = null) {
-      document.getElementById('hiradc-form').reset();
-      document.getElementById('hiradc-id').value = '';
+    function openKendaraanModal(id = null) {
+      document.getElementById('kendaraan-form').reset();
+      document.getElementById('kendaraan-id').value = id || '';
+      document.getElementById('kendaraan-inspector').value = currentUser.userName;
+      document.getElementById('kendaraan-date').value = new Date().toISOString().split('T')[0];
 
       if (id) {
-        const hiradc = getHiradc();
-        const item = hiradc.find(h => h.id === id);
+        const item = getKendaraan().find(k => k.id === id);
         if (item) {
-          document.getElementById('hiradc-modal-title').innerText = 'Edit Aktivitas HIRADC';
-          document.getElementById('hiradc-id').value = item.id;
-          document.getElementById('hiradc-code').value = item.code;
-          document.getElementById('hiradc-activity').value = item.activity;
-          document.getElementById('hiradc-hazard').value = item.hazard;
-          document.getElementById('hiradc-level').value = item.level;
-          document.getElementById('hiradc-control').value = item.control || '';
+          document.getElementById('kendaraan-modal-title').innerText = 'Edit Pemeriksaan Kendaraan';
+          document.getElementById('kendaraan-date').value = item.date;
+          document.getElementById('kendaraan-nopol').value = item.nopol;
+          document.getElementById('kendaraan-type').value = item.type;
+          document.getElementById('kendaraan-condition').value = item.condition;
+          document.getElementById('kendaraan-status').value = item.status;
+          document.getElementById('kendaraan-notes').value = item.notes || '';
         }
       } else {
-        const hiradc = getHiradc();
-        document.getElementById('hiradc-modal-title').innerText = 'Tambah Aktivitas HIRADC Baru';
-        document.getElementById('hiradc-code').value = `HRA-2024-${String(hiradc.length + 1).padStart(3, '0')}`;
+        document.getElementById('kendaraan-modal-title').innerText = 'Tambah Pemeriksaan Kendaraan';
       }
-      openModal('hiradc-modal');
+      openModal('kendaraan-modal');
     }
 
-    function editHiradc(id) { openHiradcModal(id); }
+    function editKendaraan(id) { openKendaraanModal(id); }
 
-    function saveHiradc(event) {
-      event.preventDefault();
-      const id = document.getElementById('hiradc-id').value;
-      const code = document.getElementById('hiradc-code').value;
-      const activity = document.getElementById('hiradc-activity').value;
-      const hazard = document.getElementById('hiradc-hazard').value;
-      const level = document.getElementById('hiradc-level').value;
-      const control = document.getElementById('hiradc-control').value;
-      let hiradc = getHiradc();
+    function saveKendaraan(e) {
+      e.preventDefault();
+      const id = document.getElementById('kendaraan-id').value;
+      const record = {
+        id: id || 'kdr-' + Date.now(),
+        date: document.getElementById('kendaraan-date').value,
+        nopol: document.getElementById('kendaraan-nopol').value.trim(),
+        type: document.getElementById('kendaraan-type').value.trim(),
+        condition: document.getElementById('kendaraan-condition').value,
+        status: document.getElementById('kendaraan-status').value,
+        notes: document.getElementById('kendaraan-notes').value.trim(),
+        inspector: currentUser.userName
+      };
 
-      if (id) {
-        hiradc = hiradc.map(h => h.id === id ? { ...h, code, activity, hazard, level, control, isDemo: false } : h);
-        showToast("Data HIRADC berhasil diperbarui.");
-      } else {
-        hiradc.unshift({
-          id: 'hiradc-' + Date.now(),
-          code,
-          activity,
-          hazard,
-          level,
-          control,
-          date: new Date().toISOString().split('T')[0],
-          isDemo: false
-        });
-        showToast("Aktivitas HIRADC baru berhasil ditambahkan.");
-      }
-
-      setHiradc(hiradc);
-      closeModal('hiradc-modal');
+      let list = getKendaraan();
+      list = id ? list.map(k => k.id === id ? record : k) : [record, ...list];
+      setKendaraan(list);
+      closeModal('kendaraan-modal');
       renderApp();
+      showToast("Data pemeriksaan kendaraan berhasil disimpan!");
     }
 
-    function deleteHiradc(id) {
-      if (confirm("Hapus baris HIRADC ini?")) {
-        let hiradc = getHiradc();
-        hiradc = hiradc.filter(h => h.id !== id);
-        setHiradc(hiradc);
-        showToast("Data HIRADC berhasil dihapus.");
+    function deleteKendaraan(id) {
+      if (confirm("Apakah Anda yakin ingin menghapus catatan pemeriksaan kendaraan ini?")) {
+        setKendaraan(getKendaraan().filter(k => k.id !== id));
         renderApp();
+        showToast("Data pemeriksaan berhasil dihapus.");
       }
     }
 
-    /* =============================================================
-       KOMPONEN: UNIT HSSE - PENGELOLAAN RCA
-       ============================================================= */
-    function renderHsseManageRca(container) {
-      const rcaList = getRca();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="font-bold text-navy-900">Manajemen Root Cause Analysis (${rcaList.length} Kasus)</h3>
-              <p class="text-xs text-slate-500">Kelola investigasi akar penyebab temuan, PIC perbaikan, dan status tindak lanjut</p>
-            </div>
-            <button onclick="openRcaModal()" class="inline-flex items-center space-x-2 bg-navy-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-navy-800 transition">
-              <i data-lucide="plus" class="w-4 h-4"></i>
-              <span>Tambah Data RCA Baru</span>
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">No. Kasus</th>
-                  <th class="p-3">Temuan & Akar Masalah</th>
-                  <th class="p-3 text-center">Severity</th>
-                  <th class="p-3">Rencana Tindakan</th>
-                  <th class="p-3">PIC</th>
-                  <th class="p-3 text-center">Status</th>
-                  <th class="p-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${rcaList.map(r => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${r.caseNo}</td>
-                    <td class="p-3 max-w-xs">
-                      <div class="font-semibold text-slate-900 truncate" title="${r.finding}">${r.finding}</div>
-                      <div class="text-[11px] text-slate-500 truncate" title="Penyebab: ${r.rootCause}">Penyebab: ${r.rootCause}</div>
-                    </td>
-                    <td class="p-3 text-center">
-                      <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                        r.severity === 'Kritis' ? 'bg-red-100 text-red-800' :
-                        r.severity === 'Mayor' ? 'bg-amber-100 text-amber-800' :
-                        r.severity === 'Moderat' ? 'bg-blue-100 text-blue-800' :
-                        'bg-emerald-100 text-emerald-800'
-                      }">
-                        ${r.severity}
-                      </span>
-                    </td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${r.action || '-'}">${r.action || '-'}</td>
-                    <td class="p-3 text-slate-800 font-medium">${r.pic || '-'}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        r.status === 'Closed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        r.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                        'bg-rose-50 text-rose-700 border border-rose-200'
-                      }">
-                        ${r.status || 'Open'}
-                      </span>
-                    </td>
-                    <td class="p-3 text-center">
-                      <div class="inline-flex space-x-1">
-                        <button onclick="editRca('${r.id}')" title="Edit Data" class="p-1.5 hover:bg-slate-100 rounded text-blue-600">
-                          <i data-lucide="edit-2" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="deleteRca('${r.id}')" title="Hapus Data" class="p-1.5 hover:bg-slate-100 rounded text-red-600">
-                          <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function openRcaModal(id = null, sourceFinding = null) {
-      document.getElementById('rca-form').reset();
-      document.getElementById('rca-id').value = '';
-
-      if (id) {
-        const rcaList = getRca();
-        const item = rcaList.find(r => r.id === id);
-        if (item) {
-          document.getElementById('rca-modal-title').innerText = 'Edit Root Cause Analysis (RCA)';
-          document.getElementById('rca-id').value = item.id;
-          document.getElementById('rca-caseno').value = item.caseNo;
-          document.getElementById('rca-finding').value = item.finding;
-          document.getElementById('rca-severity').value = item.severity;
-          document.getElementById('rca-rootcause').value = item.rootCause || '';
-          document.getElementById('rca-action').value = item.action || '';
-          document.getElementById('rca-pic').value = item.pic || '';
-          document.getElementById('rca-status').value = item.status || 'Open';
-          document.getElementById('rca-location').value = item.location || '';
-          document.getElementById('rca-reporter').value = item.reporter || '';
-        }
-      } else if (sourceFinding) {
-        const rcaList = getRca();
-        document.getElementById('rca-modal-title').innerText = `Eskalasi RCA dari ${sourceFinding.code}`;
-        document.getElementById('rca-caseno').value = `RCA-SEN-2024-${String(rcaList.length + 1).padStart(3, '0')}`;
-        document.getElementById('rca-finding').value = `[${sourceFinding.location}] ${sourceFinding.description}`;
-        document.getElementById('rca-action').value = sourceFinding.recommendation;
-        document.getElementById('rca-severity').value = 'Mayor';
-        document.getElementById('rca-status').value = 'In Progress';
-        document.getElementById('rca-location').value = sourceFinding.location || '';
-        document.getElementById('rca-reporter').value = sourceFinding.reporter || '';
-      } else {
-        const rcaList = getRca();
-        document.getElementById('rca-modal-title').innerText = 'Tambah Data RCA Baru';
-        document.getElementById('rca-caseno').value = `RCA-SEN-2024-${String(rcaList.length + 1).padStart(3, '0')}`;
-      }
-      openModal('rca-modal');
-    }
-
-    function editRca(id) { openRcaModal(id); }
-
-    function saveRca(event) {
-      event.preventDefault();
-      const id = document.getElementById('rca-id').value;
-      const caseNo = document.getElementById('rca-caseno').value;
-      const finding = document.getElementById('rca-finding').value;
-      const severity = document.getElementById('rca-severity').value;
-      const rootCause = document.getElementById('rca-rootcause').value;
-      const action = document.getElementById('rca-action').value;
-      const pic = document.getElementById('rca-pic').value;
-      const status = document.getElementById('rca-status').value;
-      const location = document.getElementById('rca-location').value || 'Area Operasional Lapangan';
-      const reporter = document.getElementById('rca-reporter').value || currentUser.userName;
-      let rcaList = getRca();
-
-      if (id) {
-        rcaList = rcaList.map(r => r.id === id ? { 
-          ...r, caseNo, finding, severity, rootCause, action, pic, status, location, reporter, isDemo: false 
-        } : r);
-        showToast("Data RCA berhasil diperbarui.");
-      } else {
-        rcaList.unshift({
-          id: 'rca-' + Date.now(),
-          caseNo,
-          finding,
-          severity,
-          rootCause,
-          action,
-          pic,
-          status,
-          location,
-          reporter,
-          date: new Date().toISOString().split('T')[0],
-          indicator: 'Kondisi Tidak Aman (Unsafe Condition)',
-          behaviorCategory: 'Unsafe Condition',
-          isValidated: true,
-          isDemo: false
-        });
-        showToast("Data RCA baru berhasil disimpan.");
-      }
-
-      setRca(rcaList);
-      closeModal('rca-modal');
-      renderApp();
-    }
-
-    function deleteRca(id) {
-      if (confirm("Hapus data RCA ini?")) {
-        let rcaList = getRca();
-        rcaList = rcaList.filter(r => r.id !== id);
-        setRca(rcaList);
-        showToast("Data RCA berhasil dihapus.");
-        renderApp();
-      }
-    }
-
-    /* =============================================================
-       KOMPONEN: DASHBOARD MANAJEMEN DINAMIS & MONITORING
-       ============================================================= */
-    function renderManajemenDashboard(container) {
-      const hiradc = getHiradc();
-      const rca = getRca().filter(r => r.isValidated !== false);
-
-      const hiradcStats = {
-        'Rendah': hiradc.filter(h => h.level === 'Rendah').length,
-        'Sedang': hiradc.filter(h => h.level === 'Sedang').length,
-        'Tinggi': hiradc.filter(h => h.level === 'Tinggi').length,
-        'Ekstrem': hiradc.filter(h => h.level === 'Ekstrem').length,
-      };
-
-      const rcaStats = {
-        'Minor': rca.filter(r => r.severity === 'Minor').length,
-        'Moderat': rca.filter(r => r.severity === 'Moderat').length,
-        'Mayor': rca.filter(r => r.severity === 'Mayor').length,
-        'Kritis': rca.filter(r => r.severity === 'Kritis').length,
-      };
-
-      const statusStats = {
-        'Open': rca.filter(r => (r.status || 'Open') === 'Open').length,
-        'In Progress': rca.filter(r => r.status === 'In Progress').length,
-        'Closed': rca.filter(r => r.status === 'Closed').length,
-      };
-
-      container.innerHTML = `
-        <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 flex items-center justify-between">
-          <div class="flex items-center space-x-3">
-            <div class="p-2 bg-blue-100 text-navy-900 rounded-lg">
-              <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-            </div>
-            <div>
-              <h4 class="text-xs font-bold text-navy-900 uppercase tracking-wider">Akses Manajemen: Pemantauan Eksekutif Terpadu</h4>
-              <p class="text-xs text-slate-600">Visualisasi profil risiko HIRADC, keparahan RCA, dan status tindak lanjut K3L secara real-time.</p>
-            </div>
-          </div>
-          <button onclick="switchMenu('rekap-laporan')" class="inline-flex items-center space-x-2 px-3 py-1.5 text-xs font-bold bg-navy-900 text-white rounded-md shadow-sm hover:bg-navy-800">
-            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-            <span>Buka Rekap Laporan & Excel</span>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-medium text-slate-500">Total Aktivitas HIRADC</span>
-            <div class="text-2xl font-bold text-navy-900 mt-1">${hiradc.length} Aktivitas</div>
-            <span class="text-[10px] text-slate-400">Terdaftar di matriks risiko</span>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-medium text-rose-600">Risiko Ekstrem & Tinggi</span>
-            <div class="text-2xl font-bold text-rose-600 mt-1">${hiradcStats['Ekstrem'] + hiradcStats['Tinggi']} Kasus</div>
-            <span class="text-[10px] text-slate-400">Pengawasan prioritas</span>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-medium text-slate-500">Total Temuan RCA</span>
-            <div class="text-2xl font-bold text-navy-900 mt-1">${rca.length} Temuan</div>
-            <span class="text-[10px] text-slate-400">Akar masalah teridentifikasi</span>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-medium text-emerald-600">Perbaikan Selesai (Closed)</span>
-            <div class="text-2xl font-bold text-emerald-600 mt-1">${statusStats['Closed']} Selesai</div>
-            <span class="text-[10px] text-slate-400">${statusStats['Open'] + statusStats['In Progress']} masih berjalan</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-              <h4 class="font-bold text-sm text-navy-900">Risiko HIRADC</h4>
-              <span class="px-2 py-0.5 text-[10px] bg-slate-100 rounded text-slate-600 font-medium">Batang</span>
-            </div>
-            <div class="h-60 flex items-center justify-center">
-              <canvas id="mgmtHiradcChart"></canvas>
-            </div>
-          </div>
-
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-              <h4 class="font-bold text-sm text-navy-900">Severity Temuan RCA</h4>
-              <span class="px-2 py-0.5 text-[10px] bg-slate-100 rounded text-slate-600 font-medium">Donat</span>
-            </div>
-            <div class="h-60 flex items-center justify-center">
-              <canvas id="mgmtRcaSeverityChart"></canvas>
-            </div>
-          </div>
-
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-              <h4 class="font-bold text-sm text-navy-900">Status Tindak Lanjut</h4>
-              <span class="px-2 py-0.5 text-[10px] bg-slate-100 rounded text-slate-600 font-medium">Pie</span>
-            </div>
-            <div class="h-60 flex items-center justify-center">
-              <canvas id="mgmtRcaStatusChart"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider">Ringkasan Matriks HIRADC</h4>
-              <button onclick="switchMenu('rekap-laporan')" class="text-xs text-blue-700 font-semibold hover:underline">Lihat Selengkapnya →</button>
-            </div>
-            <div class="max-h-72 overflow-y-auto custom-scrollbar">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-100 bg-slate-50 text-slate-500 sticky top-0">
-                    <th class="p-2">Aktivitas</th>
-                    <th class="p-2">Tingkat Risiko</th>
-                    <th class="p-2">Pengendalian</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  ${hiradc.map(h => `
-                    <tr>
-                      <td class="p-2 font-medium text-slate-800">${h.activity}</td>
-                      <td class="p-2">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                          h.level === 'Ekstrem' ? 'bg-red-100 text-red-800' :
-                          h.level === 'Tinggi' ? 'bg-amber-100 text-amber-800' :
-                          h.level === 'Sedang' ? 'bg-blue-100 text-blue-800' :
-                          'bg-emerald-100 text-emerald-800'
-                        }">
-                          ${h.level}
-                        </span>
-                      </td>
-                      <td class="p-2 text-slate-500 truncate max-w-xs" title="${h.control || '-'}">${h.control || '-'}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-xs text-navy-900 uppercase tracking-wider">Ringkasan Tindak Lanjut RCA</h4>
-              <button onclick="switchMenu('rekap-laporan')" class="text-xs text-blue-700 font-semibold hover:underline">Lihat Selengkapnya →</button>
-            </div>
-            <div class="max-h-72 overflow-y-auto custom-scrollbar">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-100 bg-slate-50 text-slate-500 sticky top-0">
-                    <th class="p-2">Temuan</th>
-                    <th class="p-2">PIC</th>
-                    <th class="p-2 text-center">Status</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  ${rca.map(r => `
-                    <tr>
-                      <td class="p-2 font-medium text-slate-800 truncate max-w-[200px]" title="${r.finding}">${r.finding}</td>
-                      <td class="p-2 text-slate-600">${r.pic || '-'}</td>
-                      <td class="p-2 text-center">
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          r.status === 'Closed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                          r.status === 'In Progress' ? 'bg-amber-50 text-amber-700 border border-amber-200' :
-                          'bg-rose-50 text-rose-700 border border-rose-200'
-                        }">
-                          ${r.status || 'Open'}
-                        </span>
-                      </td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        Chart.getChart("mgmtHiradcChart")?.destroy();
-        Chart.getChart("mgmtRcaSeverityChart")?.destroy();
-        Chart.getChart("mgmtRcaStatusChart")?.destroy();
-
-        const ctxBar = document.getElementById('mgmtHiradcChart');
-        if (ctxBar) {
-          new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-              labels: ['Rendah', 'Sedang', 'Tinggi', 'Ekstrem'],
-              datasets: [{
-                data: [hiradcStats['Rendah'], hiradcStats['Sedang'], hiradcStats['Tinggi'], hiradcStats['Ekstrem']],
-                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
-                borderRadius: 4
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: { y: { beginAtZero: true } }
-            }
-          });
-        }
-
-        const ctxDoughnut = document.getElementById('mgmtRcaSeverityChart');
-        if (ctxDoughnut) {
-          new Chart(ctxDoughnut, {
-            type: 'doughnut',
-            data: {
-              labels: ['Minor', 'Moderat', 'Mayor', 'Kritis'],
-              datasets: [{
-                data: [rcaStats['Minor'], rcaStats['Moderat'], rcaStats['Mayor'], rcaStats['Kritis']],
-                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { position: 'bottom' } }
-            }
-          });
-        }
-
-        const ctxPie = document.getElementById('mgmtRcaStatusChart');
-        if (ctxPie) {
-          new Chart(ctxPie, {
-            type: 'pie',
-            data: {
-              labels: ['Open', 'In Progress', 'Closed'],
-              datasets: [{
-                data: [statusStats['Open'], statusStats['In Progress'], statusStats['Closed']],
-                backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { position: 'bottom' } }
-            }
-          });
-        }
-      }, 50);
-    }
-
-    /* =============================================================
-       KOMPONEN: DASHBOARD HSSE, SOP, APD, & DOC REQS
-       ============================================================= */
-    function renderHsseDashboard(container) {
+    // HALAMAN DOKUMEN SOP
+    function renderSop(container) {
       const sops = getSops();
-      const docReqs = getDocRequests();
-      const apdReqs = getApdRequests();
-      const findings = getFindings();
-
-      const pendingDoc = docReqs.filter(d => d.status === 'Menunggu Persetujuan').length;
-      const pendingApd = apdReqs.filter(a => a.status === 'Menunggu Persetujuan').length;
-      const pendingFind = findings.filter(f => f.status === 'Menunggu Validasi').length;
-
       container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase">Total SOP K3L</span>
-            <div class="text-2xl font-extrabold text-navy-900 mt-1">${sops.length}</div>
-            <span class="text-[11px] text-emerald-600 font-medium">Tersedia online</span>
-          </div>
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase">Validasi Temuan</span>
-            <div class="text-2xl font-extrabold text-navy-900 mt-1">${findings.length}</div>
-            <span class="text-[11px] text-amber-600 font-medium">${pendingFind} butuh validasi</span>
-          </div>
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase">Permintaan Dokumen</span>
-            <div class="text-2xl font-extrabold text-navy-900 mt-1">${docReqs.length}</div>
-            <span class="text-[11px] text-amber-600 font-medium">${pendingDoc} permohonan baru</span>
-          </div>
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase">Peminjaman APD</span>
-            <div class="text-2xl font-extrabold text-navy-900 mt-1">${apdReqs.length}</div>
-            <span class="text-[11px] text-amber-600 font-medium">${pendingApd} butuh tindakan</span>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
+          <div class="flex justify-between items-center pb-4 border-b">
             <div>
-              <h3 class="font-bold text-navy-900">Perlu Tindakan Persetujuan & Validasi Segera</h3>
-              <p class="text-xs text-slate-500">Pengajuan dokumen, APD, dan temuan bahaya dari karyawan</p>
+              <h3 class="font-bold text-navy-900 text-base">Dokumen SOP K3L</h3>
+              <p class="text-xs text-slate-500">Standar operasional prosedur resmi PT Solusi Energy Nusantara</p>
             </div>
-            <button onclick="switchMenu('rekap-laporan')" class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 inline-flex items-center space-x-1">
-              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
-              <span>Buka Menu Rekap Laporan</span>
-            </button>
+            ${currentUser.role === 'hsse' ? `
+              <button onclick="openModal('sop-modal')" class="bg-navy-900 text-white px-4 py-2 rounded-lg text-xs font-bold">+ Tambah SOP</button>
+            ` : ''}
           </div>
-
-          ${(pendingDoc === 0 && pendingApd === 0 && pendingFind === 0) ? `
-            <div class="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-              <i data-lucide="check-circle-2" class="w-8 h-8 text-emerald-500 mx-auto mb-2"></i>
-              <p class="text-xs font-semibold text-slate-700">Semua Laporan & Permintaan Telah Diproses</p>
-            </div>
-          ` : `
-            <div class="space-y-3">
-              ${findings.filter(f => f.status === 'Menunggu Validasi').map(item => `
-                <div class="flex items-center justify-between p-3.5 bg-rose-50/50 border border-rose-200 rounded-lg">
-                  <div class="flex items-center space-x-3">
-                    <span class="px-2 py-0.5 text-[11px] font-bold bg-rose-200 text-rose-800 rounded">Temuan</span>
-                    <div>
-                      <div class="text-sm font-semibold text-slate-800">${item.location}: ${item.description}</div>
-                      <div class="text-xs text-slate-500">Pelapor: <strong>${item.reporter}</strong> (${item.dept}) • Tanggal: ${item.date}</div>
-                    </div>
-                  </div>
-                  <button onclick="switchMenu('validasi-temuan')" class="text-xs font-semibold text-rose-700 hover:underline">Validasi Sekarang →</button>
-                </div>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b">
+              <tr><th class="p-3">Kode</th><th class="p-3">Judul</th><th class="p-3">Kategori</th><th class="p-3">Revisi</th><th class="p-3">Tanggal</th></tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              ${sops.map(s => `
+                <tr><td class="p-3 font-semibold text-navy-900">${s.code}</td><td class="p-3">${s.title}</td><td class="p-3 text-slate-500">${s.category}</td><td class="p-3">${s.rev || 'Rev 01'}</td><td class="p-3 text-slate-400">${s.date}</td></tr>
               `).join('')}
-
-              ${apdReqs.filter(a => a.status === 'Menunggu Persetujuan').map(item => `
-                <div class="flex items-center justify-between p-3.5 bg-blue-50/50 border border-blue-200 rounded-lg">
-                  <div class="flex items-center space-x-3">
-                    <span class="px-2 py-0.5 text-[11px] font-bold bg-blue-200 text-blue-800 rounded">APD</span>
-                    <div>
-                      <div class="text-sm font-semibold text-slate-800">${Array.isArray(item.items) ? item.items.join(', ') : item.apdType}</div>
-                      <div class="text-xs text-slate-500">Pemohon: <strong>${item.requester}</strong> (${item.dept}) • Durasi: ${item.duration || 1} Hari</div>
-                    </div>
-                  </div>
-                  <button onclick="switchMenu('peminjaman-apd')" class="text-xs font-semibold text-blue-700 hover:underline">Tinjau APD →</button>
-                </div>
-              `).join('')}
-
-              ${docReqs.filter(d => d.status === 'Menunggu Persetujuan').map(item => `
-                <div class="flex items-center justify-between p-3.5 bg-amber-50/50 border border-amber-200 rounded-lg">
-                  <div class="flex items-center space-x-3">
-                    <span class="px-2 py-0.5 text-[11px] font-bold bg-amber-200 text-amber-800 rounded">Dokumen</span>
-                    <div>
-                      <div class="text-sm font-semibold text-slate-800">${item.sopTitle}</div>
-                      <div class="text-xs text-slate-500">Pemohon: <strong>${item.requester}</strong> (${item.dept})</div>
-                    </div>
-                  </div>
-                  <button onclick="switchMenu('permintaan-dokumen')" class="text-xs font-semibold text-blue-700 hover:underline">Tinjau Dokumen →</button>
-                </div>
-              `).join('')}
-            </div>
-          `}
+            </tbody>
+          </table>
         </div>
       `;
     }
 
-    function renderHsseSop(container) {
-      const sops = getSops();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="font-bold text-navy-900">Database Dokumen SOP K3L (${sops.length} Dokumen)</h3>
-              <p class="text-xs text-slate-500">Kelola dan unggah file asli agar dapat diunduh langsung oleh karyawan</p>
-            </div>
-            <button onclick="openSopModal()" class="inline-flex items-center space-x-2 bg-navy-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-navy-800 transition">
-              <i data-lucide="plus" class="w-4 h-4"></i>
-              <span>Tambah SOP Baru</span>
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">No. Dokumen</th>
-                  <th class="p-3">Judul SOP</th>
-                  <th class="p-3">Kategori</th>
-                  <th class="p-3">Revisi</th>
-                  <th class="p-3">Tgl Berlaku</th>
-                  <th class="p-3 text-center">Unduh File</th>
-                  <th class="p-3 text-center">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${sops.map(sop => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-semibold text-navy-900 font-mono">${sop.code}</td>
-                    <td class="p-3 text-slate-800 font-medium">${sop.title}</td>
-                    <td class="p-3 text-slate-600">${sop.category}</td>
-                    <td class="p-3 text-slate-500">${sop.rev || 'Rev 01'}</td>
-                    <td class="p-3 text-slate-500">${sop.date}</td>
-                    <td class="p-3 text-center">
-                      <button onclick="downloadSopFile('${sop.id}')" title="Unduh Berkas" class="inline-flex items-center space-x-1 px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold border border-blue-200">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>Unduh</span>
-                      </button>
-                    </td>
-                    <td class="p-3 text-center">
-                      <div class="inline-flex space-x-1">
-                        <button onclick="editSop('${sop.id}')" class="p-1.5 hover:bg-slate-100 rounded text-blue-600"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                        <button onclick="deleteSop('${sop.id}')" class="p-1.5 hover:bg-slate-100 rounded text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderHsseApdReq(container) {
-      const requests = getApdRequests();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="mb-6">
-            <h3 class="font-bold text-navy-900">Verifikasi & Persetujuan Peminjaman APD</h3>
-            <p class="text-xs text-slate-500">Permohonan peminjaman APD realtime dari karyawan divisi lain</p>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode Pinjam</th>
-                  <th class="p-3">Pemohon & NIP</th>
-                  <th class="p-3">Item APD yang Diminta</th>
-                  <th class="p-3">Durasi</th>
-                  <th class="p-3">Keperluan / Lokasi</th>
-                  <th class="p-3 text-center">Status</th>
-                  <th class="p-3 text-center">Keputusan HSSE</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${requests.length === 0 ? `
-                  <tr><td colspan="7" class="text-center py-6 text-slate-400">Belum ada permohonan APD yang diajukan.</td></tr>
-                ` : requests.map(item => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${item.reqCode}</td>
-                    <td class="p-3">
-                      <div class="font-semibold text-slate-900">${item.requester}</div>
-                      <div class="text-[11px] text-slate-500 font-mono">NIP: ${item.nip || '-'} • ${item.dept}</div>
-                    </td>
-                    <td class="p-3 font-medium text-navy-900">
-                      ${Array.isArray(item.items) ? item.items.map(it => `<span class="inline-block bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 text-[10px] mr-1 mb-1">${it}</span>`).join('') : item.apdType}
-                    </td>
-                    <td class="p-3 text-slate-600 font-semibold">${item.duration || 1} Hari</td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${item.purpose}">${item.purpose}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        item.status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        item.status === 'Ditolak' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${item.status}
-                      </span>
-                    </td>
-                    <td class="p-3 text-center">
-                      ${item.status === 'Menunggu Persetujuan' ? `
-                        <div class="inline-flex space-x-1.5">
-                          <button onclick="approveApdRequest('${item.id}', true)" class="px-3 py-1 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700">Setujui</button>
-                          <button onclick="approveApdRequest('${item.id}', false)" class="px-3 py-1 bg-red-600 text-white rounded font-medium hover:bg-red-700">Tolak</button>
-                        </div>
-                      ` : `
-                        <span class="text-xs text-slate-400 italic">Selesai Diverifikasi</span>
-                      `}
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderHsseDocReq(container) {
-      const requests = getDocRequests();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="mb-6">
-            <h3 class="font-bold text-navy-900">Persetujuan Permintaan Dokumen SOP</h3>
-            <p class="text-xs text-slate-500">Persetujuan salinan resmi SOP untuk keperluan audit dan pekerjaan</p>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode</th>
-                  <th class="p-3">Pemohon</th>
-                  <th class="p-3">Dokumen Diminta</th>
-                  <th class="p-3">Keperluan</th>
-                  <th class="p-3">Tanggal</th>
-                  <th class="p-3 text-center">Status</th>
-                  <th class="p-3 text-center">Keputusan</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${requests.length === 0 ? `
-                  <tr><td colspan="7" class="text-center py-6 text-slate-400">Belum ada permintaan dokumen.</td></tr>
-                ` : requests.map(item => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${item.reqCode}</td>
-                    <td class="p-3">
-                      <div class="font-semibold text-slate-900">${item.requester}</div>
-                      <div class="text-[11px] text-slate-500">${item.dept}</div>
-                    </td>
-                    <td class="p-3 font-medium text-navy-900">${item.sopTitle}</td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${item.purpose}">${item.purpose}</td>
-                    <td class="p-3 text-slate-500">${item.date}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2 py-1 rounded text-[11px] font-semibold ${
-                        item.status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        item.status === 'Ditolak' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${item.status}
-                      </span>
-                    </td>
-                    <td class="p-3 text-center">
-                      ${item.status === 'Menunggu Persetujuan' ? `
-                        <div class="inline-flex space-x-1.5">
-                          <button onclick="approveDocRequest('${item.id}', true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700">Setujui</button>
-                          <button onclick="approveDocRequest('${item.id}', false)" class="px-2.5 py-1 bg-red-600 text-white rounded font-medium hover:bg-red-700">Tolak</button>
-                        </div>
-                      ` : `
-                        <span class="text-xs text-slate-400 italic">Selesai Ditinjau</span>
-                      `}
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    /* =============================================================
-       KOMPONEN: DASHBOARD KARYAWAN & FORM PEMINJAMAN APD (GAMBAR 1)
-       ============================================================= */
-    function renderKaryawanDashboard(container) {
-      const docReqs = getDocRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
-      const apdReqs = getApdRequests().filter(a => a.requester.toLowerCase() === currentUser.userName.toLowerCase());
-      const findings = getFindings().filter(f => f.reporter.toLowerCase() === currentUser.userName.toLowerCase());
-
-      container.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <span class="text-xs font-semibold text-slate-500 uppercase">Laporan Temuan Saya</span>
-              <div class="text-3xl font-extrabold text-navy-900 mt-1">${findings.length} Laporan</div>
-              <span class="text-[11px] text-emerald-600 font-medium">${findings.filter(f => f.status === 'Tervalidasi').length} tervalidasi</span>
-            </div>
-            <button onclick="switchMenu('lapor-temuan')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold hover:bg-blue-100">
-              Lapor Baru
-            </button>
-          </div>
-
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <span class="text-xs font-semibold text-slate-500 uppercase">Peminjaman APD</span>
-              <div class="text-3xl font-extrabold text-navy-900 mt-1">${apdReqs.length} Pengajuan</div>
-              <span class="text-[11px] text-emerald-600 font-medium">${apdReqs.filter(a => a.status === 'Disetujui').length} disetujui</span>
-            </div>
-            <button onclick="switchMenu('peminjaman-apd')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold hover:bg-blue-100">
-              Buka Form
-            </button>
-          </div>
-
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <span class="text-xs font-semibold text-slate-500 uppercase">Permintaan Dokumen</span>
-              <div class="text-3xl font-extrabold text-navy-900 mt-1">${docReqs.length} Pengajuan</div>
-              <span class="text-[11px] text-emerald-600 font-medium">${docReqs.filter(d => d.status === 'Disetujui').length} disetujui</span>
-            </div>
-            <button onclick="switchMenu('permintaan-dokumen')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold hover:bg-blue-100">
-              Lihat Status
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-          <h3 class="font-bold text-navy-900 mb-1">Aksi Cepat Karyawan</h3>
-          <p class="text-xs text-slate-500 mb-4">Laporkan bahaya K3L, ajukan peminjaman APD, atau akses perpustakaan dokumen SOP</p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <button onclick="switchMenu('lapor-temuan')" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-blue-600 hover:bg-blue-50/30 transition text-left">
-              <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-900 flex items-center justify-center mr-3">
-                <i data-lucide="camera" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="text-sm font-bold text-navy-900">Lapor Temuan Bahaya</div>
-                <div class="text-xs text-slate-500">Unggah foto & usulan perbaikan</div>
-              </div>
-            </button>
-
-            <button onclick="switchMenu('peminjaman-apd')" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-blue-600 hover:bg-blue-50/30 transition text-left">
-              <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center mr-3">
-                <i data-lucide="shield-alert" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="text-sm font-bold text-navy-900">Form Peminjaman APD</div>
-                <div class="text-xs text-slate-500">Alur digital realtime 1-hari</div>
-              </div>
-            </button>
-
-            <button onclick="switchMenu('dokumen-sop')" class="flex items-center p-4 border border-slate-200 rounded-lg hover:border-blue-600 hover:bg-blue-50/30 transition text-left">
-              <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-900 flex items-center justify-center mr-3">
-                <i data-lucide="download" class="w-5 h-5"></i>
-              </div>
-              <div>
-                <div class="text-sm font-bold text-navy-900">Katalog SOP K3L</div>
-                <div class="text-xs text-slate-500">Unduh dokumen resmi</div>
-              </div>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderKaryawanApdForm(container) {
-      const myRequests = getApdRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-7">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-slate-100 mb-6">
-            <div>
-              <h2 class="text-xl font-bold text-slate-900 leading-tight">Formulir Peminjaman Alat Pelindung Diri (APD)</h2>
-              <p class="text-xs text-slate-500 mt-1">Menggantikan formulir kertas manual. Permohonan akan diverifikasi oleh PIC HSSE secara realtime.</p>
-            </div>
-            <div>
-              <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200">
-                Digital Workflow 1-Hari
-              </span>
-            </div>
-          </div>
-
-          <form onsubmit="handleKaryawanApdSubmit(event)" class="space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Lengkap Pemohon</label>
-                <input type="text" id="apd-form-name" required value="${currentUser.userName}" placeholder="Contoh: Davi Adhimukti" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">NIP / ID Karyawan</label>
-                <input type="text" id="apd-form-nip" required placeholder="Contoh: 1020123002" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Divisi / Unit Kerja</label>
-                <select id="apd-form-dept" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-                  <option value="Engineering & Design" selected>Engineering & Design</option>
-                  <option value="Operasi Lapangan">Operasi Lapangan</option>
-                  <option value="Pemeliharaan & Fasilitas">Pemeliharaan & Fasilitas</option>
-                  <option value="Logistik & Supply Chain">Logistik & Supply Chain</option>
-                  <option value="Komersial & Proyek">Komersial & Proyek</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Durasi Pemakaian (Hari)</label>
-                <input type="number" id="apd-form-duration" required min="1" max="60" value="2" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-blue-600">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Pilih Item APD yang Dibutuhkan</label>
-              <div class="p-4 border border-slate-200 rounded-lg bg-slate-50/50">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-3.5 gap-x-6 text-sm text-slate-800">
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Safety Helmet" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Safety Helmet</span>
-                  </label>
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Safety Shoes" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Safety Shoes</span>
-                  </label>
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Full Body Harness" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Full Body Harness</span>
-                  </label>
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Safety Glasses" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Safety Glasses</span>
-                  </label>
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Rompi Reflektor" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Rompi Reflektor</span>
-                  </label>
-                  <label class="flex items-center space-x-2.5 cursor-pointer">
-                    <input type="checkbox" name="apd_item" value="Sarung Tangan" class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                    <span class="text-xs font-medium">Sarung Tangan</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Keperluan Lapangan / Lokasi Proyek</label>
-              <textarea id="apd-form-purpose" rows="3" required placeholder="Contoh: Site visit inspeksi pipa transmisi gas area Bogor" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600"></textarea>
-            </div>
-
-            <div class="flex justify-end pt-2">
-              <button type="submit" class="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-2.5 rounded-lg transition shadow-sm">
-                <i data-lucide="triangle-alert" class="w-4 h-4"></i>
-                <span>Kirim Pengajuan Peminjaman</span>
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mt-6">
-          <h3 class="font-bold text-navy-900 mb-1">Riwayat Status Pengajuan APD Anda</h3>
-          <p class="text-xs text-slate-500 mb-4">Persetujuan realtime dari Unit HSSE langsung tercatat di bawah ini</p>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode Pinjam</th>
-                  <th class="p-3">Item APD Diminta</th>
-                  <th class="p-3">Durasi</th>
-                  <th class="p-3">Keperluan / Lokasi</th>
-                  <th class="p-3">Tgl Diajukan</th>
-                  <th class="p-3 text-center">Status HSSE</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${myRequests.length === 0 ? `
-                  <tr><td colspan="6" class="text-center py-6 text-slate-400">Belum ada riwayat pengajuan peminjaman APD.</td></tr>
-                ` : myRequests.map(r => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${r.reqCode}</td>
-                    <td class="p-3 font-medium text-navy-900">${Array.isArray(r.items) ? r.items.join(', ') : (r.apdType || '-')}</td>
-                    <td class="p-3 text-slate-600">${r.duration ? r.duration + ' Hari' : '-'}</td>
-                    <td class="p-3 text-slate-600 max-w-xs truncate" title="${r.purpose}">${r.purpose}</td>
-                    <td class="p-3 text-slate-500">${r.date}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        r.status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        r.status === 'Ditolak' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${r.status}
-                      </span>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function handleKaryawanApdSubmit(event) {
-      event.preventDefault();
-      const name = document.getElementById('apd-form-name').value;
-      const nip = document.getElementById('apd-form-nip').value;
-      const dept = document.getElementById('apd-form-dept').value;
-      const duration = document.getElementById('apd-form-duration').value;
-      const purpose = document.getElementById('apd-form-purpose').value;
-
-      const checkboxes = document.querySelectorAll('input[name="apd_item"]:checked');
-      const selectedItems = Array.from(checkboxes).map(cb => cb.value);
-
-      if (selectedItems.length === 0) {
-        alert("Pilih setidaknya satu item APD yang dibutuhkan!");
-        return;
-      }
-
-      const allApd = getApdRequests();
-      const newReq = {
-        id: 'apd-' + Date.now(),
-        reqCode: `REQ-APD-${String(allApd.length + 1).padStart(3, '0')}`,
-        requester: name,
-        nip: nip,
-        dept: dept,
-        duration: parseInt(duration),
-        items: selectedItems,
-        purpose: purpose,
-        date: new Date().toISOString().split('T')[0],
-        status: 'Menunggu Persetujuan'
-      };
-
-      allApd.unshift(newReq);
-      setApdRequests(allApd);
-      showToast("Formulir peminjaman APD berhasil dikirim ke Unit HSSE!");
-      renderApp();
-    }
-
-    function renderKaryawanSop(container) {
-      const sops = getSops();
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="font-bold text-navy-900">Katalog Dokumen SOP K3L (${sops.length} Dokumen)</h3>
-              <p class="text-xs text-slate-500">Cari dan unduh berkas prosedur keselamatan kerja resmi PT SEN</p>
-            </div>
-            <div class="relative w-full sm:w-72">
-              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
-              <input type="text" id="search-sop" onkeyup="filterSopList()" placeholder="Cari SOP..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">No. Dokumen</th>
-                  <th class="p-3">Judul SOP</th>
-                  <th class="p-3">Kategori</th>
-                  <th class="p-3">Revisi</th>
-                  <th class="p-3">Tanggal</th>
-                  <th class="p-3 text-center">Akses Unduh</th>
-                </tr>
-              </thead>
-              <tbody id="sop-list-tbody" class="divide-y divide-slate-100">
-                ${sops.map(sop => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-semibold text-navy-900 font-mono">${sop.code}</td>
-                    <td class="p-3 text-slate-800 font-medium">${sop.title}</td>
-                    <td class="p-3 text-slate-600">${sop.category}</td>
-                    <td class="p-3 text-slate-500">${sop.rev || 'Rev 01'}</td>
-                    <td class="p-3 text-slate-500">${sop.date}</td>
-                    <td class="p-3 text-center">
-                      <button onclick="downloadSopFile('${sop.id}')" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded border border-blue-200 font-medium transition">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        <span>Unduh Dokumen</span>
-                      </button>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function filterSopList() {
-      const q = document.getElementById('search-sop').value.toLowerCase();
-      const sops = getSops();
-      const filtered = sops.filter(s => s.title.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
-      const tbody = document.getElementById('sop-list-tbody');
-      tbody.innerHTML = filtered.map(sop => `
-        <tr class="hover:bg-slate-50/80 transition">
-          <td class="p-3 font-semibold text-navy-900 font-mono">${sop.code}</td>
-          <td class="p-3 text-slate-800 font-medium">${sop.title}</td>
-          <td class="p-3 text-slate-600">${sop.category}</td>
-          <td class="p-3 text-slate-500">${sop.rev || 'Rev 01'}</td>
-          <td class="p-3 text-slate-500">${sop.date}</td>
-          <td class="p-3 text-center">
-            <button onclick="downloadSopFile('${sop.id}')" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded border border-blue-200 font-medium transition">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i>
-              <span>Unduh Dokumen</span>
-            </button>
-          </td>
-        </tr>
-      `).join('');
-      lucide.createIcons();
-    }
-
-    function renderKaryawanDocReq(container) {
-      const myRequests = getDocRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
-
-      container.innerHTML = `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="font-bold text-navy-900">Permintaan Salinan Dokumen SOP</h3>
-              <p class="text-xs text-slate-500">Ajukan permohonan salinan resmi ke Unit HSSE</p>
-            </div>
-            <button onclick="openRequestDocModal()" class="inline-flex items-center space-x-2 bg-navy-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-navy-800 transition">
-              <i data-lucide="plus" class="w-4 h-4"></i>
-              <span>Ajukan Permintaan Dokumen</span>
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase font-semibold">
-                  <th class="p-3">Kode Pengajuan</th>
-                  <th class="p-3">Nama SOP</th>
-                  <th class="p-3">Keperluan</th>
-                  <th class="p-3">Tanggal</th>
-                  <th class="p-3 text-center">Status HSSE</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${myRequests.length === 0 ? `
-                  <tr><td colspan="5" class="text-center py-6 text-slate-400">Belum ada pengajuan dokumen. Klik tombol di atas untuk mengajukan.</td></tr>
-                ` : myRequests.map(r => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3 font-mono font-semibold text-slate-700">${r.reqCode}</td>
-                    <td class="p-3 font-semibold text-navy-900">${r.sopTitle}</td>
-                    <td class="p-3 text-slate-600">${r.purpose}</td>
-                    <td class="p-3 text-slate-500">${r.date}</td>
-                    <td class="p-3 text-center">
-                      <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${
-                        r.status === 'Disetujui' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-                        r.status === 'Ditolak' ? 'bg-red-50 text-red-700 border border-red-200' :
-                        'bg-amber-50 text-amber-700 border border-amber-200'
-                      }">
-                        ${r.status}
-                      </span>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    /* =============================================================
-       ACTION CRUD SOP & PERSUTUJUAN HSSE
-       ============================================================= */
-    function openSopModal(id = null) {
-      document.getElementById('sop-form').reset();
-      document.getElementById('sop-id').value = '';
-
-      if (id) {
-        const sops = getSops();
-        const item = sops.find(s => s.id === id);
-        if (item) {
-          document.getElementById('sop-modal-title').innerText = 'Edit Dokumen SOP';
-          document.getElementById('sop-id').value = item.id;
-          document.getElementById('sop-code').value = item.code;
-          document.getElementById('sop-title').value = item.title;
-          document.getElementById('sop-category').value = item.category;
-        }
-      } else {
-        document.getElementById('sop-modal-title').innerText = 'Tambah Dokumen SOP Baru';
-        const sops = getSops();
-        document.getElementById('sop-code').value = `SOP-HSSE-${String(sops.length + 1).padStart(3, '0')}`;
-      }
-      openModal('sop-modal');
-    }
-
-    function editSop(id) { openSopModal(id); }
-
-    function deleteSop(id) {
-      if (confirm("Apakah Anda yakin ingin menghapus SOP ini?")) {
-        let sops = getSops();
-        sops = sops.filter(s => s.id !== id);
-        setSops(sops);
-        showToast("SOP berhasil dihapus.");
-        renderApp();
-      }
-    }
-
-    async function saveSop(event) {
-      event.preventDefault();
-      const id = document.getElementById('sop-id').value;
+    function saveSop(e) {
+      e.preventDefault();
       const code = document.getElementById('sop-code').value;
       const title = document.getElementById('sop-title').value;
       const category = document.getElementById('sop-category').value;
-      const fileInput = document.getElementById('sop-file');
-      let sops = getSops();
-
-      let fileName = null;
-      let fileDataUrl = null;
-
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        fileName = file.name;
-        fileDataUrl = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(file);
-        });
-      }
-
-      if (id) {
-        sops = sops.map(s => {
-          if (s.id === id) {
-            return {
-              ...s,
-              code,
-              title,
-              category,
-              fileName: fileName || s.fileName,
-              fileDataUrl: fileDataUrl || s.fileDataUrl,
-              isDemo: false
-            };
-          }
-          return s;
-        });
-        showToast(`Dokumen ${code} berhasil diperbarui.`);
-      } else {
-        sops.unshift({
-          id: 'sop-' + Date.now(),
-          code,
-          title,
-          category,
-          rev: 'Rev 01',
-          date: new Date().toISOString().split('T')[0],
-          fileName: fileName || `${code}.txt`,
-          fileDataUrl: fileDataUrl,
-          fileContent: `DOKUMEN RESMI PT SOLUSI ENERGY NUSANTARA\nNOMOR: ${code}\nJUDUL: ${title}\nKATEGORI: ${category}`,
-          isDemo: false
-        });
-        showToast(`Dokumen ${code} berhasil diunggah & tersimpan!`);
-      }
-
-      setSops(sops);
+      const list = getSops();
+      list.unshift({ id: 'sop-' + Date.now(), code, title, category, rev: 'Rev 01', date: new Date().toISOString().split('T')[0] });
+      setSops(list);
       closeModal('sop-modal');
       renderApp();
+      showToast("Dokumen SOP berhasil ditambahkan!");
     }
 
-    function openRequestDocModal() {
-      const sops = getSops();
-      const select = document.getElementById('req-sop-id');
-      select.innerHTML = sops.map(s => `<option value="${s.id}">${s.code} - ${s.title}</option>`).join('');
-      openModal('req-doc-modal');
-    }
-
-    function submitDocRequest(event) {
-      event.preventDefault();
-      const sopId = document.getElementById('req-sop-id').value;
-      const purpose = document.getElementById('req-doc-purpose').value;
-      const sops = getSops();
-      const targetSop = sops.find(s => s.id === sopId);
-      const reqs = getDocRequests();
-
-      reqs.unshift({
-        id: 'doc-req-' + Date.now(),
-        reqCode: `REQ-DOC-${String(reqs.length + 1).padStart(3, '0')}`,
-        sopId: sopId,
-        sopTitle: targetSop ? targetSop.title : 'Dokumen SOP',
-        requester: currentUser.userName,
-        dept: currentUser.department,
-        purpose: purpose,
-        date: new Date().toISOString().split('T')[0],
-        status: 'Menunggu Persetujuan'
-      });
-
-      setDocRequests(reqs);
-      closeModal('req-doc-modal');
-      document.getElementById('req-doc-form').reset();
-      showToast("Permintaan dokumen berhasil dikirim ke Unit HSSE!");
-      renderApp();
-    }
-
-    function approveApdRequest(id, isApproved) {
-      let requests = getApdRequests();
-      requests = requests.map(r => r.id === id ? { ...r, status: isApproved ? 'Disetujui' : 'Ditolak' } : r);
-      setApdRequests(requests);
-      showToast(`Peminjaman APD berhasil ${isApproved ? 'DISETUJUI' : 'DITOLAK'}.`);
-      renderApp();
-    }
-
-    function approveDocRequest(id, isApproved) {
-      let requests = getDocRequests();
-      requests = requests.map(r => r.id === id ? { ...r, status: isApproved ? 'Disetujui' : 'Ditolak' } : r);
-      setDocRequests(requests);
-      showToast(`Permintaan dokumen berhasil ${isApproved ? 'DISETUJUI' : 'DITOLAK'}.`);
-      renderApp();
-    }
-
-    // Inisialisasi saat web dimuat
+    // INIT
     window.addEventListener('DOMContentLoaded', () => {
-      if (!currentUser) {
-        document.getElementById('login-modal').classList.remove('hidden');
-      } else {
-        document.getElementById('login-modal').classList.add('hidden');
-        renderApp();
-      }
+      if (!currentUser) document.getElementById('login-modal').classList.remove('hidden');
+      else { document.getElementById('login-modal').classList.add('hidden'); renderApp(); }
     });
   </script>
 </body>
