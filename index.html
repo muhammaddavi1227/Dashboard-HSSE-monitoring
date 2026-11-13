@@ -27,7 +27,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-  <!-- TOAST NOTIFIKASI -->
+  <!-- NOTIFIKASI TOAST -->
   <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 translate-y-[-150%] opacity-0 bg-white border-l-4 border-emerald-600 shadow-xl rounded-md p-4 flex items-center space-x-3 text-slate-800">
     <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
     <span id="toast-msg" class="text-sm font-medium">Operasi berhasil!</span>
@@ -138,7 +138,7 @@
     </main>
   </div>
 
-  <!-- MODAL PEMERIKSAAN APAR -->
+  <!-- MODAL FORM PEMERIKSAAN APAR -->
   <div id="apar-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -150,41 +150,42 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Tanggal Pemeriksaan</label>
-            <input type="date" id="apar-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <input type="date" id="apar-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
           </div>
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Kode APAR</label>
-            <input type="text" id="apar-code" required placeholder="Contoh: APAR-GD1-01" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <input type="text" id="apar-code" required placeholder="Contoh: APAR-GD1-01" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
           </div>
         </div>
         <div>
           <label class="block font-semibold text-slate-600 mb-1">Lokasi APAR</label>
-          <input type="text" id="apar-location" required placeholder="Contoh: Lantai 2 Koridor Timur" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+          <input type="text" id="apar-location" required placeholder="Contoh: Lantai 2 Koridor Timur" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Kondisi APAR</label>
-            <select id="apar-condition" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <select id="apar-condition" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
               <option value="Baik">Baik</option>
               <option value="Tidak Baik">Tidak Baik</option>
             </select>
           </div>
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
-            <select id="apar-status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <select id="apar-status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
               <option value="Belum">Belum</option>
               <option value="Proses">Proses</option>
               <option value="Selesai">Selesai</option>
             </select>
           </div>
         </div>
+        <!-- PERUBAHAN: NAMA PEMERIKSA MANUAL & WAJIB DIISI -->
         <div>
-          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa (Otomatis Akun Login)</label>
-          <input type="text" id="apar-inspector" readonly class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-500 rounded-lg cursor-not-allowed">
+          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa</label>
+          <input type="text" id="apar-inspector" required placeholder="Masukkan nama pemeriksa" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900 bg-white">
         </div>
         <div>
           <label class="block font-semibold text-slate-600 mb-1">Catatan Pemeriksaan</label>
-          <textarea id="apar-notes" rows="2" placeholder="Keterangan pin pengaman, jarum tekanan, selang, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg"></textarea>
+          <textarea id="apar-notes" rows="2" placeholder="Keterangan pin pengaman, jarum tekanan, selang, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900"></textarea>
         </div>
         <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModal('apar-modal')" class="px-4 py-2 border text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
@@ -194,7 +195,7 @@
     </div>
   </div>
 
-  <!-- MODAL PEMERIKSAAN KENDARAAN -->
+  <!-- MODAL FORM PEMERIKSAAN KENDARAAN -->
   <div id="kendaraan-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -206,41 +207,42 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Tanggal Pemeriksaan</label>
-            <input type="date" id="kendaraan-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <input type="date" id="kendaraan-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
           </div>
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Nomor Polisi</label>
-            <input type="text" id="kendaraan-nopol" required placeholder="Contoh: B 1234 SEN" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <input type="text" id="kendaraan-nopol" required placeholder="Contoh: B 1234 SEN" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
           </div>
         </div>
         <div>
           <label class="block font-semibold text-slate-600 mb-1">Jenis Kendaraan</label>
-          <input type="text" id="kendaraan-type" required placeholder="Contoh: Toyota Hilux 4x4 / Blind Van" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+          <input type="text" id="kendaraan-type" required placeholder="Contoh: Toyota Hilux 4x4 / Blind Van" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Kondisi Kendaraan</label>
-            <select id="kendaraan-condition" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <select id="kendaraan-condition" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
               <option value="Baik">Baik</option>
               <option value="Tidak Baik">Tidak Baik</option>
             </select>
           </div>
           <div>
             <label class="block font-semibold text-slate-600 mb-1">Status Tindak Lanjut</label>
-            <select id="kendaraan-status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            <select id="kendaraan-status" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900">
               <option value="Belum">Belum</option>
               <option value="Proses">Proses</option>
               <option value="Selesai">Selesai</option>
             </select>
           </div>
         </div>
+        <!-- PERUBAHAN: NAMA PEMERIKSA MANUAL & WAJIB DIISI -->
         <div>
-          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa (Otomatis Akun Login)</label>
-          <input type="text" id="kendaraan-inspector" readonly class="w-full px-3 py-2 border border-slate-200 bg-slate-100 text-slate-500 rounded-lg cursor-not-allowed">
+          <label class="block font-semibold text-slate-600 mb-1">Nama Pemeriksa</label>
+          <input type="text" id="kendaraan-inspector" required placeholder="Masukkan nama pemeriksa" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900 bg-white">
         </div>
         <div>
           <label class="block font-semibold text-slate-600 mb-1">Catatan Pemeriksaan</label>
-          <textarea id="kendaraan-notes" rows="2" placeholder="Keterangan rem, ban, kotak P3K, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg"></textarea>
+          <textarea id="kendaraan-notes" rows="2" placeholder="Keterangan rem, ban, kotak P3K, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-navy-900"></textarea>
         </div>
         <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModal('kendaraan-modal')" class="px-4 py-2 border text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
@@ -431,7 +433,7 @@
     </div>
   </div>
 
-  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
     const STORAGE_KEYS = {
       SOPS: 'hsse_sops_data_v2',
@@ -469,7 +471,6 @@
         ]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.RCA)) {
-        // Menggunakan severity numerik riil sesuai kolom SEVERITY database perusahaan
         localStorage.setItem(STORAGE_KEYS.RCA, JSON.stringify([
           { id: 'rca-1', caseNo: 'RCA-SEN-2024-001', finding: 'Trip breaker genset utama menyebabkan site padam', severity: '4', rootCause: 'Relai proteksi kelebihan beban aus', action: 'Ganti relai baru & kalibrasi', pic: 'Tim Elektrikal', status: 'Closed', location: 'Powerhouse Genset', reporter: 'Budi Santoso', date: '2024-05-02', isValidated: true },
           { id: 'rca-2', caseNo: 'RCA-SEN-2024-002', finding: 'Kabel gerinda tangan terkelupas tanpa insulasi', severity: '2', rootCause: 'Inspeksi bulanan terlewat', action: 'Tarik alat dan re-tagging', pic: 'Safety Officer', status: 'Closed', location: 'Workshop Fabrikasi', reporter: 'Davi Adhimukti', date: '2024-05-05', isValidated: true },
@@ -494,14 +495,14 @@
       }
       if (!localStorage.getItem(STORAGE_KEYS.APAR)) {
         localStorage.setItem(STORAGE_KEYS.APAR, JSON.stringify([
-          { id: 'apar-1', date: '2024-05-20', code: 'APAR-GD1-01', location: 'Lantai 1 Koridor Timur', condition: 'Baik', notes: 'Tekanan normal di area hijau.', status: 'Selesai', inspector: 'Unit HSSE (Admin)' },
-          { id: 'apar-2', date: '2024-05-21', code: 'APAR-WS-02', location: 'Workshop Fabrikasi', condition: 'Tidak Baik', notes: 'Jarum berada di area merah.', status: 'Proses', inspector: 'Unit HSSE (Admin)' }
+          { id: 'apar-1', date: '2024-05-20', code: 'APAR-GD1-01', location: 'Lantai 1 Koridor Timur', condition: 'Baik', notes: 'Tekanan normal di area hijau.', status: 'Selesai', inspector: 'Ahmad Fauzi' },
+          { id: 'apar-2', date: '2024-05-21', code: 'APAR-WS-02', location: 'Workshop Fabrikasi', condition: 'Tidak Baik', notes: 'Jarum berada di area merah.', status: 'Proses', inspector: 'Budi Santoso' }
         ]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.KENDARAAN)) {
         localStorage.setItem(STORAGE_KEYS.KENDARAAN, JSON.stringify([
-          { id: 'kdr-1', date: '2024-05-20', nopol: 'B 1024 SEN', type: 'Toyota Hilux 4x4', condition: 'Baik', notes: 'Kondisi prima siap dinas.', status: 'Selesai', inspector: 'Unit HSSE (Admin)' },
-          { id: 'kdr-2', date: '2024-05-22', nopol: 'B 2419 SEN', type: 'Blind Van Logistik', condition: 'Tidak Baik', notes: 'Ban cadangan bocor halus.', status: 'Belum', inspector: 'Unit HSSE (Admin)' }
+          { id: 'kdr-1', date: '2024-05-20', nopol: 'B 1024 SEN', type: 'Toyota Hilux 4x4', condition: 'Baik', notes: 'Kondisi prima siap dinas.', status: 'Selesai', inspector: 'Ahmad Fauzi' },
+          { id: 'kdr-2', date: '2024-05-22', nopol: 'B 2419 SEN', type: 'Blind Van Logistik', condition: 'Tidak Baik', notes: 'Ban cadangan bocor halus.', status: 'Belum', inspector: 'Hendra Gunawan' }
         ]));
       }
     }
@@ -510,7 +511,7 @@
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
     let currentActiveMenu = 'dashboard';
     let rekapActiveTab = 'rca';
-    let biFilterPeriod = 'semua'; // 'semua', 'bulan_ini', 'tahun_ini'
+    let biFilterPeriod = 'semua';
 
     function getSops() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.SOPS)) || []; }
     function setSops(d) { localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify(d)); }
@@ -666,7 +667,6 @@
       renderApp();
     }
 
-    // Helper Filter Periode Khusus Analisis BI
     function filterBiDataByPeriod(dataList, dateField = 'date') {
       if (biFilterPeriod === 'semua') return dataList;
       const now = new Date();
@@ -730,7 +730,7 @@
       lucide.createIcons();
     }
 
-    // ==================== DASHBOARD ADMIN UNIT HSSE ====================
+    // DASHBOARD ADMIN UNIT HSSE
     function renderHsseDashboard(container) {
       const sops = getSops();
       const findings = getFindings();
@@ -740,7 +740,6 @@
       const kdrList = getKendaraan();
 
       container.innerHTML = `
-        <!-- BAGIAN 1: 4 KARTU RINGKASAN OPERASIONAL (DIPERTAHANKAN) -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <span class="text-xs font-semibold text-slate-500 uppercase">Total SOP K3L</span>
@@ -764,7 +763,6 @@
           </div>
         </div>
 
-        <!-- BAGIAN 2: 4 KARTU RINGKASAN INSPEKSI LAPANGAN (DIPERTAHANKAN) -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold text-navy-900 uppercase tracking-wider">Ringkasan Hasil Inspeksi Lapangan (APAR & Armada)</h3>
@@ -794,14 +792,12 @@
           </div>
         </div>
 
-        <!-- BAGIAN 3: BUSINESS INTELLIGENCE (ANALISIS DAN MONITORING RISIKO HSSE) -->
         <div class="space-y-4 pt-2">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
             <div>
               <h2 class="text-sm font-bold text-navy-900 tracking-wide uppercase">ANALISIS DAN MONITORING RISIKO HSSE</h2>
               <p class="text-xs text-slate-500">Visualisasi profil risiko HIRADC, tingkat keparahan RCA, dan status tindak lanjut</p>
             </div>
-            <!-- FILTER PERIODE BI -->
             <div class="flex items-center space-x-2">
               <label class="text-xs font-semibold text-slate-600 whitespace-nowrap">Filter Periode:</label>
               <select id="bi-period-select" onchange="handleBiPeriodChange(this.value)" class="text-xs font-medium px-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-navy-900 shadow-sm">
@@ -812,9 +808,7 @@
             </div>
           </div>
 
-          <!-- 3 GRAFIK BI DALAM SATU BARIS HORIZONTAL DI DESKTOP -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- GRAFIK A: DISTRIBUSI RISIKO HIRADC (BAR CHART) -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -828,7 +822,6 @@
               </div>
             </div>
 
-            <!-- GRAFIK B: DISTRIBUSI SEVERITY RCA (DOUGHNUT CHART - DARI DATABASE ASLI) -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -842,7 +835,6 @@
               </div>
             </div>
 
-            <!-- GRAFIK C: STATUS TINDAK LANJUT (DOUGHNUT CHART - MERAH / ORANYE / HIJAU) -->
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
               <div class="flex items-center justify-between mb-4">
                 <div>
@@ -858,7 +850,6 @@
           </div>
         </div>
 
-        <!-- DAFTAR PENDING OPERASIONAL HSSE -->
         <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div>
@@ -930,17 +921,13 @@
       renderHsseBiCharts();
     }
 
-    // LOGIKA PERHITUNGAN DAN RENDER 3 GRAFIK BI ADMIN HSSE
     function renderHsseBiCharts() {
-      // 1. Data HIRADC terfilter periode
       const rawHiradc = getHiradc();
       const filteredHiradc = filterBiDataByPeriod(rawHiradc, 'date');
 
-      // 2. Data RCA terfilter periode
       const rawRca = getRca();
       const filteredRca = filterBiDataByPeriod(rawRca, 'date');
 
-      // Destroy chart lama jika ada
       Chart.getChart("hsseHiradcChart")?.destroy();
       Chart.getChart("hsseRcaSeverityChart")?.destroy();
       Chart.getChart("hsseRcaStatusChart")?.destroy();
@@ -949,78 +936,48 @@
       const containerRcaSev = document.getElementById('chart-container-rca-sev');
       const containerRcaStatus = document.getElementById('chart-container-rca-status');
 
-      // ================= GRAFIK A: RISIKO HIRADC (BAR CHART) =================
       if (filteredHiradc.length === 0) {
         containerHiradc.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
       } else {
         containerHiradc.innerHTML = `<canvas id="hsseHiradcChart"></canvas>`;
-        // Kategori dinamis dari database HIRADC
         const levelOrder = ['Rendah', 'Sedang', 'Tinggi', 'Ekstrem'];
         const existingLevels = [...new Set(filteredHiradc.map(h => h.level || 'Lainnya'))];
         const sortedLabels = levelOrder.filter(l => existingLevels.includes(l)).concat(existingLevels.filter(l => !levelOrder.includes(l)));
 
         const counts = sortedLabels.map(lvl => filteredHiradc.filter(h => (h.level || 'Lainnya') === lvl).length);
-        const colorMap = {
-          'Rendah': '#10b981',
-          'Sedang': '#3b82f6',
-          'Tinggi': '#f59e0b',
-          'Ekstrem': '#ef4444',
-          'Lainnya': '#64748b'
-        };
+        const colorMap = { 'Rendah': '#10b981', 'Sedang': '#3b82f6', 'Tinggi': '#f59e0b', 'Ekstrem': '#ef4444', 'Lainnya': '#64748b' };
         const bgColors = sortedLabels.map(l => colorMap[l] || '#3b82f6');
 
         new Chart(document.getElementById('hsseHiradcChart'), {
           type: 'bar',
           data: {
             labels: sortedLabels,
-            datasets: [{
-              label: 'Jumlah Aktivitas',
-              data: counts,
-              backgroundColor: bgColors,
-              borderRadius: 6
-            }]
+            datasets: [{ label: 'Jumlah Aktivitas', data: counts, backgroundColor: bgColors, borderRadius: 6 }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => ` ${ctx.parsed.y} Aktivitas`
-                }
-              }
-            },
-            scales: {
-              y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } },
-              x: { grid: { display: false } }
-            }
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }, x: { grid: { display: false } } }
           }
         });
       }
 
-      // ================= GRAFIK B: SEVERITY RCA (DOUGHNUT CHART - NILAI RIIL DB) =================
       if (filteredRca.length === 0) {
         containerRcaSev.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
       } else {
         containerRcaSev.innerHTML = `<canvas id="hsseRcaSeverityChart"></canvas>`;
-        // Ekstraksi nilai severity asli tanpa konversi teks sembarangan
         const severityCounts = {};
         filteredRca.forEach(r => {
           let rawVal = r.severity;
           if (rawVal === undefined || rawVal === null || String(rawVal).trim() === '') return;
           let label = String(rawVal).trim();
-          // Jika nilai numerik murni, beri label resmi 'Severity X'
-          if (/^\d+$/.test(label)) {
-            label = `Severity ${label}`;
-          }
+          if (/^\d+$/.test(label)) label = `Severity ${label}`;
           severityCounts[label] = (severityCounts[label] || 0) + 1;
         });
 
         const sevLabels = Object.keys(severityCounts).sort();
         const sevData = sevLabels.map(l => severityCounts[l]);
-
-        // Palet warna konsisten & berbeda
         const palette = ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4'];
         const sevColors = sevLabels.map((_, idx) => palette[idx % palette.length]);
 
@@ -1028,33 +985,17 @@
           type: 'doughnut',
           data: {
             labels: sevLabels,
-            datasets: [{
-              data: sevData,
-              backgroundColor: sevColors,
-              borderWidth: 2,
-              borderColor: '#ffffff'
-            }]
+            datasets: [{ data: sevData, backgroundColor: sevColors, borderWidth: 2, borderColor: '#ffffff' }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: { boxWidth: 12, font: { size: 11 } }
-              },
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => ` ${ctx.label}: ${ctx.raw} Kasus`
-                }
-              }
-            },
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
             cutout: '65%'
           }
         });
       }
 
-      // ================= GRAFIK C: STATUS TINDAK LANJUT (DOUGHNUT CHART - MERAH / ORANYE / HIJAU) =================
       if (filteredRca.length === 0) {
         containerRcaStatus.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
       } else {
@@ -1065,36 +1006,16 @@
           'Closed': filteredRca.filter(r => r.status === 'Closed').length
         };
 
-        const statusLabels = ['Open', 'In Progress', 'Closed'];
-        const statusData = [statusMap['Open'], statusMap['In Progress'], statusMap['Closed']];
-        // Warna wajib: Open: Merah (#ef4444), In Progress: Oranye (#f59e0b), Closed: Hijau (#10b981)
-        const statusColors = ['#ef4444', '#f59e0b', '#10b981'];
-
         new Chart(document.getElementById('hsseRcaStatusChart'), {
           type: 'doughnut',
           data: {
-            labels: statusLabels,
-            datasets: [{
-              data: statusData,
-              backgroundColor: statusColors,
-              borderWidth: 2,
-              borderColor: '#ffffff'
-            }]
+            labels: ['Open', 'In Progress', 'Closed'],
+            datasets: [{ data: [statusMap['Open'], statusMap['In Progress'], statusMap['Closed']], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderWidth: 2, borderColor: '#ffffff' }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: { boxWidth: 12, font: { size: 11 } }
-              },
-              tooltip: {
-                callbacks: {
-                  label: (ctx) => ` ${ctx.label}: ${ctx.raw} Temuan`
-                }
-              }
-            },
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
             cutout: '65%'
           }
         });
@@ -1102,10 +1023,9 @@
       lucide.createIcons();
     }
 
-    // ==================== DASHBOARD MANAJEMEN ====================
+    // DASHBOARD MANAJEMEN
     function renderManajemenDashboard(container) {
       const hiradc = getHiradc();
-      // Manajemen hanya melihat data yang telah tervalidasi
       const rca = getRca().filter(r => r.isValidated !== false);
       const aparList = getApar();
       const kdrList = getKendaraan();
@@ -1134,7 +1054,6 @@
           </div>
         </div>
 
-        <!-- 3 GRAFIK MONITORING EKSEKUTIF -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <h4 class="font-bold text-sm text-navy-900 mb-3">Distribusi Risiko HIRADC</h4>
@@ -1152,7 +1071,6 @@
       `;
 
       setTimeout(() => {
-        // HIRADC Chart Manajemen
         const hLevels = ['Rendah', 'Sedang', 'Tinggi', 'Ekstrem'];
         new Chart(document.getElementById('mgmtHiradcChart'), {
           type: 'bar',
@@ -1167,7 +1085,6 @@
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        // RCA Severity Manajemen (Dinamis dari nilai database riil)
         const sevMap = {};
         rca.forEach(r => {
           if (!r.severity) return;
@@ -1190,7 +1107,6 @@
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
         });
 
-        // Status Tindak Lanjut Manajemen
         const rStatus = ['Open', 'In Progress', 'Closed'];
         new Chart(document.getElementById('mgmtRcaStatusChart'), {
           type: 'doughnut',
@@ -1206,11 +1122,11 @@
       }, 50);
     }
 
-    // ==================== FITUR LAINNYA LENGKAP ====================
+    // PEMERIKSAAN APAR
     let searchAparTxt = '', filterAparTgl = '';
     function renderHsseApar(container) {
       const data = getApar().filter(a => {
-        const s = (a.code + ' ' + a.location).toLowerCase().includes(searchAparTxt.toLowerCase());
+        const s = (a.code + ' ' + a.location + ' ' + (a.inspector || '')).toLowerCase().includes(searchAparTxt.toLowerCase());
         const d = !filterAparTgl || a.date === filterAparTgl;
         return s && d;
       });
@@ -1226,7 +1142,7 @@
           </div>
 
           <div class="flex gap-2">
-            <input type="text" placeholder="Cari Kode/Lokasi..." value="${searchAparTxt}" oninput="searchAparTxt=this.value; renderHsseApar(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded w-56">
+            <input type="text" placeholder="Cari Kode, Lokasi, Pemeriksa..." value="${searchAparTxt}" oninput="searchAparTxt=this.value; renderHsseApar(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded w-64">
             <input type="date" value="${filterAparTgl}" onchange="filterAparTgl=this.value; renderHsseApar(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded">
             ${filterAparTgl ? `<button onclick="filterAparTgl=''; renderHsseApar(document.getElementById('main-content'))" class="text-xs text-rose-600 underline">Reset</button>` : ''}
           </div>
@@ -1235,7 +1151,7 @@
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="bg-slate-50 border-b text-slate-600">
-                  <th class="p-3">Tanggal</th><th class="p-3">Kode</th><th class="p-3">Lokasi</th><th class="p-3 text-center">Kondisi</th><th class="p-3 text-center">Status TL</th><th class="p-3">Pemeriksa</th><th class="p-3">Catatan</th><th class="p-3 text-center">Aksi</th>
+                  <th class="p-3">Tanggal</th><th class="p-3">Kode</th><th class="p-3">Lokasi</th><th class="p-3 text-center">Kondisi</th><th class="p-3 text-center">Status TL</th><th class="p-3">Nama Pemeriksa</th><th class="p-3">Catatan</th><th class="p-3 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
@@ -1244,7 +1160,7 @@
                     <td class="p-3">${a.date}</td><td class="p-3 font-bold text-navy-900">${a.code}</td><td class="p-3">${a.location}</td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.condition==='Baik'?'bg-emerald-100 text-emerald-800':'bg-red-100 text-red-800'}">${a.condition}</span></td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 border">${a.status}</span></td>
-                    <td class="p-3">${a.inspector}</td><td class="p-3 text-slate-500 max-w-xs truncate">${a.notes || '-'}</td>
+                    <td class="p-3 font-medium text-slate-800">${a.inspector}</td><td class="p-3 text-slate-500 max-w-xs truncate">${a.notes || '-'}</td>
                     <td class="p-3 text-center space-x-2">
                       <button onclick="editApar('${a.id}')" class="text-blue-600">Edit</button>
                       <button onclick="deleteApar('${a.id}')" class="text-red-600">Hapus</button>
@@ -1260,18 +1176,23 @@
     function openAparModal(id = null) {
       document.getElementById('apar-form').reset();
       document.getElementById('apar-id').value = id || '';
-      document.getElementById('apar-inspector').value = currentUser.userName;
       document.getElementById('apar-date').value = new Date().toISOString().split('T')[0];
+      
       if (id) {
         const a = getApar().find(x => x.id === id);
         if (a) {
+          document.getElementById('apar-modal-title').innerText = 'Edit Pemeriksaan APAR';
           document.getElementById('apar-date').value = a.date;
           document.getElementById('apar-code').value = a.code;
           document.getElementById('apar-location').value = a.location;
           document.getElementById('apar-condition').value = a.condition;
           document.getElementById('apar-status').value = a.status;
+          document.getElementById('apar-inspector').value = a.inspector || '';
           document.getElementById('apar-notes').value = a.notes || '';
         }
+      } else {
+        document.getElementById('apar-modal-title').innerText = 'Tambah Pemeriksaan APAR';
+        document.getElementById('apar-inspector').value = '';
       }
       openModal('apar-modal');
     }
@@ -1286,8 +1207,8 @@
         location: document.getElementById('apar-location').value.trim(),
         condition: document.getElementById('apar-condition').value,
         status: document.getElementById('apar-status').value,
-        notes: document.getElementById('apar-notes').value.trim(),
-        inspector: currentUser.userName
+        inspector: document.getElementById('apar-inspector').value.trim(),
+        notes: document.getElementById('apar-notes').value.trim()
       };
       let l = getApar();
       l = id ? l.map(x => x.id === id ? rec : x) : [rec, ...l];
@@ -1297,10 +1218,11 @@
       if (confirm("Hapus catatan pemeriksaan APAR ini?")) { setApar(getApar().filter(x => x.id !== id)); renderApp(); showToast("Data terhapus."); }
     }
 
+    // PEMERIKSAAN KENDARAAN
     let searchKdrTxt = '', filterKdrTgl = '';
     function renderHsseKendaraan(container) {
       const data = getKendaraan().filter(k => {
-        const s = (k.nopol + ' ' + k.type).toLowerCase().includes(searchKdrTxt.toLowerCase());
+        const s = (k.nopol + ' ' + k.type + ' ' + (k.inspector || '')).toLowerCase().includes(searchKdrTxt.toLowerCase());
         const d = !filterKdrTgl || k.date === filterKdrTgl;
         return s && d;
       });
@@ -1316,7 +1238,7 @@
           </div>
 
           <div class="flex gap-2">
-            <input type="text" placeholder="Cari Nopol/Jenis..." value="${searchKdrTxt}" oninput="searchKdrTxt=this.value; renderHsseKendaraan(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded w-56">
+            <input type="text" placeholder="Cari Nopol, Jenis, Pemeriksa..." value="${searchKdrTxt}" oninput="searchKdrTxt=this.value; renderHsseKendaraan(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded w-64">
             <input type="date" value="${filterKdrTgl}" onchange="filterKdrTgl=this.value; renderHsseKendaraan(document.getElementById('main-content'))" class="border px-3 py-1.5 text-xs rounded">
             ${filterKdrTgl ? `<button onclick="filterKdrTgl=''; renderHsseKendaraan(document.getElementById('main-content'))" class="text-xs text-rose-600 underline">Reset</button>` : ''}
           </div>
@@ -1325,7 +1247,7 @@
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="bg-slate-50 border-b text-slate-600">
-                  <th class="p-3">Tanggal</th><th class="p-3">Nomor Polisi</th><th class="p-3">Jenis</th><th class="p-3 text-center">Kondisi</th><th class="p-3 text-center">Status TL</th><th class="p-3">Pemeriksa</th><th class="p-3">Catatan</th><th class="p-3 text-center">Aksi</th>
+                  <th class="p-3">Tanggal</th><th class="p-3">Nomor Polisi</th><th class="p-3">Jenis</th><th class="p-3 text-center">Kondisi</th><th class="p-3 text-center">Status TL</th><th class="p-3">Nama Pemeriksa</th><th class="p-3">Catatan</th><th class="p-3 text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
@@ -1334,7 +1256,7 @@
                     <td class="p-3">${k.date}</td><td class="p-3 font-bold text-navy-900">${k.nopol}</td><td class="p-3">${k.type}</td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${k.condition==='Baik'?'bg-emerald-100 text-emerald-800':'bg-red-100 text-red-800'}">${k.condition}</span></td>
                     <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 border">${k.status}</span></td>
-                    <td class="p-3">${k.inspector}</td><td class="p-3 text-slate-500 max-w-xs truncate">${k.notes || '-'}</td>
+                    <td class="p-3 font-medium text-slate-800">${k.inspector}</td><td class="p-3 text-slate-500 max-w-xs truncate">${k.notes || '-'}</td>
                     <td class="p-3 text-center space-x-2">
                       <button onclick="editKendaraan('${k.id}')" class="text-blue-600">Edit</button>
                       <button onclick="deleteKendaraan('${k.id}')" class="text-red-600">Hapus</button>
@@ -1350,18 +1272,23 @@
     function openKendaraanModal(id = null) {
       document.getElementById('kendaraan-form').reset();
       document.getElementById('kendaraan-id').value = id || '';
-      document.getElementById('kendaraan-inspector').value = currentUser.userName;
       document.getElementById('kendaraan-date').value = new Date().toISOString().split('T')[0];
+      
       if (id) {
         const k = getKendaraan().find(x => x.id === id);
         if (k) {
+          document.getElementById('kendaraan-modal-title').innerText = 'Edit Pemeriksaan Kendaraan';
           document.getElementById('kendaraan-date').value = k.date;
           document.getElementById('kendaraan-nopol').value = k.nopol;
           document.getElementById('kendaraan-type').value = k.type;
           document.getElementById('kendaraan-condition').value = k.condition;
           document.getElementById('kendaraan-status').value = k.status;
+          document.getElementById('kendaraan-inspector').value = k.inspector || '';
           document.getElementById('kendaraan-notes').value = k.notes || '';
         }
+      } else {
+        document.getElementById('kendaraan-modal-title').innerText = 'Tambah Pemeriksaan Kendaraan';
+        document.getElementById('kendaraan-inspector').value = '';
       }
       openModal('kendaraan-modal');
     }
@@ -1376,8 +1303,8 @@
         type: document.getElementById('kendaraan-type').value.trim(),
         condition: document.getElementById('kendaraan-condition').value,
         status: document.getElementById('kendaraan-status').value,
-        notes: document.getElementById('kendaraan-notes').value.trim(),
-        inspector: currentUser.userName
+        inspector: document.getElementById('kendaraan-inspector').value.trim(),
+        notes: document.getElementById('kendaraan-notes').value.trim()
       };
       let l = getKendaraan();
       l = id ? l.map(x => x.id === id ? rec : x) : [rec, ...l];
