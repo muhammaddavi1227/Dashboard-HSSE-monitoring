@@ -138,7 +138,7 @@
     </main>
   </div>
 
-  <!-- ==================== MODAL FORM PEMERIKSAAN APAR ==================== -->
+  <!-- MODAL PEMERIKSAAN APAR -->
   <div id="apar-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -184,7 +184,7 @@
         </div>
         <div>
           <label class="block font-semibold text-slate-600 mb-1">Catatan Pemeriksaan</label>
-          <textarea id="apar-notes" rows="2" placeholder="Keterangan pin pengaman, tekanan gauge, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg"></textarea>
+          <textarea id="apar-notes" rows="2" placeholder="Keterangan pin pengaman, jarum tekanan, selang, dll..." class="w-full px-3 py-2 border border-slate-300 rounded-lg"></textarea>
         </div>
         <div class="flex justify-end space-x-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModal('apar-modal')" class="px-4 py-2 border text-slate-600 hover:bg-slate-100 rounded-lg">Batal</button>
@@ -194,7 +194,7 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL FORM PEMERIKSAAN KENDARAAN ==================== -->
+  <!-- MODAL PEMERIKSAAN KENDARAAN -->
   <div id="kendaraan-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -372,13 +372,8 @@
             <input type="text" id="rca-caseno" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
           </div>
           <div>
-            <label class="block font-semibold text-slate-600 mb-1">Tingkat Severity</label>
-            <select id="rca-severity" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
-              <option value="Minor">Minor</option>
-              <option value="Moderat">Moderat</option>
-              <option value="Mayor">Mayor</option>
-              <option value="Kritis">Kritis</option>
-            </select>
+            <label class="block font-semibold text-slate-600 mb-1">Tingkat Severity (Sesuai Kolom Database)</label>
+            <input type="text" id="rca-severity" required placeholder="Contoh: 1, 2, 3, atau 4" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -436,7 +431,7 @@
     </div>
   </div>
 
-  <!-- ==================== JAVASCRIPT LENGKAP ==================== -->
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
     const STORAGE_KEYS = {
       SOPS: 'hsse_sops_data_v2',
@@ -469,14 +464,17 @@
         localStorage.setItem(STORAGE_KEYS.HIRADC, JSON.stringify([
           { id: 'hiradc-1', code: 'HRA-2024-001', activity: 'Pekerjaan Pengelasan Pipa Gas', hazard: 'Percikan api & gas meledak', level: 'Ekstrem', control: 'Permit to Work, Fire Watcher, APD', date: '2024-05-02' },
           { id: 'hiradc-2', code: 'HRA-2024-002', activity: 'Bekerja pada Ketinggian 15m', hazard: 'Terjatuh dari perancah', level: 'Tinggi', control: 'Full Body Harness Double Lanyard', date: '2024-05-03' },
-          { id: 'hiradc-3', code: 'HRA-2024-003', activity: 'Pengoperasian Forklift Gudang', hazard: 'Menabrak personel', level: 'Sedang', control: 'Batas kecepatan 10km/jam, klakson', date: '2024-05-08' }
+          { id: 'hiradc-3', code: 'HRA-2024-003', activity: 'Pengoperasian Forklift Gudang', hazard: 'Menabrak personel', level: 'Sedang', control: 'Batas kecepatan 10km/jam, klakson', date: '2024-05-08' },
+          { id: 'hiradc-4', code: 'HRA-2024-004', activity: 'Pembersihan Saluran Air Internal', hazard: 'Terpeleset dan bakteri', level: 'Rendah', control: 'Safety Boots, Sarung Tangan Karet', date: '2024-05-10' }
         ]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.RCA)) {
+        // Menggunakan severity numerik riil sesuai kolom SEVERITY database perusahaan
         localStorage.setItem(STORAGE_KEYS.RCA, JSON.stringify([
-          { id: 'rca-1', caseNo: 'RCA-SEN-2024-001', finding: 'Trip breaker genset utama menyebabkan site padam', severity: 'Kritis', rootCause: 'Relai proteksi kelebihan beban aus', action: 'Ganti relai baru & kalibrasi', pic: 'Tim Elektrikal', status: 'Closed', location: 'Powerhouse Genset', reporter: 'Budi Santoso', date: '2024-05-02', isValidated: true },
-          { id: 'rca-2', caseNo: 'RCA-SEN-2024-002', finding: 'Kabel gerinda tangan terkelupas tanpa insulasi', severity: 'Moderat', rootCause: 'Inspeksi bulanan terlewat', action: 'Tarik alat dan re-tagging', pic: 'Safety Officer', status: 'Closed', location: 'Workshop Fabrikasi', reporter: 'Davi Adhimukti', date: '2024-05-05', isValidated: true },
-          { id: 'rca-3', caseNo: 'RCA-SEN-2024-003', finding: 'Sensor deteksi gas metana error', severity: 'Mayor', rootCause: 'Sensor teracuni senyawa silikon', action: 'Ganti sensor infrared tahan racun', pic: 'Instrumentasi', status: 'In Progress', location: 'Stasiun Gas', reporter: 'Hendra Gunawan', date: '2024-05-11', isValidated: true }
+          { id: 'rca-1', caseNo: 'RCA-SEN-2024-001', finding: 'Trip breaker genset utama menyebabkan site padam', severity: '4', rootCause: 'Relai proteksi kelebihan beban aus', action: 'Ganti relai baru & kalibrasi', pic: 'Tim Elektrikal', status: 'Closed', location: 'Powerhouse Genset', reporter: 'Budi Santoso', date: '2024-05-02', isValidated: true },
+          { id: 'rca-2', caseNo: 'RCA-SEN-2024-002', finding: 'Kabel gerinda tangan terkelupas tanpa insulasi', severity: '2', rootCause: 'Inspeksi bulanan terlewat', action: 'Tarik alat dan re-tagging', pic: 'Safety Officer', status: 'Closed', location: 'Workshop Fabrikasi', reporter: 'Davi Adhimukti', date: '2024-05-05', isValidated: true },
+          { id: 'rca-3', caseNo: 'RCA-SEN-2024-003', finding: 'Sensor deteksi gas metana error saat uji coba', severity: '3', rootCause: 'Sensor teracuni senyawa silikon', action: 'Ganti sensor infrared tahan racun', pic: 'Instrumentasi', status: 'In Progress', location: 'Stasiun Gas', reporter: 'Hendra Gunawan', date: '2024-05-11', isValidated: true },
+          { id: 'rca-4', caseNo: 'RCA-SEN-2024-004', finding: 'Penyimpanan APAR terhalang tumpukan palet', severity: '1', rootCause: 'Housekeeping vendor kurang disiplin', action: 'Pembersihan batas demarkasi', pic: 'Logistik', status: 'Open', location: 'Warehouse Bahan Baku', reporter: 'Siti Rahma', date: '2024-05-14', isValidated: true }
         ]));
       }
       if (!localStorage.getItem(STORAGE_KEYS.FINDINGS)) {
@@ -512,6 +510,7 @@
     let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER)) || null;
     let currentActiveMenu = 'dashboard';
     let rekapActiveTab = 'rca';
+    let biFilterPeriod = 'semua'; // 'semua', 'bulan_ini', 'tahun_ini'
 
     function getSops() { return JSON.parse(localStorage.getItem(STORAGE_KEYS.SOPS)) || []; }
     function setSops(d) { localStorage.setItem(STORAGE_KEYS.SOPS, JSON.stringify(d)); }
@@ -630,7 +629,6 @@
         </button>
       `).join('');
 
-      // MENU INSPEKSI HSSE (Hanya untuk Admin Unit HSSE)
       if (currentUser.role === 'hsse') {
         html += `
           <div class="pt-4 mt-2 border-t border-slate-100">
@@ -666,6 +664,23 @@
       }
       currentActiveMenu = menuId;
       renderApp();
+    }
+
+    // Helper Filter Periode Khusus Analisis BI
+    function filterBiDataByPeriod(dataList, dateField = 'date') {
+      if (biFilterPeriod === 'semua') return dataList;
+      const now = new Date();
+      const currentYear = String(now.getFullYear());
+      const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+      const currentYM = `${currentYear}-${currentMonth}`;
+
+      return dataList.filter(item => {
+        const itemDate = item[dateField];
+        if (!itemDate) return false;
+        if (biFilterPeriod === 'bulan_ini') return itemDate.startsWith(currentYM);
+        if (biFilterPeriod === 'tahun_ini') return itemDate.startsWith(currentYear);
+        return true;
+      });
     }
 
     function renderApp() {
@@ -715,7 +730,7 @@
       lucide.createIcons();
     }
 
-    // DASHBOARD ADMIN UNIT HSSE
+    // ==================== DASHBOARD ADMIN UNIT HSSE ====================
     function renderHsseDashboard(container) {
       const sops = getSops();
       const findings = getFindings();
@@ -725,6 +740,7 @@
       const kdrList = getKendaraan();
 
       container.innerHTML = `
+        <!-- BAGIAN 1: 4 KARTU RINGKASAN OPERASIONAL (DIPERTAHANKAN) -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <span class="text-xs font-semibold text-slate-500 uppercase">Total SOP K3L</span>
@@ -748,11 +764,11 @@
           </div>
         </div>
 
-        <!-- 4 KARTU RINGKASAN PEMERIKSAAN APAR & KENDARAAN (REAL DATABASE) -->
+        <!-- BAGIAN 2: 4 KARTU RINGKASAN INSPEKSI LAPANGAN (DIPERTAHANKAN) -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold text-navy-900 uppercase tracking-wider">Ringkasan Hasil Inspeksi Lapangan (APAR & Armada)</h3>
-            <span class="text-[11px] text-slate-400">Dihitung otomatis dari database riwayat</span>
+            <span class="text-[11px] text-slate-400">Data riil terhitung dari database</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white p-5 rounded-xl border-l-4 border-blue-600 border border-slate-200 shadow-sm">
@@ -777,13 +793,320 @@
             </div>
           </div>
         </div>
+
+        <!-- BAGIAN 3: BUSINESS INTELLIGENCE (ANALISIS DAN MONITORING RISIKO HSSE) -->
+        <div class="space-y-4 pt-2">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200">
+            <div>
+              <h2 class="text-sm font-bold text-navy-900 tracking-wide uppercase">ANALISIS DAN MONITORING RISIKO HSSE</h2>
+              <p class="text-xs text-slate-500">Visualisasi profil risiko HIRADC, tingkat keparahan RCA, dan status tindak lanjut</p>
+            </div>
+            <!-- FILTER PERIODE BI -->
+            <div class="flex items-center space-x-2">
+              <label class="text-xs font-semibold text-slate-600 whitespace-nowrap">Filter Periode:</label>
+              <select id="bi-period-select" onchange="handleBiPeriodChange(this.value)" class="text-xs font-medium px-3 py-1.5 border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-navy-900 shadow-sm">
+                <option value="semua" ${biFilterPeriod === 'semua' ? 'selected' : ''}>Semua Data</option>
+                <option value="bulan_ini" ${biFilterPeriod === 'bulan_ini' ? 'selected' : ''}>Bulan Ini</option>
+                <option value="tahun_ini" ${biFilterPeriod === 'tahun_ini' ? 'selected' : ''}>Tahun Ini</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3 GRAFIK BI DALAM SATU BARIS HORIZONTAL DI DESKTOP -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- GRAFIK A: DISTRIBUSI RISIKO HIRADC (BAR CHART) -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="font-bold text-xs text-navy-900 uppercase">Distribusi Risiko HIRADC</h4>
+                  <p class="text-[11px] text-slate-400">Grafik Batang (Sumbu X: Tingkat Risiko)</p>
+                </div>
+                <span class="p-1.5 bg-blue-50 text-blue-800 rounded"><i data-lucide="bar-chart-2" class="w-4 h-4"></i></span>
+              </div>
+              <div id="chart-container-hiradc" class="h-64 flex items-center justify-center">
+                <canvas id="hsseHiradcChart"></canvas>
+              </div>
+            </div>
+
+            <!-- GRAFIK B: DISTRIBUSI SEVERITY RCA (DOUGHNUT CHART - DARI DATABASE ASLI) -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="font-bold text-xs text-navy-900 uppercase">Distribusi Severity RCA</h4>
+                  <p class="text-[11px] text-slate-400">Grafik Donat (Kategori Nilai Kolom Database)</p>
+                </div>
+                <span class="p-1.5 bg-blue-50 text-blue-800 rounded"><i data-lucide="pie-chart" class="w-4 h-4"></i></span>
+              </div>
+              <div id="chart-container-rca-sev" class="h-64 flex items-center justify-center">
+                <canvas id="hsseRcaSeverityChart"></canvas>
+              </div>
+            </div>
+
+            <!-- GRAFIK C: STATUS TINDAK LANJUT (DOUGHNUT CHART - MERAH / ORANYE / HIJAU) -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="font-bold text-xs text-navy-900 uppercase">Status Tindak Lanjut</h4>
+                  <p class="text-[11px] text-slate-400">Open (Merah), In Progress (Oranye), Closed (Hijau)</p>
+                </div>
+                <span class="p-1.5 bg-blue-50 text-blue-800 rounded"><i data-lucide="check-circle" class="w-4 h-4"></i></span>
+              </div>
+              <div id="chart-container-rca-status" class="h-64 flex items-center justify-center">
+                <canvas id="hsseRcaStatusChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DAFTAR PENDING OPERASIONAL HSSE -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-navy-900">Perlu Tindakan Persetujuan & Validasi Segera</h3>
+              <p class="text-xs text-slate-500">Pengajuan dokumen, APD, dan temuan bahaya dari karyawan</p>
+            </div>
+            <button onclick="switchMenu('rekap-laporan')" class="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 inline-flex items-center space-x-1">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+              <span>Buka Menu Rekap Laporan</span>
+            </button>
+          </div>
+
+          <div class="space-y-3">
+            ${findings.filter(f => f.status === 'Menunggu Validasi').map(item => `
+              <div class="flex items-center justify-between p-3.5 bg-rose-50/50 border border-rose-200 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <span class="px-2 py-0.5 text-[11px] font-bold bg-rose-200 text-rose-800 rounded">Temuan</span>
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">${item.location}: ${item.description}</div>
+                    <div class="text-xs text-slate-500">Pelapor: <strong>${item.reporter}</strong> (${item.dept}) • Tanggal: ${item.date}</div>
+                  </div>
+                </div>
+                <button onclick="switchMenu('validasi-temuan')" class="text-xs font-semibold text-rose-700 hover:underline">Validasi Sekarang →</button>
+              </div>
+            `).join('')}
+
+            ${apdReqs.filter(a => a.status === 'Menunggu Persetujuan').map(item => `
+              <div class="flex items-center justify-between p-3.5 bg-blue-50/50 border border-blue-200 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <span class="px-2 py-0.5 text-[11px] font-bold bg-blue-200 text-blue-800 rounded">APD</span>
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">${item.items ? item.items.join(', ') : '-'}</div>
+                    <div class="text-xs text-slate-500">Pemohon: <strong>${item.requester}</strong> (${item.dept}) • Durasi: ${item.duration || 1} Hari</div>
+                  </div>
+                </div>
+                <button onclick="switchMenu('peminjaman-apd')" class="text-xs font-semibold text-blue-700 hover:underline">Tinjau APD →</button>
+              </div>
+            `).join('')}
+
+            ${docReqs.filter(d => d.status === 'Menunggu Persetujuan').map(item => `
+              <div class="flex items-center justify-between p-3.5 bg-amber-50/50 border border-amber-200 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <span class="px-2 py-0.5 text-[11px] font-bold bg-amber-200 text-amber-800 rounded">Dokumen</span>
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">${item.sopTitle}</div>
+                    <div class="text-xs text-slate-500">Pemohon: <strong>${item.requester}</strong> (${item.dept})</div>
+                  </div>
+                </div>
+                <button onclick="switchMenu('permintaan-dokumen')" class="text-xs font-semibold text-blue-700 hover:underline">Tinjau Dokumen →</button>
+              </div>
+            `).join('')}
+
+            ${findings.filter(f => f.status === 'Menunggu Validasi').length === 0 &&
+              apdReqs.filter(a => a.status === 'Menunggu Persetujuan').length === 0 &&
+              docReqs.filter(d => d.status === 'Menunggu Persetujuan').length === 0 ? `
+              <div class="text-center py-6 text-slate-400 text-xs bg-slate-50 rounded-lg border border-dashed">
+                Semua laporan dan permohonan telah selesai diverifikasi.
+              </div>
+            ` : ''}
+          </div>
+        </div>
       `;
+
+      setTimeout(() => renderHsseBiCharts(), 50);
     }
 
-    // DASHBOARD MANAJEMEN DENGAN 3 GRAFIK DAN RINGKASAN INSPEKSI
+    function handleBiPeriodChange(periodVal) {
+      biFilterPeriod = periodVal;
+      renderHsseBiCharts();
+    }
+
+    // LOGIKA PERHITUNGAN DAN RENDER 3 GRAFIK BI ADMIN HSSE
+    function renderHsseBiCharts() {
+      // 1. Data HIRADC terfilter periode
+      const rawHiradc = getHiradc();
+      const filteredHiradc = filterBiDataByPeriod(rawHiradc, 'date');
+
+      // 2. Data RCA terfilter periode
+      const rawRca = getRca();
+      const filteredRca = filterBiDataByPeriod(rawRca, 'date');
+
+      // Destroy chart lama jika ada
+      Chart.getChart("hsseHiradcChart")?.destroy();
+      Chart.getChart("hsseRcaSeverityChart")?.destroy();
+      Chart.getChart("hsseRcaStatusChart")?.destroy();
+
+      const containerHiradc = document.getElementById('chart-container-hiradc');
+      const containerRcaSev = document.getElementById('chart-container-rca-sev');
+      const containerRcaStatus = document.getElementById('chart-container-rca-status');
+
+      // ================= GRAFIK A: RISIKO HIRADC (BAR CHART) =================
+      if (filteredHiradc.length === 0) {
+        containerHiradc.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
+      } else {
+        containerHiradc.innerHTML = `<canvas id="hsseHiradcChart"></canvas>`;
+        // Kategori dinamis dari database HIRADC
+        const levelOrder = ['Rendah', 'Sedang', 'Tinggi', 'Ekstrem'];
+        const existingLevels = [...new Set(filteredHiradc.map(h => h.level || 'Lainnya'))];
+        const sortedLabels = levelOrder.filter(l => existingLevels.includes(l)).concat(existingLevels.filter(l => !levelOrder.includes(l)));
+
+        const counts = sortedLabels.map(lvl => filteredHiradc.filter(h => (h.level || 'Lainnya') === lvl).length);
+        const colorMap = {
+          'Rendah': '#10b981',
+          'Sedang': '#3b82f6',
+          'Tinggi': '#f59e0b',
+          'Ekstrem': '#ef4444',
+          'Lainnya': '#64748b'
+        };
+        const bgColors = sortedLabels.map(l => colorMap[l] || '#3b82f6');
+
+        new Chart(document.getElementById('hsseHiradcChart'), {
+          type: 'bar',
+          data: {
+            labels: sortedLabels,
+            datasets: [{
+              label: 'Jumlah Aktivitas',
+              data: counts,
+              backgroundColor: bgColors,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` ${ctx.parsed.y} Aktivitas`
+                }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      }
+
+      // ================= GRAFIK B: SEVERITY RCA (DOUGHNUT CHART - NILAI RIIL DB) =================
+      if (filteredRca.length === 0) {
+        containerRcaSev.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
+      } else {
+        containerRcaSev.innerHTML = `<canvas id="hsseRcaSeverityChart"></canvas>`;
+        // Ekstraksi nilai severity asli tanpa konversi teks sembarangan
+        const severityCounts = {};
+        filteredRca.forEach(r => {
+          let rawVal = r.severity;
+          if (rawVal === undefined || rawVal === null || String(rawVal).trim() === '') return;
+          let label = String(rawVal).trim();
+          // Jika nilai numerik murni, beri label resmi 'Severity X'
+          if (/^\d+$/.test(label)) {
+            label = `Severity ${label}`;
+          }
+          severityCounts[label] = (severityCounts[label] || 0) + 1;
+        });
+
+        const sevLabels = Object.keys(severityCounts).sort();
+        const sevData = sevLabels.map(l => severityCounts[l]);
+
+        // Palet warna konsisten & berbeda
+        const palette = ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4'];
+        const sevColors = sevLabels.map((_, idx) => palette[idx % palette.length]);
+
+        new Chart(document.getElementById('hsseRcaSeverityChart'), {
+          type: 'doughnut',
+          data: {
+            labels: sevLabels,
+            datasets: [{
+              data: sevData,
+              backgroundColor: sevColors,
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { boxWidth: 12, font: { size: 11 } }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` ${ctx.label}: ${ctx.raw} Kasus`
+                }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+
+      // ================= GRAFIK C: STATUS TINDAK LANJUT (DOUGHNUT CHART - MERAH / ORANYE / HIJAU) =================
+      if (filteredRca.length === 0) {
+        containerRcaStatus.innerHTML = `<div class="text-xs text-slate-400 font-medium text-center py-8">Belum ada data pada periode yang dipilih.</div>`;
+      } else {
+        containerRcaStatus.innerHTML = `<canvas id="hsseRcaStatusChart"></canvas>`;
+        const statusMap = {
+          'Open': filteredRca.filter(r => (r.status || 'Open') === 'Open').length,
+          'In Progress': filteredRca.filter(r => r.status === 'In Progress').length,
+          'Closed': filteredRca.filter(r => r.status === 'Closed').length
+        };
+
+        const statusLabels = ['Open', 'In Progress', 'Closed'];
+        const statusData = [statusMap['Open'], statusMap['In Progress'], statusMap['Closed']];
+        // Warna wajib: Open: Merah (#ef4444), In Progress: Oranye (#f59e0b), Closed: Hijau (#10b981)
+        const statusColors = ['#ef4444', '#f59e0b', '#10b981'];
+
+        new Chart(document.getElementById('hsseRcaStatusChart'), {
+          type: 'doughnut',
+          data: {
+            labels: statusLabels,
+            datasets: [{
+              data: statusData,
+              backgroundColor: statusColors,
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { boxWidth: 12, font: { size: 11 } }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` ${ctx.label}: ${ctx.raw} Temuan`
+                }
+              }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+      lucide.createIcons();
+    }
+
+    // ==================== DASHBOARD MANAJEMEN ====================
     function renderManajemenDashboard(container) {
       const hiradc = getHiradc();
-      const rca = getRca();
+      // Manajemen hanya melihat data yang telah tervalidasi
+      const rca = getRca().filter(r => r.isValidated !== false);
       const aparList = getApar();
       const kdrList = getKendaraan();
 
@@ -811,13 +1134,14 @@
           </div>
         </div>
 
+        <!-- 3 GRAFIK MONITORING EKSEKUTIF -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-sm text-navy-900 mb-3">Risiko HIRADC</h4>
+            <h4 class="font-bold text-sm text-navy-900 mb-3">Distribusi Risiko HIRADC</h4>
             <div class="h-60"><canvas id="mgmtHiradcChart"></canvas></div>
           </div>
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <h4 class="font-bold text-sm text-navy-900 mb-3">Severity RCA</h4>
+            <h4 class="font-bold text-sm text-navy-900 mb-3">Distribusi Severity RCA</h4>
             <div class="h-60"><canvas id="mgmtRcaSeverityChart"></canvas></div>
           </div>
           <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -828,39 +1152,61 @@
       `;
 
       setTimeout(() => {
+        // HIRADC Chart Manajemen
         const hLevels = ['Rendah', 'Sedang', 'Tinggi', 'Ekstrem'];
         new Chart(document.getElementById('mgmtHiradcChart'), {
           type: 'bar',
           data: {
             labels: hLevels,
-            datasets: [{ data: hLevels.map(l => hiradc.filter(h => h.level === l).length), backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'] }]
+            datasets: [{
+              data: hLevels.map(l => hiradc.filter(h => (h.level || '') === l).length),
+              backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+              borderRadius: 4
+            }]
           },
           options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        const rSevs = ['Minor', 'Moderat', 'Mayor', 'Kritis'];
+        // RCA Severity Manajemen (Dinamis dari nilai database riil)
+        const sevMap = {};
+        rca.forEach(r => {
+          if (!r.severity) return;
+          let lbl = String(r.severity).trim();
+          if (/^\d+$/.test(lbl)) lbl = `Severity ${lbl}`;
+          sevMap[lbl] = (sevMap[lbl] || 0) + 1;
+        });
+        const sevLabels = Object.keys(sevMap).sort();
+        const palette = ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'];
+
         new Chart(document.getElementById('mgmtRcaSeverityChart'), {
           type: 'doughnut',
           data: {
-            labels: rSevs,
-            datasets: [{ data: rSevs.map(s => rca.filter(r => r.severity === s).length), backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'] }]
+            labels: sevLabels,
+            datasets: [{
+              data: sevLabels.map(l => sevMap[l]),
+              backgroundColor: sevLabels.map((_, i) => palette[i % palette.length])
+            }]
           },
-          options: { responsive: true, maintainAspectRatio: false }
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
         });
 
+        // Status Tindak Lanjut Manajemen
         const rStatus = ['Open', 'In Progress', 'Closed'];
         new Chart(document.getElementById('mgmtRcaStatusChart'), {
-          type: 'pie',
+          type: 'doughnut',
           data: {
             labels: rStatus,
-            datasets: [{ data: rStatus.map(st => rca.filter(r => (r.status || 'Open') === st).length), backgroundColor: ['#ef4444', '#f59e0b', '#10b981'] }]
+            datasets: [{
+              data: rStatus.map(st => rca.filter(r => (r.status || 'Open') === st).length),
+              backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+            }]
           },
-          options: { responsive: true, maintainAspectRatio: false }
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
         });
       }, 50);
     }
 
-    // PEMERIKSAAN APAR
+    // ==================== FITUR LAINNYA LENGKAP ====================
     let searchAparTxt = '', filterAparTgl = '';
     function renderHsseApar(container) {
       const data = getApar().filter(a => {
@@ -945,13 +1291,12 @@
       };
       let l = getApar();
       l = id ? l.map(x => x.id === id ? rec : x) : [rec, ...l];
-      setApar(l); closeModal('apar-modal'); renderApp(); showToast("Data APAR berhasil disimpan!");
+      setApar(l); closeModal('apar-modal'); renderApp(); showToast("Data APAR tersimpan!");
     }
     function deleteApar(id) {
       if (confirm("Hapus catatan pemeriksaan APAR ini?")) { setApar(getApar().filter(x => x.id !== id)); renderApp(); showToast("Data terhapus."); }
     }
 
-    // PEMERIKSAAN KENDARAAN
     let searchKdrTxt = '', filterKdrTgl = '';
     function renderHsseKendaraan(container) {
       const data = getKendaraan().filter(k => {
@@ -1036,13 +1381,12 @@
       };
       let l = getKendaraan();
       l = id ? l.map(x => x.id === id ? rec : x) : [rec, ...l];
-      setKendaraan(l); closeModal('kendaraan-modal'); renderApp(); showToast("Data kendaraan berhasil disimpan!");
+      setKendaraan(l); closeModal('kendaraan-modal'); renderApp(); showToast("Data kendaraan tersimpan!");
     }
     function deleteKendaraan(id) {
       if (confirm("Hapus pemeriksaan kendaraan ini?")) { setKendaraan(getKendaraan().filter(x => x.id !== id)); renderApp(); showToast("Data terhapus."); }
     }
 
-    // FORM PELAPORAN TEMUAN K3L OLEH KARYAWAN (LENGKAP DENGAN UPLOAD FOTO)
     function renderKaryawanLaporTemuan(container) {
       const today = new Date().toISOString().split('T')[0];
       const myFindings = getFindings().filter(f => f.reporter.toLowerCase() === currentUser.userName.toLowerCase());
@@ -1122,7 +1466,6 @@
       renderApp();
     }
 
-    // VALIDASI TEMUAN OLEH HSSE
     function renderHsseValidateFindings(container) {
       const findings = getFindings();
       container.innerHTML = `
@@ -1178,7 +1521,6 @@
       openRcaModal(null, f);
     }
 
-    // FORM PEMINJAMAN APD OLEH KARYAWAN (LENGKAP DENGAN CHECKBOXES)
     function renderKaryawanApdForm(container) {
       const myRequests = getApdRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
       container.innerHTML = `
@@ -1243,7 +1585,6 @@
       renderApp();
     }
 
-    // PERSETUJUAN APD OLEH HSSE
     function renderHsseApdReq(container) {
       const requests = getApdRequests();
       container.innerHTML = `
@@ -1272,7 +1613,6 @@
       showToast(`Peminjaman APD ${ok ? 'Disetujui' : 'Ditolak'}.`);
     }
 
-    // MODUL DOKUMEN SOP (HSSE & KARYAWAN)
     function renderHsseSop(container) {
       const sops = getSops();
       container.innerHTML = `
@@ -1327,7 +1667,6 @@
     }
     function deleteSop(id) { if (confirm("Hapus SOP ini?")) { setSops(getSops().filter(s => s.id !== id)); renderApp(); showToast("SOP terhapus."); } }
 
-    // PERMINTAAN DOKUMEN SOP
     function renderKaryawanDocReq(container) {
       const myReqs = getDocRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
       container.innerHTML = `
@@ -1391,7 +1730,6 @@
       renderApp(); showToast(`Permintaan dokumen ${ok ? 'Disetujui' : 'Ditolak'}.`);
     }
 
-    // MODUL HIRADC (CRUD)
     function renderHsseManageHiradc(container) {
       const hiradc = getHiradc();
       container.innerHTML = `
@@ -1436,7 +1774,6 @@
     }
     function deleteHiradc(id) { if (confirm("Hapus baris HIRADC ini?")) { setHiradc(getHiradc().filter(h => h.id !== id)); renderApp(); showToast("Data terhapus."); } }
 
-    // MODUL RCA (CRUD)
     function renderHsseManageRca(container) {
       const rca = getRca();
       container.innerHTML = `
@@ -1450,7 +1787,7 @@
             <tbody>${rca.map(r => `
               <tr class="border-b">
                 <td class="p-3 font-mono font-bold">${r.caseNo}</td><td class="p-3 font-semibold">${r.finding}<div class="text-[10px] text-slate-400 font-normal">Akar: ${r.rootCause}</div></td>
-                <td class="p-3 text-center"><span class="px-2 py-0.5 rounded font-bold ${r.severity==='Kritis'?'bg-red-100 text-red-800':'bg-amber-100 text-amber-800'}">${r.severity}</span></td>
+                <td class="p-3 text-center"><span class="px-2 py-0.5 rounded font-bold bg-slate-100 border text-slate-700">${/^\d+$/.test(r.severity) ? 'Severity ' + r.severity : r.severity}</span></td>
                 <td class="p-3">${r.pic}</td><td class="p-3 text-center font-bold">${r.status}</td>
                 <td class="p-3 text-center"><button onclick="deleteRca('${r.id}')" class="text-red-600">Hapus</button></td>
               </tr>`).join('')}
@@ -1468,7 +1805,7 @@
         document.getElementById('rca-action').value = sourceFinding.recommendation;
         document.getElementById('rca-location').value = sourceFinding.location;
         document.getElementById('rca-reporter').value = sourceFinding.reporter;
-        document.getElementById('rca-severity').value = 'Mayor';
+        document.getElementById('rca-severity').value = '3';
         document.getElementById('rca-status').value = 'In Progress';
       } else {
         document.getElementById('rca-caseno').value = `RCA-SEN-2024-${String(getRca().length + 1).padStart(3, '0')}`;
@@ -1482,7 +1819,7 @@
         id: 'rca-' + Date.now(),
         caseNo: document.getElementById('rca-caseno').value,
         finding: document.getElementById('rca-finding').value,
-        severity: document.getElementById('rca-severity').value,
+        severity: document.getElementById('rca-severity').value.trim(),
         rootCause: document.getElementById('rca-rootcause').value,
         action: document.getElementById('rca-action').value,
         pic: document.getElementById('rca-pic').value,
@@ -1496,7 +1833,6 @@
     }
     function deleteRca(id) { if (confirm("Hapus data RCA ini?")) { setRca(getRca().filter(r => r.id !== id)); renderApp(); showToast("Data terhapus."); } }
 
-    // MODUL REKAP LAPORAN & EKSPOR EXCEL (SHEETJS RESMI)
     function renderRekapLaporan(container) {
       container.innerHTML = `
         <div class="bg-white rounded-xl border border-slate-200 p-2 shadow-sm flex space-x-2">
@@ -1558,6 +1894,38 @@
       XLSX.utils.book_append_sheet(wb, ws, "Rekap_HIRADC");
       XLSX.writeFile(wb, `Rekap_HIRADC_${new Date().toISOString().split('T')[0]}.xlsx`);
       showToast("File Excel HIRADC berhasil diunduh!");
+    }
+
+    function renderKaryawanDashboard(c) {
+      const docReqs = getDocRequests().filter(r => r.requester.toLowerCase() === currentUser.userName.toLowerCase());
+      const apdReqs = getApdRequests().filter(a => a.requester.toLowerCase() === currentUser.userName.toLowerCase());
+      const findings = getFindings().filter(f => f.reporter.toLowerCase() === currentUser.userName.toLowerCase());
+
+      c.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold text-slate-500 uppercase">Laporan Temuan Saya</span>
+              <div class="text-3xl font-extrabold text-navy-900 mt-1">${findings.length} Laporan</div>
+            </div>
+            <button onclick="switchMenu('lapor-temuan')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold">Lapor Baru</button>
+          </div>
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold text-slate-500 uppercase">Peminjaman APD</span>
+              <div class="text-3xl font-extrabold text-navy-900 mt-1">${apdReqs.length} Pengajuan</div>
+            </div>
+            <button onclick="switchMenu('peminjaman-apd')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold">Buka Form</button>
+          </div>
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs font-semibold text-slate-500 uppercase">Permintaan Dokumen</span>
+              <div class="text-3xl font-extrabold text-navy-900 mt-1">${docReqs.length} Pengajuan</div>
+            </div>
+            <button onclick="switchMenu('permintaan-dokumen')" class="px-3 py-2 bg-blue-50 text-navy-900 rounded-lg text-xs font-semibold">Lihat Status</button>
+          </div>
+        </div>
+      `;
     }
 
     // INISIALISASI
